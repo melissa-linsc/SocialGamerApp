@@ -11,7 +11,7 @@ import {
 const WelcomeScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Welcome to Firebase : )</Text>
+      <Text style={styles.title}>Gamerly</Text>
 
       <TouchableOpacity
         style={styles.button}
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#ffffff",
+    backgroundColor: "#2e2157",
     paddingHorizontal: 20,
   },
   logo: {
@@ -47,7 +47,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   title: {
-    fontSize: 24,
+    color: 'white',
+    fontSize: 50,
     fontWeight: "bold",
     marginBottom: 30,
   },
@@ -57,11 +58,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   button: {
-    backgroundColor: "#007BFF",
-    width: "90%",
+    backgroundColor: "#920075",
+    width: "60%",
     paddingVertical: 15,
     marginHorizontal: 15,
-    borderRadius: 8,
+    borderRadius: 50,
     marginBottom: 20,
   },
   buttonText: {
