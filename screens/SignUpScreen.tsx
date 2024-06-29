@@ -38,6 +38,7 @@ const SignUpScreen = () => {
       <TextInput
         style={styles.input}
         placeholder="Email"
+        placeholderTextColor="#fff"
         keyboardType="email-address"
         autoCapitalize="none"
         value={email}
@@ -46,6 +47,7 @@ const SignUpScreen = () => {
       <TextInput
         style={styles.input}
         placeholder="Password"
+        placeholderTextColor="#fff"
         secureTextEntry
         value={password}
         onChangeText={(text) => setPassword(text)}
@@ -53,6 +55,7 @@ const SignUpScreen = () => {
       <TextInput
         style={styles.input}
         placeholder="Confirm Password"
+        placeholderTextColor="#fff"
         secureTextEntry
         value={confirmPassword}
         onChangeText={(text) => setConfirmPassword(text)}
@@ -80,28 +83,29 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#ffffff",
+    backgroundColor: "#2e2157",
     paddingHorizontal: 20,
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
+    color: "#fff"
   },
   input: {
-    width: "100%",
+    width: "80%",
     height: 40,
     borderColor: "#ccc",
     borderWidth: 1,
-    borderRadius: 5,
+    borderRadius: 50,
     marginBottom: 16,
     paddingLeft: 8,
   },
   button: {
-    backgroundColor: "#007BFF",
-    width: "100%",
+    backgroundColor: "#920075",
+    width: "80%",
     paddingVertical: 15,
-    borderRadius: 10,
+    borderRadius: 50,
     marginTop: 10,
   },
   buttonText: {

@@ -31,9 +31,10 @@ import {
           flex: 1,
           justifyContent: "center",
           alignItems: "center",
+          backgroundColor: "#2e2157"
         }}
       >
-        <Text>You have successfully learned Firebase Login.</Text>
+        <Text style={styles.text}>You have successfully learned Firebase Login.</Text>
         <TouchableOpacity onPress={signOutUser} style={styles.button}>
           <Text style={styles.signOutText}>Sign Out</Text>
         </TouchableOpacity>
@@ -45,7 +46,7 @@ import {
   
   const styles = StyleSheet.create({
     button: {
-      backgroundColor: "#302298",
+      backgroundColor: "#920075",
       borderRadius: 20,
       padding: 10,
       margin: 14,
@@ -62,4 +63,7 @@ import {
       fontSize: 16,
       alignSelf: "center",
     },
+    text: {
+      color: "#fff"
+    }
   });

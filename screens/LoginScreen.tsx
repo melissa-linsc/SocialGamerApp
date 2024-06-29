@@ -48,7 +48,7 @@ const LoginScreen = ({ navigation }) => {
       <Text style={styles.welcomeText}>Welcome!</Text>
       <Image
         source={{
-          uri: "https://ouch-cdn2.icons8.com/teMbWzQG6l5J7CQqv4TiWL2pvjv9-A1IUmfuhymu3zw/rs:fit:608:456/extend:false/wm:1:re:0:0:0.8/wmid:ouch/czM6Ly9pY29uczgu/b3VjaC1wcm9kLmFz/c2V0cy9zdmcvMzIy/LzEzODJjMmMwLThj/M2YtNGQ4Yy1iODk0/LWRkYTRhMDI3ZGFl/OS5zdmc.png",
+          uri: "https://www.creativefabrica.com/wp-content/uploads/2023/05/08/Video-Game-Controller-Logo-Graphics-69127373-1-580x387.png",
         }}
         style={styles.logo}
       />
@@ -59,7 +59,7 @@ const LoginScreen = ({ navigation }) => {
         placeholder="Enter your email"
         keyboardType="email-address"
         autoCapitalize="none"
-        placeholderTextColor="#003f5c"
+        placeholderTextColor="#fff"
         value={email}
         onChangeText={(email) => setEmail(email)}
       />
@@ -68,7 +68,7 @@ const LoginScreen = ({ navigation }) => {
         ref={passwordRef}
         style={styles.input}
         placeholder="Enter your password"
-        placeholderTextColor="#003f5c"
+        placeholderTextColor="#fff"
         value={password}
         secureTextEntry
         onChangeText={(text) => setPassword(text)}
@@ -109,23 +109,27 @@ const styles = StyleSheet.create({
       justifyContent: "center",
       alignItems: "center",
       padding: 20,
+      backgroundColor: "#2e2157"
     },
     label: {
       fontSize: 16,
       marginBottom: 8,
+      color: "#920075"
     },
     input: {
-      width: "100%",
+      width: "80%",
       height: 40,
       borderColor: "gray",
+      borderRadius: 50,
       borderWidth: 1,
       marginBottom: 16,
       paddingLeft: 8,
       paddingRight: 8,
+      color: "#fff"
     },
     button: {
-      backgroundColor: "#302298",
-      borderRadius: 20,
+      backgroundColor: "#920075",
+      borderRadius: 50,
       padding: 10,
       margin: 14,
       width: "78%",
@@ -146,6 +150,7 @@ const styles = StyleSheet.create({
       fontWeight: "bold",
       marginBottom: 16,
       textAlign: "center",
+      color: "#fff"
     },
     logo: {
       width: 150,
@@ -153,7 +158,7 @@ const styles = StyleSheet.create({
       marginBottom: 20,
     },
     downText: {
-      color: "#331ece",
+      color: "#920075",
       fontSize: 16,
       fontWeight: "400",
       marginTop: 10,
@@ -161,7 +166,7 @@ const styles = StyleSheet.create({
     signup: {
       alignSelf: "flex-start",
       textDecorationLine: "underline",
-      color: "#331ece",
+      color: "#920075",
       fontSize: 16,
       fontWeight: "500",
       marginLeft: 5,
