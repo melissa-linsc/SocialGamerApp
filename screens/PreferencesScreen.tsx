@@ -185,7 +185,7 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
         containerStyle={{ marginVertical: 15 }}
         onPress={() => {
           if (preferences.length >= 3 && selectedGenres.length >= 3) {
-            navigation.navigate("Home");
+            navigation.navigate("Recs");
           }
         }}
       />

@@ -2,7 +2,7 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import PreferencesScreen from "../screens/PreferencesScreen";
-import HomeScreen from "../screens/HomeScreen";
+import recsCarousel from "../screens/Recommendations";
 
 const Stack = createNativeStackNavigator();
 
@@ -15,8 +15,8 @@ const PreferencesStack = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="Home"
-        component={HomeScreen}
+        name="Recs"
+        component={recsCarousel}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
