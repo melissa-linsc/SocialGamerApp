@@ -3,13 +3,14 @@ import { SafeAreaView, View } from "react-native";
 import { Button } from "@rneui/themed";
 import { useAuth } from "../contexts/AuthContext";
 import { authentication } from "../firebase/config";
-import { signOut } from "firebase/auth";
+
+import HomeScreen from "./HomeScreen";
 
 interface Game {
   title: string;
 }
 
-const PreferencesScreen: React.FC = () => {
+const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   const { loggedInUser, setLoggedInUser } = useAuth();
   const [preferences, setPreferences] = useState<string[]>([]);
 
@@ -44,17 +45,6 @@ const PreferencesScreen: React.FC = () => {
         return [...prevPreferences, title];
       }
     });
-  };
-
-  const signOutUser = () => {
-    signOut(authentication)
-      .then((res) => {
-        console.log(res);
-        setLoggedInUser(null);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
   };
 
   // Function to render buttons in rows
@@ -113,7 +103,11 @@ const PreferencesScreen: React.FC = () => {
         disabled={preferences.length < 3}
         type="outline"
         containerStyle={{ marginVertical: 15 }}
-        // onPress={() => handleNextPage}
+        onPress={() => {
+          if (preferences.length >= 3) {
+            navigation.navigate("Home");
+          }
+        }}
       />
     </SafeAreaView>
   );
