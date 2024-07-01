@@ -175,7 +175,7 @@ const FriendsScreen = ({navigation}) => {
     return (
         <SafeAreaView>
             <View style={styles.container}>
-                <Text>All Users</Text>
+                <Text style={styles.text}>All Users</Text>
                 <FlatList
                     data={users}
                     keyExtractor={item => item.id}
@@ -185,13 +185,13 @@ const FriendsScreen = ({navigation}) => {
                             style={styles.image}
                             source={{uri: item.avatar}}
                             /> 
-                            <Text>{item.name}</Text>  
+                            <Text style={styles.text}>{item.name}</Text>  
                             {/* <Text>{item.req}</Text> */}
                             {!item.req.some(friend => friend.uid === loggedInUser.uid) ? <Button title="Add Friend" onPress={() => handleSendFriendRequest(item)}></Button> : null }                     
                         </View>
                 )}
                 />
-                <Text>My Friends</Text>
+                <Text style={styles.text}>My Friends</Text>
                 <FlatList
                     data={userFriends}
                     keyExtractor={item => item.id}
@@ -201,12 +201,12 @@ const FriendsScreen = ({navigation}) => {
                             style={styles.image}
                             source={{uri: item.avatar}}
                             /> 
-                            <Text>{item.name}</Text>  
+                            <Text style={styles.text}>{item.name}</Text>  
                             <Button title="Remove Friends" onPress={() => handleRemoveFriend(item)}></Button>          
                         </View>
                 )}
                 />
-                <Text>Friend Requests</Text>
+                <Text style={styles.text}>Friend Requests</Text>
                 <FlatList
                     data={friendRequests}
                     keyExtractor={item => item.id}
@@ -216,13 +216,13 @@ const FriendsScreen = ({navigation}) => {
                             style={styles.image}
                             source={{uri: item.avatar}}
                             /> 
-                            <Text>{item.name}</Text>  
+                            <Text style={styles.text}>{item.name}</Text>  
                             <Button title="Accept" onPress={() => handleAddFriend(item)}></Button>          
                         </View>
                 )}
                 />
-                <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-                    <Text>Home</Text>
+                <TouchableOpacity onPress={() => navigation.navigate("Home")} style={styles.homeButton}>
+                    <Text style={styles.text}>Home</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
@@ -236,11 +236,15 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         padding: 20,
+        backgroundColor: "#2e2157",
+
     },
     image: {
         width: 50,
         height: 50,
         marginRight: 20,
+        backgroundColor:  "#920075",
+        borderRadius: 50,
     },
     user: {
         justifyContent: "center",
@@ -248,7 +252,17 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         padding: 20,
         borderWidth: 2,
-        margin: 10
+        margin: 10,
+        borderRadius: 50,
+    },
+    text: {
+        color: "#fff"
+    },
+    homeButton: {
+        backgroundColor: "#920075",
+        padding: 10,
+        borderRadius: 50,
+        margin: 20,
     }
 })
 
