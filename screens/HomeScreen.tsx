@@ -11,7 +11,7 @@ import {
   import { authentication } from "../firebase/config";
   import { signOut } from "firebase/auth";
   
-  const HomeScreen = () => {
+  const HomeScreen = ({navigation}) => {
     const { loggedInUser, setLoggedInUser } = useAuth();
   
     const signOutUser = () => {
@@ -38,6 +38,9 @@ import {
         <Text style={styles.text}>{loggedInUser.photoURL}</Text>
         <TouchableOpacity onPress={signOutUser} style={styles.button}>
           <Text style={styles.signOutText}>Sign Out</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("Friends")}>
+          <Text style={styles.signOutText}>Friends</Text>
         </TouchableOpacity>
       </SafeAreaView>
     );

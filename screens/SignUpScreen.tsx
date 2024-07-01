@@ -16,6 +16,7 @@ const SignUpScreen = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [avatar, setAvatar] = useState('https://robohash.org/default');
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const [isLoading, setIsLoading] = useState(false);
@@ -26,6 +27,7 @@ const SignUpScreen = () => {
     createUserWithEmailAndPassword(authentication, email, password)
       .then((res) => {
         const user=res.user
+        setDoc(doc(db, "users", user.uid), { uid:user.uid, email:email, name:name, req:[], realFriend:[], avatar:avatar  });
         updateProfile(user, {
           displayName: name,
           photoURL: 'https://robohash.org/default',
