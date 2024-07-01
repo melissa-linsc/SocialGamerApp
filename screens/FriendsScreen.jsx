@@ -10,9 +10,9 @@ const FriendsScreen = ({navigation}) => {
     const { loggedInUser, setLoggedInUser } = useAuth();
 
     const [loggedInUserDoc, setLoggedInUserDoc] = useState({})
+    const [targetDoc, setTargetDoc] = useState({})
     const [userFriends, setUserFriends] = useState([])
     const [users, setUsers] = useState([])
-    const [friendAdded, setFriendAdded] = useState(false)
     const [friendRequests, setFriendRequests] = useState([])
 
     useEffect(() => {
@@ -120,7 +120,6 @@ const FriendsScreen = ({navigation}) => {
                     })
                 })
 
-                setFriendAdded(true)
             } else {
                 throw new Error('No matching user document found.');
             }
@@ -161,8 +160,6 @@ const FriendsScreen = ({navigation}) => {
                         })
                     })
 
-                    setFriendAdded(false)
-
                 } else {
                     throw new Error('No matching user document found.');
                 }
@@ -189,7 +186,8 @@ const FriendsScreen = ({navigation}) => {
                             source={{uri: item.avatar}}
                             /> 
                             <Text>{item.name}</Text>  
-                            {!userFriends.some(friend => friend.uid === item.uid) ? <Button title="Add Friend" onPress={() => handleSendFriendRequest(item)}></Button> : null }                     
+                            {/* <Text>{item.req}</Text> */}
+                            {!item.req.some(friend => friend.uid === loggedInUser.uid) ? <Button title="Add Friend" onPress={() => handleSendFriendRequest(item)}></Button> : null }                     
                         </View>
                 )}
                 />
