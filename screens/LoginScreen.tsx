@@ -37,7 +37,7 @@ const LoginScreen = ({ navigation }) => {
 
       .catch((err) => {
         console.log(err);
-        setError("Incorrect Email/Password");
+        setError("Incorrect Email/Password ");
       })
 
       .finally(() => setIsLoading(false));

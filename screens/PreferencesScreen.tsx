@@ -1,8 +1,9 @@
-import { SafeAreaView } from "react-native";
+import React, { useState } from "react";
+import { SafeAreaView, View } from "react-native";
 import { Button } from "@rneui/themed";
-import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
-import React from "react";
+import { authentication } from "../firebase/config";
+import { signOut } from "firebase/auth";
 
 interface Game {
   title: string;
@@ -23,6 +24,16 @@ const PreferencesScreen: React.FC = () => {
     { title: "Hollow Knight" },
     { title: "Hades" },
     { title: "The Legend of Zelda" },
+    { title: "Super Mario Bros" },
+    { title: "Grand Theft Auto" },
+    { title: "Persona 5 Royal" },
+    { title: "Final Fantasy IX" },
+    { title: "Undertale" },
+    { title: "FIFA" },
+    { title: "Pokemon" },
+    { title: "Kingdom Hearts" },
+    { title: "Kirby and the Forgotten Land" },
+    { title: "Ratchet and Clank" },
   ];
 
   const handlePress = (title: string) => {
@@ -35,6 +46,56 @@ const PreferencesScreen: React.FC = () => {
     });
   };
 
+  const signOutUser = () => {
+    signOut(authentication)
+      .then((res) => {
+        console.log(res);
+        setLoggedInUser(null);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  // Function to render buttons in rows
+  const renderButtons = () => {
+    let rows: JSX.Element[] = [];
+    let row: JSX.Element[] = [];
+
+    gameDataExample.forEach((button, index) => {
+      row.push(
+        <Button
+          key={index}
+          title={button.title}
+          type={preferences.includes(button.title) ? "solid" : "outline"}
+          containerStyle={{ flex: 1, margin: 5 }}
+          onPress={() => handlePress(button.title)}
+        />
+      );
+
+      // Create a new row after every 3 buttons
+      if ((index + 1) % 3 === 0) {
+        rows.push(
+          <View key={index} style={{ flexDirection: "row", marginBottom: 10 }}>
+            {row}
+          </View>
+        );
+        row = []; // Reset row array
+      }
+    });
+
+    // Push the last row if it's not empty
+    if (row.length > 0) {
+      rows.push(
+        <View key="lastRow" style={{ flexDirection: "row", marginBottom: 10 }}>
+          {row}
+        </View>
+      );
+    }
+
+    return rows;
+  };
+
   return (
     <SafeAreaView
       style={{
@@ -42,23 +103,17 @@ const PreferencesScreen: React.FC = () => {
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#2e2157",
+        paddingHorizontal: 10,
       }}
     >
-      {gameDataExample.map((button, index) => (
-        <Button
-          key={index}
-          title={button.title}
-          type={preferences.includes(button.title) ? "solid" : "outline"}
-          containerStyle={{ marginVertical: 15 }}
-          onPress={() => handlePress(button.title)}
-        />
-      ))}
+      {renderButtons()}
+
       <Button
         title="Continue"
         disabled={preferences.length < 3}
         type="outline"
         containerStyle={{ marginVertical: 15 }}
-        // onPress={continueToMain}
+        // onPress={() => handleNextPage}
       />
     </SafeAreaView>
   );
