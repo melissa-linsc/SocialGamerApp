@@ -34,7 +34,8 @@ import {
           backgroundColor: "#2e2157"
         }}
       >
-        <Text style={styles.text}>You have successfully learned Firebase Login.</Text>
+        <Text style={styles.text}>{loggedInUser.displayName}</Text>
+        <Text style={styles.text}>{loggedInUser.photoURL}</Text>
         <TouchableOpacity onPress={signOutUser} style={styles.button}>
           <Text style={styles.signOutText}>Sign Out</Text>
         </TouchableOpacity>

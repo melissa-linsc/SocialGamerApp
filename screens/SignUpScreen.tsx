@@ -7,11 +7,13 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-import { authentication } from "../firebase/config";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { authentication, db } from "../firebase/config";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { useAuth } from "../contexts/AuthContext";
+import { setDoc,doc} from 'firebase/firestore';
 
 const SignUpScreen = () => {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -23,8 +25,16 @@ const SignUpScreen = () => {
     setIsLoading(true);
     createUserWithEmailAndPassword(authentication, email, password)
       .then((res) => {
-        console.log(res.user);
-        setLoggedInUser(res.user);
+        const user=res.user
+        updateProfile(user, {
+          displayName: name,
+          photoURL: 'https://robohash.org/default',
+        })
+        return user
+      })
+      .then((user) => {
+        console.log(user);
+        setLoggedInUser(user);
       })
       .catch((re) => {
         console.log(re);
@@ -35,6 +45,14 @@ const SignUpScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Sign Up</Text>
+      <TextInput
+          style={styles.input}
+          placeholder='Username' 
+          placeholderTextColor="#fff"
+          autoCapitalize="none"
+          value={name}
+          onChangeText={(text) => setName(text)}
+            />
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -93,6 +111,7 @@ const styles = StyleSheet.create({
     color: "#fff"
   },
   input: {
+    color: "#fff",
     width: "80%",
     height: 40,
     borderColor: "#ccc",
