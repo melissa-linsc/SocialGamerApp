@@ -53,9 +53,9 @@ const CarouselItem = ({ item, index, scrollX }: Props) => {
         style={{
           width: '90%',
           height: '100%',
-          opacity: 0.8,
           justifyContent: "flex-end",
         }}
+        imageStyle={{opacity: 0.6, borderRadius: 15}}
         resizeMode="cover"
       >
           <Text style={styles.title}>{item.title}</Text>
@@ -68,10 +68,13 @@ export default CarouselItem;
 
 const styles = StyleSheet.create({
   title: {
-    color: "#f20089",
+    color: "#fff",
     opacity: 1,
     fontSize: 25,
     fontWeight: "bold",
     padding: 20,
+    textShadowColor: 'rgba(1, 30, 97, 0.8)',
+    textShadowOffset: {width: -1, height: 1},
+    textShadowRadius: 15,
   },
 });

@@ -42,6 +42,10 @@ const ListScreen = () => {
       <Header />
       <Text style={styles.subheading}>Your Recommendations</Text>
       <Carousel />
+      <Text style={styles.subheading}>RPGs</Text>
+      <Carousel />
+      <Text style={styles.subheading}>Top Rated Games</Text>
+      <Carousel />
       {/* <ScrollView
         horizontal
         pagingEnabled
@@ -85,6 +89,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 20,
     textAlign: "center",
+    marginBottom: 10,
   }
 })
 

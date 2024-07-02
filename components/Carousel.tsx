@@ -41,6 +41,7 @@ export const items = [
         <Animated.FlatList
           horizontal
           onScroll={onScrollHandler}
+          showsHorizontalScrollIndicator={false}
           data={items}
           keyExtractor={(item) => item.id}
           pagingEnabled={true}
@@ -57,6 +58,6 @@ export const items = [
     container: {
       flex: 1,
       backgroundColor: "#0a0a31",
-      marginTop: 0,
+      marginVertical: 20,
     },
   });
