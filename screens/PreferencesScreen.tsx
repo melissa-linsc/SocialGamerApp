@@ -161,34 +161,36 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   return (
     <SafeAreaView
       style={{
-        flex: 0.5,
+        flex: 1,
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#2e2157",
         paddingHorizontal: 10,
       }}
     >
-      <Text style={{ color: "white", fontSize: 18, marginTop: 20 }}>
-        Select At Least 3 Games:{" "}
-      </Text>
-      {renderButtons()}
+      <View>
+        <Text style={{ color: "white", fontSize: 18, marginTop: 20 }}>
+          Select At Least 3 Games:{" "}
+        </Text>
+        {renderButtons()}
 
-      <Text style={{ color: "white", fontSize: 18, marginTop: 20 }}>
-        Select At Least 3 Genres:{" "}
-      </Text>
-      {renderGenreButtons()}
+        <Text style={{ color: "white", fontSize: 18, marginTop: 20 }}>
+          Select At Least 3 Genres:{" "}
+        </Text>
+        {renderGenreButtons()}
 
-      <Button
-        title="Continue"
-        disabled={preferences.length < 3 || selectedGenres.length < 3}
-        type="outline"
-        containerStyle={{ marginVertical: 15 }}
-        onPress={() => {
-          if (preferences.length >= 3 && selectedGenres.length >= 3) {
-            navigation.navigate("Home");
-          }
-        }}
-      />
+        <Button
+          title="Continue"
+          disabled={preferences.length < 3 || selectedGenres.length < 3}
+          type="outline"
+          containerStyle={{ marginVertical: 15 }}
+          onPress={() => {
+            if (preferences.length >= 3 && selectedGenres.length >= 3) {
+              navigation.navigate("Home");
+            }
+          }}
+        />
+      </View>
     </SafeAreaView>
   );
 };
