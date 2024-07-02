@@ -3,6 +3,7 @@ import { ScrollView, View, ImageURISource, Text, Animated, StyleSheet } from "re
 import { SafeAreaView } from "react-native-safe-area-context";
 import RecListItems from "../components/RecListItems";
 import Header from "../components/Header";
+import Carousel from "../components/Carousel";
 
 interface RecGame {
   id: number;
@@ -40,7 +41,8 @@ const ListScreen = () => {
       <ScrollView>
       <Header />
       <Text style={styles.subheading}>Your Recommendations</Text>
-      <ScrollView
+      <Carousel />
+      {/* <ScrollView
         horizontal
         pagingEnabled
         bounces={false}
@@ -69,7 +71,7 @@ const ListScreen = () => {
         {recommendationsData.map((item) => (
           <RecListItems key={item.id.toString()} item={item} />
         ))}
-      </ScrollView>
+      </ScrollView> */}
       </ScrollView>
     </SafeAreaView>
   );
