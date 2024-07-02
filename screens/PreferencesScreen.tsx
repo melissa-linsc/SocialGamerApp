@@ -58,7 +58,7 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
       game.genres.forEach((genre) => genres.add(genre));
     });
     setUniqueGenres(Array.from(genres));
-  }, []); // Empty dependency array to run this effect only once
+  }, []);
 
   const handlePress = (title: string) => {
     setPreferences((prevPreferences) => {
@@ -161,7 +161,7 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   return (
     <SafeAreaView
       style={{
-        flex: 0.5,
+        flex: 1,
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#2e2157",
@@ -185,7 +185,7 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
         containerStyle={{ marginVertical: 15 }}
         onPress={() => {
           if (preferences.length >= 3 && selectedGenres.length >= 3) {
-            navigation.navigate("Home");
+            navigation.navigate("List");
           }
         }}
       />
