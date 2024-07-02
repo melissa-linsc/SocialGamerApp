@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#2e2157",
+    backgroundColor: "#0a0a31",
     paddingHorizontal: 20,
   },
   title: {
@@ -118,15 +118,15 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: "#ccc",
     borderWidth: 1,
-    borderRadius: 50,
+    borderRadius: 15,
     marginBottom: 16,
     paddingLeft: 8,
   },
   button: {
-    backgroundColor: "#920075",
+    backgroundColor: "#f20089",
     width: "80%",
     paddingVertical: 15,
-    borderRadius: 50,
+    borderRadius: 15,
     marginTop: 10,
   },
   buttonText: {

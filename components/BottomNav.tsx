@@ -11,6 +11,7 @@ import { Ionicons } from '@expo/vector-icons';
 import HomeScreen from '../screens/HomeScreen';
 import FriendsScreen from '../screens/FriendsScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import ListScreen from '../screens/ListsScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -22,6 +23,10 @@ export default function BottomNav() {
       }}
       tabBar={({ navigation, state, descriptors, insets }) => (
         <BottomNavigation.Bar
+          style={styles.bottomNav}
+          inactiveColor='#fff'
+          activeColor='#fff'
+          activeIndicatorStyle={styles.activeTab}
           navigationState={state}
          safeAreaInsets={insets}
           onTabPress={({ route, preventDefault }) => {
@@ -63,22 +68,22 @@ export default function BottomNav() {
       )}
     >
       <Tab.Screen
+        name="Home"
+        component={ListScreen}
+        options={{
+          tabBarLabel: 'Home',
+          tabBarIcon: ({ color, size }) => {
+            return <Icon name="home" size={size} color="#fff"/>;
+          },
+        }}
+      />
+      <Tab.Screen
         name="Profile"
         component={ProfileScreen}
         options={{
           tabBarLabel: 'Profile',
           tabBarIcon: ({ color, size }) => {
-            return <Ionicons name="person" size={24} color="black" />;
-          },
-        }}
-      />
-      <Tab.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{
-          tabBarLabel: 'Home',
-          tabBarIcon: ({ color, size }) => {
-            return <Icon name="home" size={size} color={color} />;
+            return <Ionicons name="person" size={24} color="#fff" />;
           },
         }}
       />
@@ -88,7 +93,7 @@ export default function BottomNav() {
         options={{
           tabBarLabel: 'Friends',
           tabBarIcon: ({ color, size }) => {
-            return <FontAwesome5 name="user-friends" size={24} color="black" />;
+            return <FontAwesome5 name="user-friends" size={24} color="#fff" />;
           },
         }}
       />
@@ -96,3 +101,17 @@ export default function BottomNav() {
   );
 }
 
+const styles = StyleSheet.create({ 
+  bottomNav: {
+     backgroundColor: "#0a0a31",
+     opacity: 0.9,
+     color: "#fff",
+     padding: 0,
+     margin: 0,
+     borderWidth: 0,
+     borderColor: "fff"
+  },
+  activeTab: {
+    backgroundColor: "#f20089",
+  }
+})

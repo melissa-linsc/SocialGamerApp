@@ -6,13 +6,22 @@ import {
   TouchableOpacity,
   View,
   Image,
+  ImageBackground
 } from "react-native";
+import GradientText from "react-native-gradient-texts";
 
 const WelcomeScreen = ({ navigation }) => {
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Gamerly</Text>
-
+    <View style={styles.container}>
+      {/* <ImageBackground source={require('../assets/geometric-shapes-neon-lights-background/3449559.jpg')} resizeMode="cover" style={styles.background}> */}
+      <GradientText
+        text={"Gamerly"}
+        fontSize={60}
+        width={420}
+        locations={{ x: 210, y: 65 }}
+        isGradientFill
+        gradientColors={["#f20089", "#2d00f7"]}
+      />
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
@@ -29,7 +38,8 @@ const WelcomeScreen = ({ navigation }) => {
       >
         <Text style={styles.buttonText}>Sign Up</Text>
       </TouchableOpacity>
-    </SafeAreaView>
+      {/* </ImageBackground> */}
+    </View>
   );
 };
 
@@ -38,8 +48,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#2e2157",
     paddingHorizontal: 20,
+    backgroundColor: "#0a0a31"
+  },
+  background: {
+    flex: 1,
+    justifyContent: "center",
+    width: 500,
+    height: "120%",
+    alignItems: "center"
   },
   logo: {
     width: 150,
@@ -47,10 +64,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   title: {
-    color: 'white',
-    fontSize: 50,
-    fontWeight: "bold",
-    marginBottom: 30,
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: {width: -1, height: 1},
+    textShadowRadius: 10
   },
   subtitle: {
     fontSize: 16,
@@ -58,12 +74,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   button: {
-    backgroundColor: "#920075",
+    backgroundColor: "#f20089",
     width: "60%",
     paddingVertical: 15,
     marginHorizontal: 15,
-    borderRadius: 50,
+    borderRadius: 15,
     marginBottom: 20,
+    marginTop: 10,
   },
   buttonText: {
     color: "#ffffff",

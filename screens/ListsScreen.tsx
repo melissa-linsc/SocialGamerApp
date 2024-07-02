@@ -1,7 +1,9 @@
 import React from "react";
-import { ScrollView, View, ImageURISource, Text, Animated } from "react-native";
+import { ScrollView, View, ImageURISource, Text, Animated, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import RecListItems from "../components/RecListItems";
+import Header from "../components/Header";
+import Carousel from "../components/Carousel";
 
 interface RecGame {
   id: number;
@@ -35,8 +37,16 @@ const ListScreen = () => {
   ];
 
   return (
-    <SafeAreaView>
-      <ScrollView
+    <SafeAreaView style={styles.safeScroll}>
+      <ScrollView>
+      <Header />
+      <Text style={styles.subheading}>Your Recommendations</Text>
+      <Carousel />
+      <Text style={styles.subheading}>RPGs</Text>
+      <Carousel />
+      <Text style={styles.subheading}>Top Rated Games</Text>
+      <Carousel />
+      {/* <ScrollView
         horizontal
         pagingEnabled
         bounces={false}
@@ -65,9 +75,22 @@ const ListScreen = () => {
         {recommendationsData.map((item) => (
           <RecListItems key={item.id.toString()} item={item} />
         ))}
+      </ScrollView> */}
       </ScrollView>
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({ 
+  safeScroll: {
+     backgroundColor: "#0a0a31",
+  },
+  subheading: {
+    color: "#fff",
+    fontSize: 20,
+    textAlign: "center",
+    marginBottom: 10,
+  }
+})
 
 export default ListScreen;

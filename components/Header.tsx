@@ -1,13 +1,22 @@
 import React from "react"
 import { StyleSheet, View, Text } from "react-native"
 import { Entypo } from '@expo/vector-icons';
+import GradientText from "react-native-gradient-texts";
 
 function Header() {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Gamerly</Text>
-            <Entypo name="chat" size={30} color="white" />
+            <GradientText
+                text={"Gamerly"}
+                fontSize={40}
+                width={180}
+                locations={{ x: 90, y: 58 }}
+                isGradientFill
+                gradientColors={["#f20089", "#2d00f7"]}
+            
+            />
+            <Entypo name="chat" size={30} color="#f20089" />
         </View>
     )
 }
@@ -16,20 +25,11 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
         justifyContent: "space-between",
-        alignItems: "flex-end",
+        alignItems: "center",
         width: "100%",
         paddingHorizontal: 30,
-        paddingVertical: 40,
-        marginTop: 40,
-    },
-    title: {
-        alignSelf: "flex-start",
-        color: "#fff",
-        fontSize: 30,
-        fontWeight: "bold",
     },
     icon: {
-        alignSelf: "flex-end",
         color: "#fff"
     }
 })
