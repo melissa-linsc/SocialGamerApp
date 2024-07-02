@@ -10,6 +10,7 @@ import {
   import { useAuth } from "../contexts/AuthContext";
   import { authentication } from "../firebase/config";
   import { signOut } from "firebase/auth";
+import BottomNav from "../components/BottomNav";
   
   const HomeScreen = ({navigation}) => {
     const { loggedInUser, setLoggedInUser } = useAuth();
