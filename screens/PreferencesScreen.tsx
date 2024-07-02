@@ -161,7 +161,7 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   return (
     <SafeAreaView
       style={{
-        flex: 1,
+        flex: 0.5,
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#2e2157",
