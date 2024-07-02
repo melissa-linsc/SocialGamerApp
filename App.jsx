@@ -8,7 +8,6 @@ import { NavigationContainer } from "@react-navigation/native";
 
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import GuestStack from "./navigation/GuestStack";
-import PreferencesStack from "./navigation/PreferencesStack";
 import AppStack from "./navigation/AppStack";
 
 const AppContent = () => {
