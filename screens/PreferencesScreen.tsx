@@ -58,7 +58,7 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
       game.genres.forEach((genre) => genres.add(genre));
     });
     setUniqueGenres(Array.from(genres));
-  }, []); // Empty dependency array to run this effect only once
+  }, []);
 
   const handlePress = (title: string) => {
     setPreferences((prevPreferences) => {
