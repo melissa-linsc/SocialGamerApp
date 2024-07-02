@@ -5,6 +5,8 @@ import { db } from "../firebase/config";
    
 import { collection, getDocs, updateDoc, doc, query, where, update, FieldValue, arrayUnion, arrayRemove } from "firebase/firestore";
 
+import Header from "../components/Header";
+
 const FriendsScreen = ({navigation}) => {
     
     const { loggedInUser, setLoggedInUser } = useAuth();
@@ -173,11 +175,13 @@ const FriendsScreen = ({navigation}) => {
         }
 
     return (
-        <SafeAreaView>
-            <View style={styles.container}>
-                <Text style={styles.text}>All Users</Text>
+        <SafeAreaView style={styles.container}>
+            <Header />
+            <View>
+                <Text style={styles.subheading}>Find Friends</Text>
                 <FlatList
                     data={users}
+                    style={styles.list}
                     keyExtractor={item => item.id}
                     renderItem={({item}) => (
                         <View style={styles.user}>
@@ -191,7 +195,7 @@ const FriendsScreen = ({navigation}) => {
                         </View>
                 )}
                 />
-                <Text style={styles.text}>My Friends</Text>
+                <Text style={styles.subheading}>My Friends</Text>
                 <FlatList
                     data={userFriends}
                     keyExtractor={item => item.id}
@@ -206,9 +210,10 @@ const FriendsScreen = ({navigation}) => {
                         </View>
                 )}
                 />
-                <Text style={styles.text}>Friend Requests</Text>
+                <Text style={styles.subheading}>Friend Requests</Text>
                 <FlatList
                     data={friendRequests}
+                    style={styles.list}
                     keyExtractor={item => item.id}
                     renderItem={({item}) => (
                         <View style={styles.user}>
@@ -236,8 +241,12 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         padding: 20,
-        backgroundColor: "#2e2157",
-
+        backgroundColor: "#17112c",
+        flex: 1,
+        margin: 0,
+    },
+    list: {
+        padding: 20,
     },
     image: {
         width: 50,
@@ -251,12 +260,16 @@ const styles = StyleSheet.create({
         alignItems: "center",
         flexDirection: 'row',
         padding: 20,
-        borderWidth: 2,
         margin: 10,
-        borderRadius: 50,
+        borderRadius: 15,
+        backgroundColor: "#292441"
     },
     text: {
-        color: "#fff"
+        color: "#fff",
+    },
+    subheading: {
+        color: "#d9d6e7",
+        fontSize: 20,
     },
     homeButton: {
         backgroundColor: "#920075",
