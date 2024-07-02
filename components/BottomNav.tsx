@@ -25,7 +25,8 @@ export default function BottomNav() {
         <BottomNavigation.Bar
           style={styles.bottomNav}
           inactiveColor='#fff'
-          activeColor='#f20089'
+          activeColor='#fff'
+          activeIndicatorStyle={styles.activeTab}
           navigationState={state}
          safeAreaInsets={insets}
           onTabPress={({ route, preventDefault }) => {
@@ -72,7 +73,7 @@ export default function BottomNav() {
         options={{
           tabBarLabel: 'Home',
           tabBarIcon: ({ color, size }) => {
-            return <Icon name="home" size={size} color="#f20089" />;
+            return <Icon name="home" size={size} color="#fff"/>;
           },
         }}
       />
@@ -82,7 +83,7 @@ export default function BottomNav() {
         options={{
           tabBarLabel: 'Profile',
           tabBarIcon: ({ color, size }) => {
-            return <Ionicons name="person" size={24} color="#f20089" />;
+            return <Ionicons name="person" size={24} color="#fff" />;
           },
         }}
       />
@@ -92,7 +93,7 @@ export default function BottomNav() {
         options={{
           tabBarLabel: 'Friends',
           tabBarIcon: ({ color, size }) => {
-            return <FontAwesome5 name="user-friends" size={24} color="#f20089" />;
+            return <FontAwesome5 name="user-friends" size={24} color="#fff" />;
           },
         }}
       />
@@ -104,6 +105,13 @@ const styles = StyleSheet.create({
   bottomNav: {
      backgroundColor: "#0a0a31",
      opacity: 0.9,
-     color: "#fff"
+     color: "#fff",
+     padding: 0,
+     margin: 0,
+     borderWidth: 0,
+     borderColor: "fff"
+  },
+  activeTab: {
+    backgroundColor: "#f20089",
   }
 })

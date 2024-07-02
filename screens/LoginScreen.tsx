@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-
+import GradientText from "react-native-gradient-texts";
 import { authentication } from "../firebase/config";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useAuth } from "../contexts/AuthContext";
@@ -45,7 +45,14 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.welcomeText}>Welcome!</Text>
+      <GradientText
+        text={"Welcome!"}
+        fontSize={40}
+        width={420}
+        locations={{ x: 210, y: 70 }}
+        isGradientFill
+        gradientColors={["#f20089", "#2d00f7"]}
+      />
       <Image
         source={{
           uri: "https://www.creativefabrica.com/wp-content/uploads/2023/05/08/Video-Game-Controller-Logo-Graphics-69127373-1-580x387.png",
@@ -105,11 +112,10 @@ const LoginScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: "center",
     alignItems: "center",
     padding: 20,
-    backgroundColor: "#2e2157",
+    flex: 1,
+    backgroundColor: "#0a0a31"
   },
   label: {
     fontSize: 16,
@@ -120,7 +126,7 @@ const styles = StyleSheet.create({
     width: "80%",
     height: 40,
     borderColor: "gray",
-    borderRadius: 50,
+    borderRadius: 15,
     borderWidth: 1,
     marginBottom: 16,
     paddingLeft: 8,
@@ -128,8 +134,8 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   button: {
-    backgroundColor: "#920075",
-    borderRadius: 50,
+    backgroundColor: "#f20089",
+    borderRadius: 15,
     padding: 10,
     margin: 14,
     width: "78%",
@@ -158,7 +164,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   downText: {
-    color: "#920075",
+    color: "#f20089",
     fontSize: 16,
     fontWeight: "400",
     marginTop: 10,
@@ -166,7 +172,7 @@ const styles = StyleSheet.create({
   signup: {
     alignSelf: "flex-start",
     textDecorationLine: "underline",
-    color: "#920075",
+    color: "#f20089",
     fontSize: 16,
     fontWeight: "500",
     marginLeft: 5,

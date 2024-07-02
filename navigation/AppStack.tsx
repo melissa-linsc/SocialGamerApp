@@ -1,13 +1,20 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import FriendsScreen from "../screens/FriendsScreen";
 import PreferencesScreen from "../screens/PreferencesScreen";
 import ListScreen from "../screens/ListsScreen";
 import BottomNav from "../components/BottomNav";
+import { StatusBar } from "react-native";
 
 const Stack = createNativeStackNavigator();
 
 const AppStack = () => {
+
+  useEffect(() => {
+    // Set status bar style when component mounts
+    StatusBar.setBarStyle('light-content'); // or 'dark-content'
+  }, []);
+
   return (
     <Stack.Navigator>
       <Stack.Screen

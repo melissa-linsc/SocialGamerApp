@@ -21,7 +21,6 @@ const WelcomeScreen = ({ navigation }) => {
         locations={{ x: 210, y: 65 }}
         isGradientFill
         gradientColors={["#f20089", "#2d00f7"]}
-      
       />
       <TouchableOpacity
         style={styles.button}
@@ -81,6 +80,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     borderRadius: 15,
     marginBottom: 20,
+    marginTop: 10,
   },
   buttonText: {
     color: "#ffffff",

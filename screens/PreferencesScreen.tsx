@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { SafeAreaView, View, Text, ScrollView, StyleSheet } from "react-native";
-import { Button } from "@rneui/themed";
+import { Button, ThemeProvider } from "@rneui/themed";
 import { useAuth } from "../contexts/AuthContext";
 import GradientText from "react-native-gradient-texts";
 
@@ -14,6 +14,7 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [preferences, setPreferences] = useState<string[]>([]);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [uniqueGenres, setUniqueGenres] = useState<string[]>([]);
+
 
   const gameDataExample: Game[] = [
     {
@@ -94,6 +95,8 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
           type={preferences.includes(button.title) ? "solid" : "outline"}
           containerStyle={{ flex: 1, margin: 5 }}
           onPress={() => handlePress(button.title)}
+          buttonStyle={preferences.includes(button.title) ? styles.pressedButton : styles.button }
+          titleStyle={preferences.includes(button.title) ? styles.pressedButtonTitle : styles.buttonTitle}
         />
       );
 
@@ -132,6 +135,8 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
           type={selectedGenres.includes(genre) ? "solid" : "outline"}
           containerStyle={{ flex: 1, margin: 5 }}
           onPress={() => handleGenrePress(genre)}
+          buttonStyle={selectedGenres.includes(genre) ? styles.pressedButton : styles.button }
+          titleStyle={selectedGenres.includes(genre) ? styles.pressedButtonTitle : styles.buttonTitle}
         />
       );
 
@@ -164,18 +169,18 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
       <ScrollView style={styles.container}>
         <GradientText
           text={"Gamerly"}
-          fontSize={50}
+          fontSize={40}
           width={420}
-          locations={{ x: 210, y: 65 }}
+          locations={{ x: 100, y: 60 }}
           isGradientFill
           gradientColors={["#f20089", "#2d00f7"]}
         />
-        <Text style={{ color: "white", fontSize: 18, marginTop: 20 }}>
+        <Text style={{ color: "white", fontSize: 18, marginVertical: 20 }}>
           Select At Least 3 Games:{" "}
         </Text>
         {renderButtons()}
 
-        <Text style={{ color: "white", fontSize: 18, marginTop: 20 }}>
+        <Text style={{ color: "white", fontSize: 18, marginVertical: 20 }}>
           Select At Least 3 Genres:{" "}
         </Text>
         {renderGenreButtons()}
@@ -184,12 +189,16 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
           title="Continue"
           disabled={preferences.length < 3 || selectedGenres.length < 3}
           type="outline"
-          containerStyle={{ marginVertical: 15 }}
+          containerStyle={{ marginVertical: 15, borderRadius: 15 }}
           onPress={() => {
             if (preferences.length >= 3 && selectedGenres.length >= 3) {
               navigation.navigate("Home");
             }
           }}
+          disabledStyle={styles.continueButtonDisabled}
+          disabledTitleStyle={styles.continueButtonTitleDisabled}
+          buttonStyle={preferences.length >= 3 && selectedGenres.length >= 3 ? styles.continueButtonEnabled : null}
+          titleStyle={preferences.length >= 3 && selectedGenres.length >= 3 ? styles.continueButtonTitleEnabled : null}
         />
       </ScrollView>
     </SafeAreaView>
@@ -204,6 +213,42 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#0a0a31",
     padding: 30,
+  },
+  button: {
+    padding: 10,
+    borderRadius: 15,
+    color: "#f20089",
+    borderColor: "#f20089",
+    borderWidth: 2,
+  },
+  buttonTitle: {
+    color: "#f20089",
+  },
+  pressedButton: {
+    backgroundColor: "#f20089",
+    borderRadius: 15,
+  },
+  pressedButtonTitle: {
+    color: "#fff",
+  },
+  continueButtonEnabled: {
+    backgroundColor: "#f20089",
+    borderRadius: 15,
+    borderWidth: 2,
+    borderColor: "#f20089",
+    marginBottom: 40,
+  },
+  continueButtonTitleEnabled: {
+    color: "#fff",
+  },
+  continueButtonDisabled: {
+    borderRadius: 15,
+    borderWidth: 2,
+    borderColor: "#fff",
+    marginBottom: 40,
+  },
+  continueButtonTitleDisabled: {
+    color: "#fff",
   }
 })
 
