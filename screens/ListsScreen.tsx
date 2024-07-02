@@ -1,7 +1,7 @@
 import React from "react";
 import { ScrollView, View, ImageURISource, Text, Animated } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import RecListItems from "../Components/RecListItems";
+import RecListItems from "../components/RecListItems";
 
 interface RecGame {
   id: number;
