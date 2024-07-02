@@ -29,7 +29,7 @@ function ProfileScreen() {
             <TouchableOpacity onPress={signOutUser} style={styles.button}>
                 <Text style={styles.signOutText}>Sign Out</Text>
             </TouchableOpacity>
-            <Text>My Library</Text>
+            <Text> My Library </Text>
         </SafeAreaView>
     )
 

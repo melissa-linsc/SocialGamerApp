@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { SafeAreaView, View, Text } from "react-native";
+import { SafeAreaView, View, Text, ScrollView, StyleSheet } from "react-native";
 import { Button } from "@rneui/themed";
 import { useAuth } from "../contexts/AuthContext";
+import GradientText from "react-native-gradient-texts";
 
 interface Game {
   title: string;
@@ -159,16 +160,16 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#2e2157",
-        paddingHorizontal: 10,
-      }}
-    >
-      <View>
+    <SafeAreaView style={styles.safeScroll}>
+      <ScrollView style={styles.container}>
+        <GradientText
+          text={"Gamerly"}
+          fontSize={50}
+          width={420}
+          locations={{ x: 210, y: 65 }}
+          isGradientFill
+          gradientColors={["#f20089", "#2d00f7"]}
+        />
         <Text style={{ color: "white", fontSize: 18, marginTop: 20 }}>
           Select At Least 3 Games:{" "}
         </Text>
@@ -190,9 +191,20 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
             }
           }}
         />
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({ 
+  safeScroll: {
+    backgroundColor: "#0a0a31",
+    justifyContent: "center"
+  },
+  container: {
+    backgroundColor: "#0a0a31",
+    padding: 30,
+  }
+})
 
 export default PreferencesScreen;

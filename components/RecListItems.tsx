@@ -6,6 +6,7 @@ import {
   Image,
   useWindowDimensions,
   ImageURISource,
+  ImageBackground
 } from "react-native";
 
 interface RecListItemsProps {
@@ -21,12 +22,14 @@ const RecListItems: React.FC<RecListItemsProps> = ({ item }) => {
 
   return (
     <View style={[styles.container]}>
+      <ImageBackground source={item.img} style={styles.background}>
       <Text style={[styles.title]}>{item.title}</Text>
       <Text style={styles.genres}>{item.genres.join(", ")}</Text>
-      <Image
+      {/* <Image
         source={item.img}
         style={[styles.image, { width, resizeMode: "contain" }]}
-      />
+      /> */}
+      </ImageBackground>
     </View>
   );
 };
@@ -37,6 +40,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     height: 250,
     marginBottom: 20,
+  },
+  background: {
+    flex: 1,
+    justifyContent: "center",
+    width: 500,
+    height: "120%",
+    alignItems: "center"
   },
   image: {
     justifyContent: "center",
