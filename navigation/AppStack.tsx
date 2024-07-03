@@ -37,12 +37,22 @@ const AppStack = () => {
       <Stack.Screen
         name="Chat"
         component={ChatScreen}
-        options={{ headerShown: true }}
+        options={{ headerShown: true,
+          headerStyle: {
+            backgroundColor: "#0a0a31"
+          },
+          headerTintColor: "#f20089"
+         }}
       />
       <Stack.Screen
         name="Messages"
         component={MessagesScreen}
-        options={{ headerShown: true }}
+        options={{ headerShown: true,
+          headerStyle: {
+            backgroundColor: "#0a0a31"
+          },
+          headerTintColor: "#f20089"
+         }}
       />
       <Stack.Screen
         name="Friends"

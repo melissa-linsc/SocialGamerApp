@@ -1,13 +1,13 @@
 import React, {useEffect, useState, useCallback} from 'react'
 import { Firestore } from 'firebase/firestore';
 
-import { SafeAreaView, StatusBar, ScrollView, View, FlatList, TouchableOpacity, Image, Text, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
+import { SafeAreaView, StatusBar, ScrollView, View, FlatList, TouchableOpacity, Image, Text, StyleSheet, KeyboardAvoidingView, Platform, Button} from 'react-native';
 import { collection, getDocs, updateDoc, doc, query, where, addDoc, FieldValue, arrayUnion, arrayRemove, getFirestore, orderBy, onSnapshot } from "firebase/firestore";
 import { serverTimestamp } from 'firebase/firestore';
 
 import { db } from '../firebase/config';
 import { useAuth } from '../contexts/AuthContext';
-import { GiftedChat, Bubble } from 'react-native-gifted-chat'
+import { GiftedChat, Bubble, InputToolbar, Send, Avatar } from 'react-native-gifted-chat'
 
 function MessagesScreen({user, route}) {
     const [messages, setMessages] = useState([]);
@@ -142,26 +142,64 @@ function MessagesScreen({user, route}) {
             );
         };
 
+        const renderAvatar = (props) => {
+            return (
+              <Avatar
+                {...props}
+                imageStyle={{
+                  left: { backgroundColor: '#f20089' }, // left (received) avatar background color
+                  right: { backgroundColor: '#4cc9f0' }, // right (sent) avatar background color
+                }}
+              />
+            );
+          };
+        
+          const renderInputToolbar = (props) => {
+            return (
+              <InputToolbar
+                {...props}
+                containerStyle={styles.inputToolbar}
+                // primaryStyle={{ alignItems: 'center' }}
+              />
+            );
+          };
+        
+          const renderSend = (props) => {
+            return (
+              <Send {...props} containerStyle={styles.sendingContainer}>
+                <View>
+                  <Button title="Send" color="#4cc9f0" />
+                </View>
+              </Send>
+            );
+          };
+
         return (
-            <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? "padding" : "height"}
-                style={{flex: 1}}
-            >
+            // <KeyboardAvoidingView
+            //     behavior={Platform.OS === 'ios' ? "padding" : "height"}
+            //     style={styles.container}
+            // >
+            <View style={styles.container}>
             <GiftedChat 
             renderBubble={renderBubble}
+            renderAvatar={renderAvatar}
+            renderInputToolbar={renderInputToolbar}
+            renderSend={renderSend}
             messages={messages}
             onSend={text => onSend(text)}
             user={{ 
               _id: loggedInUser.uid,
+              avatar: loggedInUser.photoURL
             }}
             />
-            </KeyboardAvoidingView>
+            {/* // </KeyboardAvoidingView> */}
+            </View>
         )
 }
 
 const styles = StyleSheet.create({
     rightBubble: {
-      backgroundColor: '#0a0a31',
+      backgroundColor: '#4cc9f0',
     },
     leftBubble: {
       backgroundColor: '#f20089',
@@ -172,6 +210,29 @@ const styles = StyleSheet.create({
     leftBubbleText: {
       color: '#fff',
     },
+    container: {
+        backgroundColor: "#0a0a31",
+        flex: 1,
+    },
+    inputToolbar: {
+        borderTopWidth: 2,
+        borderTopColor: '#f20089',
+        padding: 3,
+      },
+      sendingContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 5,
+        marginRight: 5,
+        backgroundColor: "#f20089",
+        borderRadius: 5,
+        fontSize: 10,
+        color: "#fff"
+        // padding: 10,
+      },
+      button: {
+        fontSize: 10,
+      }
   });
 
 
