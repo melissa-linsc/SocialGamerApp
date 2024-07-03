@@ -205,7 +205,7 @@ const FriendsScreen = ({navigation}) => {
                             style={styles.image}
                             source={{uri: item.avatar}}
                             /> 
-                            <Text style={styles.text}>{item.name}</Text>  
+                            <Text style={styles.text}>{item.name}  </Text>  
                             <Button title="Remove" onPress={() => handleRemoveFriend(item)}></Button>          
                         </View>
                 )}
@@ -221,7 +221,7 @@ const FriendsScreen = ({navigation}) => {
                             style={styles.image}
                             source={{uri: item.avatar}}
                             /> 
-                            <Text style={styles.text}>{item.name}</Text>  
+                            <Text style={styles.text}>{item.name}  </Text>  
                             {/* <Text>{item.req}</Text> */}
                             {!item.req.some(friend => friend.uid === loggedInUser.uid) ? <Button title="Add Friend" onPress={() => handleSendFriendRequest(item)}></Button> : null }                     
                         </View>

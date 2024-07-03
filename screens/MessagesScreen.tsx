@@ -1,3 +1,4 @@
+
 import React, {useEffect, useState, useCallback} from 'react'
 import { Firestore } from 'firebase/firestore';
 
@@ -140,7 +141,6 @@ function MessagesScreen({user, route}) {
                 }}
             />
             );
-        };
 
         const renderAvatar = (props) => {
             return (
@@ -234,4 +234,5 @@ const styles = StyleSheet.create({
   });
 
 
-export default MessagesScreen
+
+export default MessagesScreen;
