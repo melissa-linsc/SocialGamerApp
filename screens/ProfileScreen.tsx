@@ -97,6 +97,7 @@ function ProfileScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop: 60,
     flex: 1,
     backgroundColor: "#0a0a31",
     alignItems: "center",
@@ -128,7 +129,8 @@ const styles = StyleSheet.create({
     height: 100,
     backgroundColor: "#920075",
     borderRadius: 50,
-    marginTop: 20,
+    marginTop: 0,
+    paddingTop: 0,
   },
   signOutText: {
     color: "white",
