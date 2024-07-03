@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import { Firestore } from 'firebase/firestore';
 
 import { SafeAreaView, StatusBar, ScrollView, View, FlatList, TouchableOpacity, Image, Text } from 'react-native';
-import { collection, getDocs, updateDoc, doc, query, where, update, FieldValue, arrayUnion, arrayRemove } from "firebase/firestore";
+import { collection, getDocs, updateDoc, doc, query, where,  FieldValue, arrayUnion, arrayRemove } from "firebase/firestore";
 
 import { db } from '../firebase/config';
 import { useAuth } from '../contexts/AuthContext';
