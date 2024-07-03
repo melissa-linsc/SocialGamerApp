@@ -5,7 +5,6 @@ import {
   SafeAreaView,
   FlatList,
   Image,
-  TouchableOpacity,
   Button,
 } from "react-native";
 import { useAuth } from "../contexts/AuthContext";
@@ -19,13 +18,12 @@ import {
   doc,
   query,
   where,
-  update,
-  FieldValue,
   arrayUnion,
   arrayRemove,
 } from "firebase/firestore";
 
 import Header from "../components/Header";
+import React from "react";
 
 const FriendsScreen = ({ navigation }) => {
   const { loggedInUser, setLoggedInUser } = useAuth();
