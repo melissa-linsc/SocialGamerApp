@@ -176,8 +176,40 @@ const FriendsScreen = ({navigation}) => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <Header />
-            <View>
+            <View >
+                <Header />
+                <Text style={styles.subheading}>Friend Requests</Text>
+                <FlatList
+                    data={friendRequests}
+                    style={styles.list}
+                    keyExtractor={item => item.id}
+                    renderItem={({item}) => (
+                        <View style={styles.user}>
+                            <Image 
+                            style={styles.image}
+                            source={{uri: item.avatar}}
+                            /> 
+                            <Text style={styles.text}>{item.name}</Text>  
+                            <Button title="Accept" onPress={() => handleAddFriend(item)}></Button>          
+                        </View>
+                )}
+                />
+                <Text style={styles.subheading}>My Friends</Text>
+                <FlatList
+                    data={userFriends}
+                    style={styles.list}
+                    keyExtractor={item => item.id}
+                    renderItem={({item}) => (
+                        <View style={styles.user}>
+                            <Image 
+                            style={styles.image}
+                            source={{uri: item.avatar}}
+                            /> 
+                            <Text style={styles.text}>{item.name}</Text>  
+                            <Button title="Remove" onPress={() => handleRemoveFriend(item)}></Button>          
+                        </View>
+                )}
+                />
                 <Text style={styles.subheading}>Find Friends</Text>
                 <FlatList
                     data={users}
@@ -195,40 +227,7 @@ const FriendsScreen = ({navigation}) => {
                         </View>
                 )}
                 />
-                <Text style={styles.subheading}>My Friends</Text>
-                <FlatList
-                    data={userFriends}
-                    keyExtractor={item => item.id}
-                    renderItem={({item}) => (
-                        <View style={styles.user}>
-                            <Image 
-                            style={styles.image}
-                            source={{uri: item.avatar}}
-                            /> 
-                            <Text style={styles.text}>{item.name}</Text>  
-                            <Button title="Remove Friends" onPress={() => handleRemoveFriend(item)}></Button>          
-                        </View>
-                )}
-                />
-                <Text style={styles.subheading}>Friend Requests</Text>
-                <FlatList
-                    data={friendRequests}
-                    style={styles.list}
-                    keyExtractor={item => item.id}
-                    renderItem={({item}) => (
-                        <View style={styles.user}>
-                            <Image 
-                            style={styles.image}
-                            source={{uri: item.avatar}}
-                            /> 
-                            <Text style={styles.text}>{item.name}</Text>  
-                            <Button title="Accept" onPress={() => handleAddFriend(item)}></Button>          
-                        </View>
-                )}
-                />
-                <TouchableOpacity onPress={() => navigation.navigate("Home")} style={styles.homeButton}>
-                    <Text style={styles.text}>Home</Text>
-                </TouchableOpacity>
+                
             </View>
         </SafeAreaView>
     )
@@ -241,9 +240,12 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         padding: 20,
-        backgroundColor: "#17112c",
+        backgroundColor: "#0a0a31",
         flex: 1,
         margin: 0,
+    },
+    view: {
+        padding: 20,
     },
     list: {
         padding: 20,
@@ -270,6 +272,7 @@ const styles = StyleSheet.create({
     subheading: {
         color: "#d9d6e7",
         fontSize: 20,
+        paddingHorizontal: 30,
     },
     homeButton: {
         backgroundColor: "#920075",
