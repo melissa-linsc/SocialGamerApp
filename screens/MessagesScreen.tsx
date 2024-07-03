@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useCallback} from 'react'
 import { Firestore } from 'firebase/firestore';
 
-import { SafeAreaView, StatusBar, ScrollView, View, FlatList, TouchableOpacity, Image, Text, StyleSheet } from 'react-native';
+import { SafeAreaView, StatusBar, ScrollView, View, FlatList, TouchableOpacity, Image, Text, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { collection, getDocs, updateDoc, doc, query, where, addDoc, FieldValue, arrayUnion, arrayRemove, getFirestore, orderBy, onSnapshot } from "firebase/firestore";
 import { serverTimestamp } from 'firebase/firestore';
 
@@ -143,6 +143,10 @@ function MessagesScreen({user, route}) {
         };
 
         return (
+            <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? "padding" : "height"}
+                style={{flex: 1}}
+            >
             <GiftedChat 
             renderBubble={renderBubble}
             messages={messages}
@@ -151,6 +155,7 @@ function MessagesScreen({user, route}) {
               _id: loggedInUser.uid,
             }}
             />
+            </KeyboardAvoidingView>
         )
 }
 
