@@ -14,6 +14,7 @@ function ProfileScreen({navigation}) {
 
     const { loggedInUser, setLoggedInUser } = useAuth();
     const [loggedInUserDoc, setLoggedInUserDoc] = useState({})
+    const [ isLoading, setIsLoading ] = useState(true)
 
     const signOutUser = () => {
         signOut(authentication)
@@ -39,6 +40,7 @@ function ProfileScreen({navigation}) {
             })
 
             setLoggedInUserDoc(userData[0])
+            setIsLoading(false)
         })
         .catch((err) => {
             console.log(err.message)
@@ -47,6 +49,10 @@ function ProfileScreen({navigation}) {
 
     }, [])
 
+    if (isLoading) {
+      return <Text style={styles.title}>Loading...</Text>
+    }
+
     return (
         <SafeAreaView style={styles.container}>
           <ScrollView>
@@ -54,7 +60,7 @@ function ProfileScreen({navigation}) {
             <View style={styles.container}>
               <Image 
                   style={styles.image}
-                  source={{uri: loggedInUserDoc.avatar}}
+                  source={{uri: loggedInUser.photoURL}}
               /> 
               <Text style={styles.title}>{loggedInUser.displayName}</Text>
               <View>
