@@ -54,6 +54,11 @@ const CarouselItem = ({ item, index, scrollX }: Props) => {
           width: '90%',
           height: '100%',
           justifyContent: "flex-end",
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 1 },
+          shadowOpacity: 0.9,
+          shadowRadius: 5,
+          elevation: 10, // Android shadow
         }}
         imageStyle={{opacity: 0.6, borderRadius: 15}}
         resizeMode="cover"
