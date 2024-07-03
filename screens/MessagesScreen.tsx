@@ -164,27 +164,26 @@ function MessagesScreen({user, route}) {
             );
           };
         
-          const renderSend = (props) => {
-            return (
-              <Send {...props} containerStyle={styles.sendingContainer}>
-                <View>
-                  <Button title="Send" color="#4cc9f0" />
-                </View>
-              </Send>
-            );
-          };
+        //   const renderSend = (props) => {
+        //     return (
+        //       <Send {...props} containerStyle={styles.sendingContainer}>
+        //         <TouchableOpacity onPress={() => {props.onSend={text: props.text}}}>
+        //           <Text>Send</Text>
+        //         </TouchableOpacity>
+        //       </Send>
+        //     );
+        //   };
 
         return (
-            // <KeyboardAvoidingView
-            //     behavior={Platform.OS === 'ios' ? "padding" : "height"}
-            //     style={styles.container}
-            // >
-            <View style={styles.container}>
+            <KeyboardAvoidingView
+                // behavior={Platform.OS === 'ios' ? "padding" : "height"}
+                style={styles.container}
+            >
             <GiftedChat 
             renderBubble={renderBubble}
             renderAvatar={renderAvatar}
             renderInputToolbar={renderInputToolbar}
-            renderSend={renderSend}
+            // renderSend={renderSend}
             messages={messages}
             onSend={text => onSend(text)}
             user={{ 
@@ -192,8 +191,7 @@ function MessagesScreen({user, route}) {
               avatar: loggedInUser.photoURL
             }}
             />
-            {/* // </KeyboardAvoidingView> */}
-            </View>
+            </KeyboardAvoidingView>
         )
 }
 
@@ -215,8 +213,8 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     inputToolbar: {
-        borderTopWidth: 2,
-        borderTopColor: '#f20089',
+        // borderTopWidth: 2,
+        // borderTopColor: '#f20089',
         padding: 3,
       },
       sendingContainer: {

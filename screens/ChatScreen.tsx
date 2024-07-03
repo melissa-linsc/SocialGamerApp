@@ -32,7 +32,6 @@ const ChatScreen = ({user, navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
     <StatusBar />
-    <ScrollView>
       <View>
           <FlatList
               data={usersFriends}
@@ -54,7 +53,6 @@ const ChatScreen = ({user, navigation}) => {
               )}
               />
       </View>
-      </ScrollView>
   </SafeAreaView>
   )
 }
