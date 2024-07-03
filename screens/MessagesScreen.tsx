@@ -141,6 +141,7 @@ function MessagesScreen({user, route}) {
                 }}
             />
             );
+        }
 
         const renderAvatar = (props) => {
             return (
