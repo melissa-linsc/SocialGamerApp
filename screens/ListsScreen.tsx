@@ -12,7 +12,7 @@ interface RecGame {
   img: ImageURISource;
 }
 
-const ListScreen = () => {
+const ListScreen = ({navigation}) => {
   //   const scrollX = new Animated.Value(0);
 
   const recommendationsData: RecGame[] = [
@@ -39,7 +39,7 @@ const ListScreen = () => {
   return (
     <SafeAreaView style={styles.safeScroll}>
       <ScrollView>
-      <Header />
+      <Header navigation={navigation}/>
       <Text style={styles.subheading}>Your Recommendations</Text>
       <Carousel />
       <Text style={styles.subheading}>RPGs</Text>

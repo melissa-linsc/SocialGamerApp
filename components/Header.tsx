@@ -1,9 +1,9 @@
 import React from "react"
-import { StyleSheet, View, Text } from "react-native"
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native"
 import { Entypo } from '@expo/vector-icons';
 import GradientText from "react-native-gradient-texts";
 
-function Header() {
+function Header({navigation}) {
 
     return (
         <View style={styles.container}>
@@ -16,7 +16,9 @@ function Header() {
                 gradientColors={["#f20089", "#2d00f7"]}
             
             />
-            <Entypo name="chat" size={30} color="#f20089" />
+            <TouchableOpacity onPress={() => navigation.navigate("Chat")}>
+                <Entypo name="chat" size={30} color="#f20089" />
+            </TouchableOpacity>
         </View>
     )
 }

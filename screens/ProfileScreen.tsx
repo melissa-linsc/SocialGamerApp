@@ -10,7 +10,7 @@ import Carousel from "../components/Carousel";
 
 import Header from "../components/Header";
 
-function ProfileScreen() {
+function ProfileScreen({navigation}) {
 
     const { loggedInUser, setLoggedInUser } = useAuth();
     const [loggedInUserDoc, setLoggedInUserDoc] = useState({})
@@ -50,7 +50,7 @@ function ProfileScreen() {
     return (
         <SafeAreaView style={styles.container}>
           <ScrollView>
-            <Header />
+            <Header navigation={navigation}/>
             <View style={styles.container}>
               <Image 
                   style={styles.image}

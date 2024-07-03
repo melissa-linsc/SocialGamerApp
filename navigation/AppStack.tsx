@@ -5,6 +5,7 @@ import PreferencesScreen from "../screens/PreferencesScreen";
 import ListScreen from "../screens/ListsScreen";
 import BottomNav from "../components/BottomNav";
 import { StatusBar } from "react-native";
+import ChatScreen from "../screens/ChatScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -31,6 +32,11 @@ const AppStack = () => {
         name="Home"
         component={BottomNav}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Chat"
+        component={ChatScreen}
+        options={{ headerShown: true }}
       />
       <Stack.Screen
         name="Friends"

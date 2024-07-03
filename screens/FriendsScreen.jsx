@@ -177,7 +177,7 @@ const FriendsScreen = ({navigation}) => {
     return (
         <SafeAreaView style={styles.container}>
             <View >
-                <Header />
+                <Header navigation={navigation}/>
                 <Text style={styles.subheading}>Friend Requests</Text>
                 <FlatList
                     data={friendRequests}
