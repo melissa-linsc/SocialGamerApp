@@ -3,34 +3,29 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
-  useWindowDimensions,
-  ImageURISource,
-  ImageBackground
+  ImageBackground,
+  TouchableOpacity,
 } from "react-native";
 
 interface RecListItemsProps {
   item: {
     title: string;
     genres: string[];
-    img: ImageURISource;
+    img: any;
   };
+  onPress: () => void;
 }
 
-const RecListItems: React.FC<RecListItemsProps> = ({ item }) => {
-  const { width } = useWindowDimensions();
-
+const RecListItems: React.FC<RecListItemsProps> = ({ item, onPress }) => {
   return (
-    <View style={[styles.container]}>
-      <ImageBackground source={item.img} style={styles.background}>
-      <Text style={[styles.title]}>{item.title}</Text>
-      <Text style={styles.genres}>{item.genres.join(", ")}</Text>
-      {/* <Image
-        source={item.img}
-        style={[styles.image, { width, resizeMode: "contain" }]}
-      /> */}
-      </ImageBackground>
-    </View>
+    <TouchableOpacity onPress={onPress}>
+      <View style={[styles.container]}>
+        <ImageBackground source={item.img} style={styles.background}>
+          <Text style={[styles.title]}>{item.title}</Text>
+          <Text style={styles.genres}>{item.genres.join(", ")}</Text>
+        </ImageBackground>
+      </View>
+    </TouchableOpacity>
   );
 };
 
@@ -49,15 +44,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     opacity: 0.6,
   },
-  image: {
-    justifyContent: "center",
-    width: 200,
-    height: 200,
-  },
   title: {
     fontWeight: "800",
     fontSize: 28,
-
     color: "#493d8a",
     textAlign: "center",
   },

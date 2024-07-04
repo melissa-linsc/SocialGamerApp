@@ -161,16 +161,13 @@ const FriendsScreen = ({ navigation }) => {
       where("uid", "==", item.uid)
     );
 
-    // Execute the query
     getDocs(userQuery)
       .then((querySnapshot) => {
         if (!querySnapshot.empty) {
-          // Assuming there is only one document matching the query
           const userToRemoveDoc = querySnapshot.docs[0];
           const userToRemoveDocRef = doc(db, "users", userToRemoveDoc.id);
 
           const currentUserRef = doc(db, "users", loggedInUserDoc.id);
-          // Update the realFriend array field using arrayUnion
           updateDoc(userToRemoveDocRef, {
             realFriend: arrayRemove(loggedInUserDoc),
           });
