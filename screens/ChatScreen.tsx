@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react'
-import { Firestore } from 'firebase/firestore';
 
-import { SafeAreaView, StatusBar, ScrollView, View, FlatList, TouchableOpacity, Image, Text } from 'react-native';
-import { collection, getDocs, updateDoc, doc, query, where,  FieldValue, arrayUnion, arrayRemove } from "firebase/firestore";
+import { SafeAreaView, StatusBar, ScrollView, View, FlatList, TouchableOpacity, Image, Text, StyleSheet } from 'react-native';
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { Ionicons } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 
 import { db } from '../firebase/config';
 import { useAuth } from '../contexts/AuthContext';
@@ -28,31 +29,67 @@ const ChatScreen = ({user, navigation}) => {
         })
   },[])
 
-console.log(usersFriends)
   return (
-    <SafeAreaView >
+    <SafeAreaView style={styles.container}>
     <StatusBar />
-    <ScrollView>
       <View>
           <FlatList
               data={usersFriends}
               keyExtractor={(item)=>item.uid}
               renderItem={({item}) => (
-              <TouchableOpacity onPress={() => navigation.navigate('Messages', {name: item.name, uid: item.uid})} >
-                  <View>
-                        <Image source={{uri: item.avatar}} />
-                    <View >
-                        <Text >{item.name}</Text>
-                        <Text >{item.email}</Text>
+              <TouchableOpacity onPress={() => navigation.navigate('Messages', {name: item.name, uid: item.uid})}>
+                  <View style={styles.friendCards}>
+                    <View style={styles.friend}>
+                        <Image source={{uri: item.avatar}} style={styles.image}/>
+                        <View >
+                            <Text style={styles.name}>{item.name}</Text>
+                        </View>
+                    </View>
+                    <View style={styles.icon}>
+                    <Entypo name="arrow-with-circle-right" size={24} color="#f20089" />
                     </View>
                   </View>
                   </TouchableOpacity>
               )}
               />
       </View>
-      </ScrollView>
   </SafeAreaView>
   )
 }
+
+const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: "#0a0a31"
+    },
+    friendCards: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        borderBottomWidth: 1,
+        borderColor: "#fff",
+    },
+    friend: {
+      flexDirection: "row",
+      alignItems: "center",
+      padding: 10,
+      marginLeft: 10,
+    },
+    name: {
+        fontSize: 20,
+        color: "#fff",
+        padding: 10,
+    },
+    image: {
+        width: 60,
+        height: 60,
+        borderRadius: 15,
+        backgroundColor: "#fff"
+    },
+    icon: {
+        justifyContent: "flex-end",
+        marginRight: 20,
+    }
+})
 
 export default ChatScreen

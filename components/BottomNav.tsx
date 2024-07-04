@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, {useEffect} from 'react';
+import { View, StyleSheet, StatusBar } from 'react-native';
 
 import { CommonActions } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -16,6 +16,12 @@ import ListScreen from '../screens/ListsScreen';
 const Tab = createBottomTabNavigator();
 
 export default function BottomNav() {
+
+  useEffect(() => {
+    // Set status bar style when component mounts
+    StatusBar.setBarStyle('light-content'); // or 'dark-content'
+  }, []);
+
   return (
     <Tab.Navigator
       screenOptions={{

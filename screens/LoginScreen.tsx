@@ -3,7 +3,6 @@ import {
   View,
   Text,
   TextInput,
-  Button,
   StyleSheet,
   Image,
   TouchableOpacity,
@@ -115,7 +114,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
     flex: 1,
-    backgroundColor: "#0a0a31"
+    backgroundColor: "#0a0a31",
   },
   label: {
     fontSize: 16,

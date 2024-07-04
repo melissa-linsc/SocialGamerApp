@@ -1,11 +1,11 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {
   ScrollView,
   View,
   ImageURISource,
   Text,
   Animated,
-  StyleSheet,
+  StyleSheet, StatusBar,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import RecListItems from "../components/RecListItems";
@@ -21,6 +21,10 @@ interface RecGame {
 
 const ListScreen = ({ navigation }) => {
   //   const scrollX = new Animated.Value(0);
+  useEffect(() => {
+    // Set status bar style when component mounts
+    StatusBar.setBarStyle('light-content'); // or 'dark-content'
+  }, []);
 
   const recommendationsData: RecGame[] = [
     {
