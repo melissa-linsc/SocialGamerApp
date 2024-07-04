@@ -61,7 +61,7 @@ const AppStack = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="OneGame"
+        name="Back To Home"
         component={OneGame}
         options={{
           headerShown: true,

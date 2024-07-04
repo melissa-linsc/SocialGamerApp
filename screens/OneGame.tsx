@@ -3,6 +3,8 @@ import { Text, Image, StyleSheet, ScrollView } from "react-native";
 
 const OneGame = ({ route }) => {
   const { game } = route.params;
+//   console.log(game);
+  
 
   return (
     <ScrollView style={styles.container}>

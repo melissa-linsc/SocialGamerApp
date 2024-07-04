@@ -51,7 +51,7 @@ const CarouselItem = ({ item, index, scrollX }: Props) => {
   });
 
   const handlePress = () => {
-    navigation.navigate("OneGame", { game: item });
+    navigation.navigate("Back To Home", { game: item });
   };
 
   return (
