@@ -15,13 +15,8 @@ import { signOut } from "firebase/auth";
 import {
   collection,
   getDocs,
-  updateDoc,
-  doc,
   query,
   where,
-  FieldValue,
-  arrayUnion,
-  arrayRemove,
 } from "firebase/firestore";
 
 import Carousel from "../components/Carousel";
@@ -53,7 +48,6 @@ function ProfileScreen({ navigation }) {
     getDocs(userRef)
       .then((snapshot) => {
         let userData = [];
-        // console.log(snapshot.docs)
         snapshot.docs.forEach((doc) => {
           userData.push({ ...doc.data(), id: doc.id });
         });

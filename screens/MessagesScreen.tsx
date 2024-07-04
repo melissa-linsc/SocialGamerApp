@@ -22,11 +22,8 @@ function MessagesScreen({user, route}) {
         
             // Create a reference to the collection
             const messagesRef = collection(db, 'Chats', chatid, 'messages');
-        
-            // Create a query against the collection
             const q = query(messagesRef, orderBy('createdAt', 'desc'));
-        
-            // Set up the real-time listener
+      
             const unsubscribe = onSnapshot(q, (snapshot) => {
               const allTheMsgs = snapshot.docs.map((docSnap) => {
                 const data = docSnap.data();
@@ -39,7 +36,7 @@ function MessagesScreen({user, route}) {
               setMessages(allTheMsgs);
             });
         
-            // Clean up the listener on unmount
+            
             return () => unsubscribe();
           }, [uid, loggedInUser]);
         
@@ -96,7 +93,6 @@ function MessagesScreen({user, route}) {
               <InputToolbar
                 {...props}
                 containerStyle={styles.inputToolbar}
-                // primaryStyle={{ alignItems: 'center' }}
               />
             );
           };
@@ -132,14 +128,12 @@ function MessagesScreen({user, route}) {
 
         return (
             <KeyboardAvoidingView
-                // behavior={Platform.OS === 'ios' ? "padding" : "height"}
                 style={styles.container}
             >
             <GiftedChat 
             renderBubble={renderBubble}
             renderAvatar={renderAvatar}
             renderInputToolbar={renderInputToolbar}
-            // renderSend={renderSend}
             messages={messages}
             onSend={text => onSend(text)}
             user={{ 
@@ -169,8 +163,6 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     inputToolbar: {
-        // borderTopWidth: 2,
-        // borderTopColor: '#f20089',
         padding: 3,
       },
       sendingContainer: {
@@ -182,7 +174,6 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         fontSize: 10,
         color: "#fff"
-        // padding: 10,
       },
       button: {
         fontSize: 10,

@@ -100,18 +100,17 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
         />
       );
 
-      // Create a new row after every 3 buttons
+      
       if ((index + 1) % 3 === 0) {
         rows.push(
           <View key={index} style={{ flexDirection: "row", marginBottom: 10 }}>
             {row}
           </View>
         );
-        row = []; // Reset row array
+        row = []; 
       }
     });
 
-    // Push the last row if it's not empty
     if (row.length > 0) {
       rows.push(
         <View key="lastRow" style={{ flexDirection: "row", marginBottom: 10 }}>

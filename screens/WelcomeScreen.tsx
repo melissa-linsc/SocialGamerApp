@@ -1,19 +1,15 @@
 import React from "react";
 import {
-  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  Image,
-  ImageBackground
 } from "react-native";
 import GradientText from "react-native-gradient-texts";
 
 const WelcomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      {/* <ImageBackground source={require('../assets/geometric-shapes-neon-lights-background/3449559.jpg')} resizeMode="cover" style={styles.background}> */}
       <GradientText
         text={"Gamerly"}
         fontSize={60}
@@ -38,7 +34,6 @@ const WelcomeScreen = ({ navigation }) => {
       >
         <Text style={styles.buttonText}>Sign Up</Text>
       </TouchableOpacity>
-      {/* </ImageBackground> */}
     </View>
   );
 };

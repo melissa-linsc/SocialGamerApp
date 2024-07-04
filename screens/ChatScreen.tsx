@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react'
 
-import { SafeAreaView, StatusBar, ScrollView, View, FlatList, TouchableOpacity, Image, Text, StyleSheet } from 'react-native';
+import { SafeAreaView, StatusBar, View, FlatList, TouchableOpacity, Image, Text, StyleSheet } from 'react-native';
 import { collection, getDocs, query, where } from "firebase/firestore";
-import { Ionicons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 
 import { db } from '../firebase/config';
@@ -18,7 +17,6 @@ const ChatScreen = ({user, navigation}) => {
   useEffect(()=>{
     getDocs(q).then((snapshot) => {
         let userData = []
-        // console.log(snapshot.docs)
         snapshot.docs.forEach((doc) => {
             userData.push({...doc.data(), id:doc.id })
         })

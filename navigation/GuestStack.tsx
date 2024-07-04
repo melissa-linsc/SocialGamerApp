@@ -10,8 +10,7 @@ const Stack = createNativeStackNavigator();
 const GuestStack = () => {
 
   useEffect(() => {
-    // Set status bar style when component mounts
-    StatusBar.setBarStyle('light-content'); // or 'dark-content'
+    StatusBar.setBarStyle('dark-content'); 
   }, []);
 
   return (
