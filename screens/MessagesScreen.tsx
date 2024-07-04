@@ -3,7 +3,7 @@ import React, {useEffect, useState, useCallback} from 'react'
 import { Firestore } from 'firebase/firestore';
 
 import { SafeAreaView, StatusBar, ScrollView, View, FlatList, TouchableOpacity, Image, Text, StyleSheet, KeyboardAvoidingView, Platform, Button} from 'react-native';
-import { collection, getDocs, updateDoc, doc, query, where, addDoc, FieldValue, arrayUnion, arrayRemove, getFirestore, orderBy, onSnapshot } from "firebase/firestore";
+import { collection, getDocs, updateDoc, doc, query, where, addDoc, FieldValue, arrayUnion, arrayRemove, getFirestore, orderBy, onSnapshot, writeBatch } from "firebase/firestore";
 import { serverTimestamp } from 'firebase/firestore';
 
 import { db } from '../firebase/config';
@@ -15,76 +15,10 @@ function MessagesScreen({user, route}) {
     const {name, uid}  = route.params
     const { loggedInUser, setLoggedInUser } = useAuth();
 
-        // useEffect(() => {
-        //     setMessages([
-        //     {
-        //         _id: 1,
-        //         text: 'Hello developer ',
-        //         createdAt: new Date(),
-        //         user: {
-        //         _id: 2,
-        //         name: 'React Native',
-        //         avatar: 'https://placeimg.com/140/140/any',
-        //         },
-        //     },
-        //     ])
-        // }, [])
 
-        // const onSend = async (msgArray) => {
-        //     const msg = msgArray[0];
-        //     const usermsg = {
-        //       ...msg,
-        //       sentBy: loggedInUser.uid,
-        //       sentTo: uid,
-        //       createdAt: new Date(),
-        //     };
-        //     setMessages((previousMessages) => GiftedChat.append(previousMessages, usermsg));
-          
-        //     const chatId = uid > loggedInUser.uid ? `${loggedInUser.uid}-${uid}` : `${uid}-${loggedInUser.uid}`;
-          
-        //     try {
-        //       await addDoc(collection(db, 'Chats', chatId, 'messages'), {
-        //         ...usermsg,
-        //         createdAt: serverTimestamp(),
-        //       });
-        //     } catch (error) {
-        //       console.error('Error adding document: ', error);
-        //     }
-        //   };
+    const chatid = uid > loggedInUser.uid ? `${loggedInUser.uid}-${uid}` : `${uid}-${loggedInUser.uid}`;
 
-        // const getAllMessages = async () => {
-        //     const chatid = uid > loggedInUser.uid ? loggedInUser.uid+"-"+uid : uid+"-"+loggedInUser.uid   
-        //       // Create a reference to the collection
-        //     const messagesRef = collection(db, 'Chats', chatid, 'messages');
-            
-        //     // Create a query against the collection
-        //     const q = query(messagesRef, orderBy('createdAt', 'desc'));
-  
-        //     try {
-        //         // Fetch the documents
-        //         const msgResponse = await getDocs(q);
-
-        //         // Map the documents to a format suitable for your state
-        //         const allTheMsgs = msgResponse.docs.map(docSnap => {
-        //         const data = docSnap.data();
-        //         return {
-        //             ...data,
-        //             createdAt: data.createdAt.toDate(),
-        //         };
-        //         });
-
-        //         // Update the state with the messages
-        //         setMessages(allTheMsgs);
-        //     } catch (error) {
-        //         console.error('Error getting messages: ', error);
-        //     }
-        //     };
-          
-        //   useEffect(() => {
-        //     getAllMessages()
-        //   },[]);
         useEffect(() => {
-            const chatid = uid > loggedInUser.uid ? `${loggedInUser.uid}-${uid}` : `${uid}-${loggedInUser.uid}`;
         
             // Create a reference to the collection
             const messagesRef = collection(db, 'Chats', chatid, 'messages');
@@ -120,6 +54,8 @@ function MessagesScreen({user, route}) {
                 createdAt: new Date(),
                 text,
                 user,
+                read: false,
+                receiver: uid
               });
             } catch (error) {
               console.error('Error sending message:', error);
@@ -164,7 +100,26 @@ function MessagesScreen({user, route}) {
               />
             );
           };
+
+          const markMessagesAsRead = async (chatid) => {
+            const q = query(
+              collection(db, 'Chats', chatid, 'messages'),
+              where('read', '==', false)
+            );
+            const snapshot = await getDocs(q);
+          
+            const batch = writeBatch(db);
+          
+            snapshot.forEach(doc => {
+              batch.update(doc.ref, { read: true });
+            });
+          
+            await batch.commit();
+          };
         
+          useEffect(() => {
+            markMessagesAsRead(chatid)
+          }, [chatid])
         //   const renderSend = (props) => {
         //     return (
         //       <Send {...props} containerStyle={styles.sendingContainer}>
