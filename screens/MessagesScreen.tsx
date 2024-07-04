@@ -3,7 +3,7 @@ import React, {useEffect, useState, useCallback} from 'react'
 import { Firestore } from 'firebase/firestore';
 
 import { SafeAreaView, StatusBar, ScrollView, View, FlatList, TouchableOpacity, Image, Text, StyleSheet, KeyboardAvoidingView, Platform, Button} from 'react-native';
-import { collection, getDocs, updateDoc, doc, query, where, addDoc, FieldValue, arrayUnion, arrayRemove, getFirestore, orderBy, onSnapshot } from "firebase/firestore";
+import { collection, getDocs, updateDoc, doc, query, where, addDoc, FieldValue, arrayUnion, arrayRemove, getFirestore, orderBy, onSnapshot, writeBatch } from "firebase/firestore";
 import { serverTimestamp } from 'firebase/firestore';
 
 import { db } from '../firebase/config';
@@ -14,6 +14,9 @@ function MessagesScreen({user, route}) {
     const [messages, setMessages] = useState([]);
     const {name, uid}  = route.params
     const { loggedInUser, setLoggedInUser } = useAuth();
+
+
+    const chatid = uid > loggedInUser.uid ? `${loggedInUser.uid}-${uid}` : `${uid}-${loggedInUser.uid}`;
 
         useEffect(() => {
             const chatid = uid > loggedInUser.uid ? `${loggedInUser.uid}-${uid}` : `${uid}-${loggedInUser.uid}`;
@@ -47,6 +50,8 @@ function MessagesScreen({user, route}) {
                 createdAt: new Date(),
                 text,
                 user,
+                read: false,
+                receiver: uid
               });
             } catch (error) {
               console.error('Error sending message:', error);
@@ -90,7 +95,35 @@ function MessagesScreen({user, route}) {
               />
             );
           };
+
+          const markMessagesAsRead = async (chatid) => {
+            const q = query(
+              collection(db, 'Chats', chatid, 'messages'),
+              where('read', '==', false)
+            );
+            const snapshot = await getDocs(q);
+          
+            const batch = writeBatch(db);
+          
+            snapshot.forEach(doc => {
+              batch.update(doc.ref, { read: true });
+            });
+          
+            await batch.commit();
+          };
         
+          useEffect(() => {
+            markMessagesAsRead(chatid)
+          }, [chatid])
+        //   const renderSend = (props) => {
+        //     return (
+        //       <Send {...props} containerStyle={styles.sendingContainer}>
+        //         <TouchableOpacity onPress={() => {props.onSend={text: props.text}}}>
+        //           <Text>Send</Text>
+        //         </TouchableOpacity>
+        //       </Send>
+        //     );
+        //   };
 
         return (
             <KeyboardAvoidingView
