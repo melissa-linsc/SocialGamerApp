@@ -1,18 +1,22 @@
 import React from "react";
+import { Linking } from "react-native";
+import { Button } from "@rneui/themed";
 import {
   Text,
   Image,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  View,
 } from "react-native";
 
 const OneGame = ({ route }) => {
   const { game } = route.params;
-  //   const splitPlatforms = game.platforms.join(", ");
 
-  const handlePlatform = (eachPlatform, index) => {
-    console.log(eachPlatform);
+  const handlePlatform = (url) => {
+    Linking.openURL(url).catch((err) =>
+      console.error("Couldn't load page", err)
+    );
   };
 
   return (
@@ -21,17 +25,18 @@ const OneGame = ({ route }) => {
       <Image source={game.img} style={styles.image} />
       <Text style={styles.description}>{game.description}</Text>
       <Text style={styles.genres}>Genres: {game.genres.join(", ")}</Text>
-      <Text style={styles.genres}>
-        Available On: {game.platforms.join(", ")}
-      </Text>
-      {game.platforms.map((eachPlatform, index) => (
-        <TouchableOpacity
-          key={index}
-          onPress={() => handlePlatform(eachPlatform)}
-        >
-          <Text style={styles.platform}>{eachPlatform.name}</Text>
-        </TouchableOpacity>
-      ))}
+      <View style={styles.platformContainer}>
+        <Text style={styles.availableOn}>Available On: </Text>
+        {game.platforms.map((eachPlatform, index) => (
+          <TouchableOpacity
+            key={index}
+            onPress={() => handlePlatform(eachPlatform.url)}
+            style={styles.button}
+          >
+            <Text style={styles.buttonText}>{eachPlatform.name} </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
     </ScrollView>
   );
 };
@@ -69,6 +74,29 @@ const styles = StyleSheet.create({
     alignContent: "center",
     marginLeft: "auto",
     marginRight: "auto",
+  },
+  platformContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
+    flexWrap: "wrap",
+  },
+  availableOn: {
+    color: "#fff",
+    fontSize: 15,
+    textAlign: "center",
+  },
+  button: {
+    backgroundColor: "#f20089",
+    padding: 5,
+    margin: 5,
+    borderRadius: 5,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 15,
   },
 });
 
