@@ -6,10 +6,13 @@ import {
   FlatList,
   Image,
   Button,
+  TouchableOpacity,
 } from "react-native";
 import { useAuth } from "../contexts/AuthContext";
 import { useState, useEffect } from "react";
 import { db } from "../firebase/config";
+
+import { Ionicons } from '@expo/vector-icons';
 
 import {
   collection,
@@ -36,46 +39,6 @@ const FriendsScreen = ({ navigation }) => {
   const [users, setUsers] = useState([]);
   const [friendRequests, setFriendRequests] = useState([]);
 
-  // useEffect(() => {
-
-  //   const q = query(
-  //     collection(db, "users"),
-  //     where("uid", "!=", loggedInUser.uid)
-  //   );
-
-  //   const userRef = query(
-  //     collection(db, "users"),
-  //     where("uid", "==", loggedInUser.uid)
-  //   );
-
-  //   getDocs(q)
-  //     .then((snapshot) => {
-  //       let userData = [];
-  //       snapshot.docs.forEach((doc) => {
-  //         userData.push({ ...doc.data(), id: doc.id });
-  //       });
-  //       setUsers(userData);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err.message);
-  //     });
-
-  //   getDocs(userRef)
-  //     .then((snapshot) => {
-  //       let userData = [];
-  //       // console.log(snapshot.docs)
-  //       snapshot.docs.forEach((doc) => {
-  //         userData.push({ ...doc.data(), id: doc.id });
-  //       });
-
-  //       setLoggedInUserDoc(userData[0]);
-  //       setUserFriends(userData[0].realFriend);
-  //       setFriendRequests(userData[0].req);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err.message);
-  //     });
-  // }, []);
 
   useEffect(() => {
     const usersRef = collection(db, 'users');
@@ -87,6 +50,7 @@ const FriendsScreen = ({ navigation }) => {
       snapshot.docs.forEach((doc) => {
         userData.push({ ...doc.data(), id: doc.id });
       });
+  
       setUsers(userData);
     }, (error) => {
       console.log('Error fetching users:', error.message);
@@ -102,6 +66,9 @@ const FriendsScreen = ({ navigation }) => {
         setLoggedInUserDoc(userData[0]);
         setUserFriends(userData[0].realFriend);
         setFriendRequests(userData[0].req);
+
+        console.log(userData[0].realFriend)
+        console.log(users)
       }
     }, (error) => {
       console.log('Error fetching logged-in user:', error.message);
@@ -178,17 +145,22 @@ const FriendsScreen = ({ navigation }) => {
             return [item, ...currFriends];
           });
 
+          setUsers((currUsers) => {
+            return currUsers.filter((user) => user.uid !== item.uid);
+          });  
+
           setFriendRequests((currFriendRequests) => {
             return currFriendRequests.filter((friend) => {
               return friend.uid !== item.uid;
             });
           });
+          
         } else {
           throw new Error("No matching user document found.");
         }
       })
       .then(() => {
-        console.log("Real friends updated successfully!");
+        console.log("Real friends updated successfully!"); 
       })
       .catch((error) => {
         console.error("Error updating real friends:", error);
@@ -208,9 +180,20 @@ const FriendsScreen = ({ navigation }) => {
         return updateDoc(loggedInUserDocRef, {
             realFriend: loggedInUserDoc.realFriend.filter(friend => friend.uid !== item.uid)
         });
+
     })
     .then(() => {
         console.log('Friends removed successfully.');
+        setUsers((currUsers) => {
+          // Check if the removed friend is already in the users list
+          const isFriendInList = currUsers.some(user => user.uid === item.uid);
+          if (!isFriendInList) {
+            // If not already in the list, add them back
+            return [...currUsers, item];
+          }
+          // Otherwise, return the current list as is
+          return currUsers;
+        });
     })
     .catch(error => {
         console.error('Error removing friends:', error.message);
@@ -230,10 +213,12 @@ const FriendsScreen = ({ navigation }) => {
             <View style={styles.user}>
               <Image style={styles.image} source={{ uri: item.avatar }} />
               <Text style={styles.text}>{item.name}</Text>
-              <Button
-                title="Accept"
-                onPress={() => handleAddFriend(item)}
-              ></Button>
+              <TouchableOpacity
+                  onPress={() => handleAddFriend(item)}
+                  style={styles.button}
+                >
+                  <Text style={styles.text}>Accept</Text>
+                </TouchableOpacity>
             </View>
           )}
         />
@@ -246,10 +231,12 @@ const FriendsScreen = ({ navigation }) => {
             <View style={styles.user}>
               <Image style={styles.image} source={{ uri: item.avatar }} />
               <Text style={styles.text}>{item.name} </Text>
-              <Button
-                title="Remove"
-                onPress={() => handleRemoveFriend(item)}
-              ></Button>
+              <TouchableOpacity
+                  onPress={() => handleRemoveFriend(item)}
+                  style={styles.button}
+                >
+                  <Text style={styles.text}>Remove</Text>
+                </TouchableOpacity>
             </View>
           )}
         />
@@ -264,11 +251,17 @@ const FriendsScreen = ({ navigation }) => {
               <Text style={styles.text}>{item.name} </Text>
 
               {!item.req.some((friend) => friend.uid === loggedInUser.uid) ? (
-                <Button
-                  title="Add Friend"
+                <TouchableOpacity
                   onPress={() => handleSendFriendRequest(item)}
-                ></Button>
-              ) : null}
+                  style={styles.button}
+                >
+                  <Text style={styles.text}>Add</Text>
+                </TouchableOpacity>
+              ) : <TouchableOpacity
+              style={styles.disabledButton}
+            >
+              <Text style={styles.text}>Request Sent</Text>
+            </TouchableOpacity>}
             </View>
           )}
         />
@@ -317,10 +310,17 @@ const styles = StyleSheet.create({
     fontSize: 20,
     paddingHorizontal: 30,
   },
-  homeButton: {
-    backgroundColor: "#920075",
+  button: {
+    backgroundColor: "#f20089",
     padding: 10,
-    borderRadius: 50,
-    margin: 20,
+    borderRadius: 10,
+    color: "#fff",
   },
+  disabledButton: {
+    borderWidth: 2,
+    borderColor: "#fff",
+    padding: 10,
+    borderRadius: 10,
+    color: "#fff",
+  }
 });
