@@ -20,6 +20,8 @@ import {
   where,
   arrayUnion,
   arrayRemove,
+  onSnapshot,
+  writeBatch
 } from "firebase/firestore";
 
 import Header from "../components/Header";
@@ -34,47 +36,85 @@ const FriendsScreen = ({ navigation }) => {
   const [users, setUsers] = useState([]);
   const [friendRequests, setFriendRequests] = useState([]);
 
+  // useEffect(() => {
+
+  //   const q = query(
+  //     collection(db, "users"),
+  //     where("uid", "!=", loggedInUser.uid)
+  //   );
+
+  //   const userRef = query(
+  //     collection(db, "users"),
+  //     where("uid", "==", loggedInUser.uid)
+  //   );
+
+  //   getDocs(q)
+  //     .then((snapshot) => {
+  //       let userData = [];
+  //       snapshot.docs.forEach((doc) => {
+  //         userData.push({ ...doc.data(), id: doc.id });
+  //       });
+  //       setUsers(userData);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err.message);
+  //     });
+
+  //   getDocs(userRef)
+  //     .then((snapshot) => {
+  //       let userData = [];
+  //       // console.log(snapshot.docs)
+  //       snapshot.docs.forEach((doc) => {
+  //         userData.push({ ...doc.data(), id: doc.id });
+  //       });
+
+  //       setLoggedInUserDoc(userData[0]);
+  //       setUserFriends(userData[0].realFriend);
+  //       setFriendRequests(userData[0].req);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err.message);
+  //     });
+  // }, []);
+
   useEffect(() => {
-    const usersRef = collection(db, "users");
+    const usersRef = collection(db, 'users');
+    const q = query(usersRef, where('uid', '!=', loggedInUser.uid));
+    const userRef = query(usersRef, where('uid', '==', loggedInUser.uid));
 
-    const q = query(
-      collection(db, "users"),
-      where("uid", "!=", loggedInUser.uid)
-    );
+    const unsubscribeUsers = onSnapshot(q, (snapshot) => {
+      let userData = [];
+      snapshot.docs.forEach((doc) => {
+        userData.push({ ...doc.data(), id: doc.id });
+      });
+      setUsers(userData);
+    }, (error) => {
+      console.log('Error fetching users:', error.message);
+    });
 
-    const userRef = query(
-      collection(db, "users"),
-      where("uid", "==", loggedInUser.uid)
-    );
-
-    getDocs(q)
-      .then((snapshot) => {
-        let userData = [];
-        snapshot.docs.forEach((doc) => {
-          userData.push({ ...doc.data(), id: doc.id });
-        });
-        setUsers(userData);
-      })
-      .catch((err) => {
-        console.log(err.message);
+    const unsubscribeUserRef = onSnapshot(userRef, (snapshot) => {
+      let userData = [];
+      snapshot.docs.forEach((doc) => {
+        userData.push({ ...doc.data(), id: doc.id });
       });
 
-    getDocs(userRef)
-      .then((snapshot) => {
-        let userData = [];
-        // console.log(snapshot.docs)
-        snapshot.docs.forEach((doc) => {
-          userData.push({ ...doc.data(), id: doc.id });
-        });
-
+      if (userData[0]) {
         setLoggedInUserDoc(userData[0]);
         setUserFriends(userData[0].realFriend);
         setFriendRequests(userData[0].req);
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
-  }, []);
+      }
+    }, (error) => {
+      console.log('Error fetching logged-in user:', error.message);
+    });
+
+    // Cleanup listeners on unmount
+    return () => {
+      unsubscribeUsers();
+      unsubscribeUserRef();
+    };
+  }, [loggedInUser.uid]);
+
+
 
   function handleSendFriendRequest(item) {
     const userQuery = query(
@@ -156,41 +196,25 @@ const FriendsScreen = ({ navigation }) => {
   }
 
   function handleRemoveFriend(item) {
-    const userQuery = query(
-      collection(db, "users"),
-      where("uid", "==", item.uid)
-    );
+    const itemDocRef = doc(db, 'users', item.id);
+    const loggedInUserDocRef = doc(db, 'users', loggedInUserDoc.id);
 
-    getDocs(userQuery)
-      .then((querySnapshot) => {
-        if (!querySnapshot.empty) {
-          const userToRemoveDoc = querySnapshot.docs[0];
-          const userToRemoveDocRef = doc(db, "users", userToRemoveDoc.id);
-
-          const currentUserRef = doc(db, "users", loggedInUserDoc.id);
-          updateDoc(userToRemoveDocRef, {
-            realFriend: arrayRemove(loggedInUserDoc),
-          });
-
-          updateDoc(currentUserRef, {
-            realFriend: arrayRemove(item),
-          });
-
-          setUserFriends((currFriends) => {
-            return currFriends.filter((friend) => {
-              return friend.uid !== item.uid;
-            });
-          });
-        } else {
-          throw new Error("No matching user document found.");
-        }
-      })
-      .then(() => {
-        console.log("Real friends updated successfully!");
-      })
-      .catch((error) => {
-        console.error("Error updating real friends:", error);
-      });
+    // Update item's document to remove loggedInUser from realFriend array
+    updateDoc(itemDocRef, {
+        realFriend: item.realFriend.filter(friend => friend.uid !== loggedInUserDoc.uid)
+    })
+    .then(() => {
+        // Update loggedInUser's document to remove item from realFriend array
+        return updateDoc(loggedInUserDocRef, {
+            realFriend: loggedInUserDoc.realFriend.filter(friend => friend.uid !== item.uid)
+        });
+    })
+    .then(() => {
+        console.log('Friends removed successfully.');
+    })
+    .catch(error => {
+        console.error('Error removing friends:', error.message);
+    });
   }
 
   return (
