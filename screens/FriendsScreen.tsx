@@ -45,17 +45,6 @@ const FriendsScreen = ({ navigation }) => {
     const q = query(usersRef, where('uid', '!=', loggedInUser.uid));
     const userRef = query(usersRef, where('uid', '==', loggedInUser.uid));
 
-    const unsubscribeUsers = onSnapshot(q, (snapshot) => {
-      let userData = [];
-      snapshot.docs.forEach((doc) => {
-        userData.push({ ...doc.data(), id: doc.id });
-      });
-  
-      setUsers(userData);
-    }, (error) => {
-      console.log('Error fetching users:', error.message);
-    });
-
     const unsubscribeUserRef = onSnapshot(userRef, (snapshot) => {
       let userData = [];
       snapshot.docs.forEach((doc) => {
@@ -67,17 +56,27 @@ const FriendsScreen = ({ navigation }) => {
         setUserFriends(userData[0].realFriend);
         setFriendRequests(userData[0].req);
 
-        console.log(userData[0].realFriend)
-        console.log(users)
       }
     }, (error) => {
       console.log('Error fetching logged-in user:', error.message);
     });
 
+    const unsubscribeUsers = onSnapshot(q, (snapshot) => {
+      let userData = [];
+      snapshot.docs.forEach((doc) => {
+        userData.push({ ...doc.data(), id: doc.id });
+      });
+
+      setUsers(userData);
+
+    }, (error) => {
+      console.log('Error fetching users:', error.message);
+    });
+
     // Cleanup listeners on unmount
     return () => {
-      unsubscribeUsers();
       unsubscribeUserRef();
+      unsubscribeUsers();
     };
   }, [loggedInUser.uid]);
 
@@ -118,6 +117,10 @@ const FriendsScreen = ({ navigation }) => {
       where("uid", "==", item.uid)
     );
 
+    if (userFriends.some(friend => friend.uid === item.uid)) {
+      console.log("Friend already added");
+      return;  
+    }
     // Execute the query
     getDocs(userQuery)
       .then((querySnapshot) => {
@@ -146,7 +149,8 @@ const FriendsScreen = ({ navigation }) => {
           });
 
           setUsers((currUsers) => {
-            return currUsers.filter((user) => user.uid !== item.uid);
+            console.log(currUsers)
+            return currUsers.filter((user) => { return user.uid !== item.uid});
           });  
 
           setFriendRequests((currFriendRequests) => {
@@ -200,9 +204,23 @@ const FriendsScreen = ({ navigation }) => {
     });
   }
 
+  function handleDeclineFriend(item) {
+    const currentUserRef = doc(db, "users", loggedInUserDoc.id);
+
+    updateDoc(currentUserRef, {
+      req: arrayRemove(item),
+    });
+
+    setFriendRequests((currFriendRequests) => {
+      return currFriendRequests.filter((friend) => {
+        return friend.uid !== item.uid;
+      });
+    });
+  }
+
   return (
     <SafeAreaView style={styles.container}>
-      <View>
+      <View style={styles.view}>
         <Header navigation={navigation} />
         <Text style={styles.subheading}>Friend Requests</Text>
         <FlatList
@@ -211,14 +229,24 @@ const FriendsScreen = ({ navigation }) => {
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <View style={styles.user}>
-              <Image style={styles.image} source={{ uri: item.avatar }} />
-              <Text style={styles.text}>{item.name}</Text>
-              <TouchableOpacity
-                  onPress={() => handleAddFriend(item)}
-                  style={styles.button}
-                >
-                  <Text style={styles.text}>Accept</Text>
-                </TouchableOpacity>
+                <Image style={styles.image} source={{ uri: item.avatar }} />
+                <View style={styles.friendRequest}>
+                  <Text style={styles.text}>{item.name} sent you a friend request!</Text>
+                  <View style={styles.acceptDecline}>
+                      <TouchableOpacity
+                      onPress={() => handleAddFriend(item)}
+                      style={styles.button}
+                    >
+                      <Text style={styles.text}>Accept</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => handleDeclineFriend(item)}
+                      style={styles.button}
+                    >
+                      <Text style={styles.text}>Decline</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
             </View>
           )}
         />
@@ -229,8 +257,10 @@ const FriendsScreen = ({ navigation }) => {
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <View style={styles.user}>
-              <Image style={styles.image} source={{ uri: item.avatar }} />
-              <Text style={styles.text}>{item.name} </Text>
+                <View style={styles.userInfo}>
+                  <Image style={styles.image} source={{ uri: item.avatar }} />
+                  <Text style={styles.text}>{item.name}</Text>
+                </View>
               <TouchableOpacity
                   onPress={() => handleRemoveFriend(item)}
                   style={styles.button}
@@ -241,29 +271,41 @@ const FriendsScreen = ({ navigation }) => {
           )}
         />
         <Text style={styles.subheading}>Find Friends</Text>
+   
         <FlatList
           data={users}
           style={styles.list}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View style={styles.user}>
-              <Image style={styles.image} source={{ uri: item.avatar }} />
-              <Text style={styles.text}>{item.name} </Text>
-
-              {!item.req.some((friend) => friend.uid === loggedInUser.uid) ? (
-                <TouchableOpacity
-                  onPress={() => handleSendFriendRequest(item)}
-                  style={styles.button}
-                >
-                  <Text style={styles.text}>Add</Text>
-                </TouchableOpacity>
-              ) : <TouchableOpacity
-              style={styles.disabledButton}
-            >
-              <Text style={styles.text}>Request Sent</Text>
-            </TouchableOpacity>}
-            </View>
-          )}
+          renderItem={({ item }) => {
+            const isFriend = userFriends.some((friend) => friend.uid === item.uid);
+            const requestSent = item.req.some((friend) => friend.uid === loggedInUser.uid);
+  
+            return (
+              <View style={styles.user}>
+                <View style={styles.userInfo}>
+                  <Image style={styles.image} source={{ uri: item.avatar }} />
+                  <Text style={styles.text}>{item.name}</Text>
+                </View>
+  
+                {isFriend ? (
+                  <TouchableOpacity style={styles.disabledButton}>
+                    <Text style={styles.text}>Friends</Text>
+                  </TouchableOpacity>
+                ) : requestSent ? (
+                  <TouchableOpacity style={styles.disabledButton}>
+                    <Text style={styles.text}>Request Sent</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    onPress={() => handleSendFriendRequest(item)}
+                    style={styles.button}
+                  >
+                    <Text style={styles.text}>Add</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            );
+          }}
         />
       </View>
     </SafeAreaView>
@@ -280,10 +322,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   view: {
-    padding: 20,
+    // padding: 20,
   },
   list: {
-    padding: 20,
+    paddingBottom: 20,
   },
   image: {
     width: 50,
@@ -294,16 +336,23 @@ const styles = StyleSheet.create({
   },
   user: {
     // padding: 20,
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
     padding: 20,
-    margin: 10,
+    marginHorizontal: 20,
+    marginVertical: 10,
     borderRadius: 15,
     backgroundColor: "#292441",
   },
+  userInfo: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   text: {
     color: "#fff",
+    textAlign: "center",
   },
   subheading: {
     color: "#d9d6e7",
@@ -315,6 +364,8 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     color: "#fff",
+    width: 90,
+    justifyContent: "center",
   },
   disabledButton: {
     borderWidth: 2,
@@ -322,5 +373,16 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     color: "#fff",
-  }
+  },
+  friendRequest: {
+    flexDirection: "column",
+    marginRight: 20,
+    paddingRight: 20,
+    marginHorizontal: 20,
+    marginVertical: 10,
+  },
+  acceptDecline: {
+    flexDirection: "row",
+    justifyContent: "space-between"
+  },
 });
