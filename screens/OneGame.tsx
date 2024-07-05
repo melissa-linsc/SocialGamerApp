@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { Linking } from "react-native";
-import { Button } from "@rneui/themed";
+import { Rating } from "react-native-ratings";
 import {
   Text,
   Image,
@@ -11,6 +11,7 @@ import {
 } from "react-native";
 
 const OneGame = ({ route }) => {
+  const [rating, setRating] = useState(0);
   const { game } = route.params;
 
   const handlePlatform = (url) => {
@@ -19,10 +20,21 @@ const OneGame = ({ route }) => {
     );
   };
 
+  const onRatingCompleted = (rating) => {
+    setRating(rating);
+  };
+
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>{game.title}</Text>
       <Image source={game.img} style={styles.image} />
+      <View style={styles.ratingContainer}>
+        <Rating
+          showRating={false}
+          onFinishRating={onRatingCompleted}
+          tintColor="#0a0a31"
+        />
+      </View>
       <Text style={styles.description}>{game.description}</Text>
       <Text style={styles.genres}>Genres: {game.genres.join(", ")}</Text>
       <View style={styles.platformContainer}>
@@ -97,6 +109,10 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#fff",
     fontSize: 15,
+  },
+  ratingContainer: {
+    marginTop: 15,
+    
   },
 });
 
