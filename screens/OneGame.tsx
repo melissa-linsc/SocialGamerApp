@@ -15,6 +15,7 @@ import {
   Portal,
   Modal,
   Button,
+  ActivityIndicator
 } from "react-native-paper";
 import GradientText from "react-native-gradient-texts";
 import { getGameById } from "../utils/api";
@@ -60,8 +61,8 @@ const OneGame = ({ route, visible, animateFrom }) => {
   };
 
   if (isLoading) {
-    return <View>
-      <Text>Loading...</Text>
+    return <View style={{flex: 1, backgroundColor: "#0a0a31"}}>
+      <ActivityIndicator animating={true} color="#f20089" size="large"/>
     </View>
   }
 
