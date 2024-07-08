@@ -29,7 +29,7 @@ const ListScreen = ({ navigation }) => {
 
   const renderItem = ({ item }) => (
     <TouchableOpacity style={styles.searchResults} onPress={() => handlePress(item)}>
-      <Text style={{ color: '#f20089' }}>{item.slug}</Text>
+      <Text style={{ color: '#fff' }}>{item.slug}</Text>
       <Feather name="arrow-right-circle" size={24} color="#f20089" />
     </TouchableOpacity>
   );
