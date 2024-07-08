@@ -3,63 +3,40 @@ import { SafeAreaView, View, Text, ScrollView, StyleSheet } from "react-native";
 import { Button, ThemeProvider } from "@rneui/themed";
 import { useAuth } from "../contexts/AuthContext";
 import GradientText from "react-native-gradient-texts";
-
-interface Game {
-  title: string;
-  genres: string[];
-}
+import { fetchGames, fetchGenres } from "../utils/api";
 
 const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
-  const { loggedInUser, setLoggedInUser } = useAuth();
+  const [genres, setGenres] = useState([]);
+  const [games, setGames] = useState([]);
   const [preferences, setPreferences] = useState<string[]>([]);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [uniqueGenres, setUniqueGenres] = useState<string[]>([]);
 
-
-  const gameDataExample: Game[] = [
-    {
-      title: "Stardew Valley",
-      genres: ["indie", "rpg", "adventure", "simulation"],
-    },
-    {
-      title: "Elden Ring",
-      genres: ["rpg", "adventure", "survival", "action", "fantasy"],
-    },
-    { title: "The Sims 4", genres: ["simulation"] },
-    {
-      title: "Baldur's Gate 3",
-      genres: ["rpg", "adventure", "action", "fantasy"],
-    },
-    { title: "Minecraft", genres: ["sandbox"] },
-    { title: "League of Legends", genres: ["moba", "fantasy"] },
-    { title: "Animal Crossing", genres: ["simulation"] },
-    { title: "Hollow Knight", genres: ["action", "adventure"] },
-    { title: "Hades", genres: ["roguelike", "action"] },
-    { title: "The Legend of Zelda", genres: ["action", "adventure", "rpg"] },
-    { title: "Super Mario Bros", genres: ["platform", "adventure"] },
-    { title: "Grand Theft Auto", genres: ["action", "adventure"] },
-    { title: "Persona 5 Royal", genres: ["rpg", "jrpg", "action"] },
-    {
-      title: "Final Fantasy IX",
-      genres: ["rpg", "action", "adventure", "fantasy"],
-    },
-    { title: "Undertale", genres: ["indie", "adventure", "rpg"] },
-    { title: "FIFA", genres: ["sports"] },
-    { title: "Pokemon", genres: ["action", "rpg", "fighting"] },
-    { title: "Kingdom Hearts", genres: ["action", "adventure", "fantasy"] },
-    { title: "Kirby and the Forgotten Land", genres: ["fantasy"] },
-    {
-      title: "Ratchet and Clank",
-      genres: ["fantasy", "adventure", "platform"],
-    },
-  ];
-
   useEffect(() => {
-    const genres = new Set<string>();
-    gameDataExample.forEach((game) => {
-      game.genres.forEach((genre) => genres.add(genre));
-    });
-    setUniqueGenres(Array.from(genres));
+    fetchGames()
+      .then((result) => {
+        const top20Games = result.slice(0, 20);
+        setGames(top20Games);
+      })
+      .catch((error) => {
+        console.error("Error fetching games:", error);
+      });
+
+    fetchGenres()
+      .then((result) => {
+        const filteredGenres = result.filter(
+          (genre) =>
+            genre.name !== "Educational" &&
+            genre.name !== "Family" &&
+            genre.name !== "Board Games" &&
+            genre.name !== "Card"
+        );
+        const genreNames = filteredGenres.map((genre) => genre.name);
+        setUniqueGenres(genreNames);
+      })
+      .catch((error) => {
+        console.error("Error fetching genres:", error);
+      });
   }, []);
 
   const handlePress = (title: string) => {
@@ -82,35 +59,42 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
     });
   };
 
-  // Function to render buttons in rows
   const renderButtons = () => {
     let rows: JSX.Element[] = [];
     let row: JSX.Element[] = [];
 
-    gameDataExample.forEach((button, index) => {
+    games.forEach((game, index) => {
       row.push(
         <Button
           key={index}
-          title={button.title}
-          type={preferences.includes(button.title) ? "solid" : "outline"}
+          title={game.name}
+          type={preferences.includes(game.name) ? "solid" : "outline"}
           containerStyle={{ flex: 1, margin: 5 }}
-          onPress={() => handlePress(button.title)}
-          buttonStyle={preferences.includes(button.title) ? styles.pressedButton : styles.button }
-          titleStyle={preferences.includes(button.title) ? styles.pressedButtonTitle : styles.buttonTitle}
+          onPress={() => handlePress(game.name)}
+          buttonStyle={
+            preferences.includes(game.name)
+              ? styles.pressedButton
+              : styles.button
+          }
+          titleStyle={
+            preferences.includes(game.name)
+              ? styles.pressedButtonTitle
+              : styles.buttonTitle
+          }
         />
       );
 
-      
       if ((index + 1) % 3 === 0) {
         rows.push(
           <View key={index} style={{ flexDirection: "row", marginBottom: 10 }}>
             {row}
           </View>
         );
-        row = []; 
+        row = [];
       }
     });
 
+    // Push the last row if there are remaining buttons
     if (row.length > 0) {
       rows.push(
         <View key="lastRow" style={{ flexDirection: "row", marginBottom: 10 }}>
@@ -134,8 +118,16 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
           type={selectedGenres.includes(genre) ? "solid" : "outline"}
           containerStyle={{ flex: 1, margin: 5 }}
           onPress={() => handleGenrePress(genre)}
-          buttonStyle={selectedGenres.includes(genre) ? styles.pressedButton : styles.button }
-          titleStyle={selectedGenres.includes(genre) ? styles.pressedButtonTitle : styles.buttonTitle}
+          buttonStyle={
+            selectedGenres.includes(genre)
+              ? styles.pressedButton
+              : styles.button
+          }
+          titleStyle={
+            selectedGenres.includes(genre)
+              ? styles.pressedButtonTitle
+              : styles.buttonTitle
+          }
         />
       );
 
@@ -149,6 +141,7 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
       }
     });
 
+    // Push the last row if there are remaining buttons
     if (row.length > 0) {
       rows.push(
         <View
@@ -196,18 +189,26 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
           }}
           disabledStyle={styles.continueButtonDisabled}
           disabledTitleStyle={styles.continueButtonTitleDisabled}
-          buttonStyle={preferences.length >= 3 && selectedGenres.length >= 3 ? styles.continueButtonEnabled : null}
-          titleStyle={preferences.length >= 3 && selectedGenres.length >= 3 ? styles.continueButtonTitleEnabled : null}
+          buttonStyle={
+            preferences.length >= 3 && selectedGenres.length >= 3
+              ? styles.continueButtonEnabled
+              : null
+          }
+          titleStyle={
+            preferences.length >= 3 && selectedGenres.length >= 3
+              ? styles.continueButtonTitleEnabled
+              : null
+          }
         />
       </ScrollView>
     </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({ 
+const styles = StyleSheet.create({
   safeScroll: {
     backgroundColor: "#0a0a31",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   container: {
     backgroundColor: "#0a0a31",
@@ -248,7 +249,7 @@ const styles = StyleSheet.create({
   },
   continueButtonTitleDisabled: {
     color: "#fff",
-  }
-})
+  },
+});
 
 export default PreferencesScreen;
