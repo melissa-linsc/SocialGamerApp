@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Linking } from "react-native";
-import { Rating } from "react-native-ratings";
+import { Rating, AirbnbRating } from "react-native-elements";
 import {
   Text,
   Image,
@@ -142,13 +142,14 @@ const OneGame = ({ route, visible, animateFrom }) => {
             ))}
         </View>
           <View style={styles.ratingContainer}>
-            <Rating
+            <AirbnbRating
               showRating={false}
               onFinishRating={onRatingCompleted}
-              tintColor="#0a0a31"
-              ratingBackgroundColor="#00ff15"
-              ratingColor="#ff0000"
-        
+              defaultRating={3}
+              // tintColor="#0a0a31"
+              // ratingBackgroundColor="#00ff15"
+              // ratingColor="#ff0000"
+              // type='heart'
               // style={{ borderWidth: 0, padding: 2, borderColor: "#00ff15" }}
             />
           </View>

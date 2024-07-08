@@ -4,6 +4,7 @@ import { Button, ThemeProvider } from "@rneui/themed";
 import { useAuth } from "../contexts/AuthContext";
 import GradientText from "react-native-gradient-texts";
 import { fetchGames, fetchGenres } from "../utils/api";
+import { ActivityIndicator } from "react-native-paper";
 
 const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [genres, setGenres] = useState([]);
@@ -11,6 +12,8 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [preferences, setPreferences] = useState<string[]>([]);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [uniqueGenres, setUniqueGenres] = useState<string[]>([]);
+
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     fetchGames()
@@ -33,6 +36,7 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
         );
         const genreNames = filteredGenres.map((genre) => genre.name);
         setUniqueGenres(genreNames);
+        setIsLoading(false)
       })
       .catch((error) => {
         console.error("Error fetching genres:", error);
@@ -155,6 +159,12 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
 
     return rows;
   };
+
+  if (isLoading) {
+    return <SafeAreaView style={{flex: 1, backgroundColor: "#0a0a31"}}>
+      <ActivityIndicator animating={true} color="#f20089" size="large"/>
+    </SafeAreaView>
+  }
 
   return (
     <SafeAreaView style={styles.safeScroll}>

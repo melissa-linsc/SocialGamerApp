@@ -177,6 +177,9 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     marginTop: 10,
   },
+  errorText: {
+    color: "#fff"
+  }
 });
 
 export default LoginScreen;

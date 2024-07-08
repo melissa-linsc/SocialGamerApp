@@ -62,9 +62,9 @@ const ListScreen = ({ navigation }) => {
   }
 
   if (isLoading) {
-    return <View style={{flex: 1, backgroundColor: "#0a0a31"}}>
+    return <SafeAreaView style={{flex: 1, backgroundColor: "#0a0a31"}}>
       <ActivityIndicator animating={true} color="#f20089" size="large"/>
-    </View>
+    </SafeAreaView>
   }
 
   return (
