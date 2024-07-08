@@ -8,7 +8,7 @@ import Animated, {
 import CarouselItem from "./CarouselItem";
 import { items } from "./items";
 
-export default function Carousel() {
+export default function Carousel({games}) {
   const scrollX = useSharedValue(0);
   const onScrollHandler = useAnimatedScrollHandler((event) => {
     scrollX.value = event.contentOffset.x;
@@ -21,7 +21,7 @@ export default function Carousel() {
         horizontal
         onScroll={onScrollHandler}
         showsHorizontalScrollIndicator={false}
-        data={items}
+        data={games}
         keyExtractor={(item) => item.id}
         pagingEnabled
         renderItem={({ item, index }) => {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Linking } from "react-native";
-import { Rating } from "react-native-ratings";
+import { Rating, AirbnbRating } from "react-native-elements";
 import {
   Text,
   Image,
@@ -15,6 +15,7 @@ import {
   Portal,
   Modal,
   Button,
+  ActivityIndicator
 } from "react-native-paper";
 import GradientText from "react-native-gradient-texts";
 import { getGameById } from "../utils/api";
@@ -60,8 +61,8 @@ const OneGame = ({ route, visible, animateFrom }) => {
   };
 
   if (isLoading) {
-    return <View>
-      <Text>Loading...</Text>
+    return <View style={{flex: 1, backgroundColor: "#0a0a31"}}>
+      <ActivityIndicator animating={true} color="#f20089" size="large"/>
     </View>
   }
 
@@ -141,13 +142,14 @@ const OneGame = ({ route, visible, animateFrom }) => {
             ))}
         </View>
           <View style={styles.ratingContainer}>
-            <Rating
+            <AirbnbRating
               showRating={false}
               onFinishRating={onRatingCompleted}
-              tintColor="#0a0a31"
-              ratingBackgroundColor="#00ff15"
-              ratingColor="#ff0000"
-        
+              defaultRating={3}
+              // tintColor="#0a0a31"
+              // ratingBackgroundColor="#00ff15"
+              // ratingColor="#ff0000"
+              // type='heart'
               // style={{ borderWidth: 0, padding: 2, borderColor: "#00ff15" }}
             />
           </View>

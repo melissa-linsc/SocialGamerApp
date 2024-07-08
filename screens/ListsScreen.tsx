@@ -5,15 +5,19 @@ import { ScrollView, Text, StatusBar, StyleSheet, FlatList, View, TouchableOpaci
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../components/Header";
 import Carousel from "../components/Carousel";
-import { Searchbar } from 'react-native-paper';
+import { Searchbar, Chip, ActivityIndicator } from 'react-native-paper';
 import { Feather } from '@expo/vector-icons';
-
-import { getSearchedGames } from "../utils/api";
+import { formatGameTitle } from "../utils/utils";
+import { getSearchedGames, fetchGenres, getGamesByGenre } from "../utils/api";
 
 const ListScreen = ({ navigation }) => {
 
   const [searchQuery, setSearchQuery] = useState("")
   const [searchResults, setSearchResults] = useState([])
+  const [genres, setGenres] = useState([])
+  const [selectedGenre, setSelectedGenre] = useState("racing")
+  const [selectedGenreGames, setSelectedGenreGames] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     StatusBar.setBarStyle("light-content");
@@ -21,7 +25,26 @@ const ListScreen = ({ navigation }) => {
     getSearchedGames(searchQuery).then((results) => {
       setSearchResults(results)
     })
-  }, [searchQuery]);
+
+    fetchGenres().then((results) => {
+      const filteredGenres = results.filter((genre) => {
+        if (genre.slug !== 'card' 
+          && genre.slug !== 'board-games' 
+          && genre.slug !== 'family' 
+          && genre.slug !== 'educational' 
+        ) {
+          return genre
+        }
+      })
+      setGenres(filteredGenres)
+    })
+
+    getGamesByGenre(selectedGenre).then((result) => {
+      setSelectedGenreGames(result)
+      setIsLoading(false)
+    })
+
+  }, [searchQuery, selectedGenre]);
 
   const handlePress = (item) => {
     navigation.navigate("Back To Home", { game: item, gameid: item.id });
@@ -34,11 +57,20 @@ const ListScreen = ({ navigation }) => {
     </TouchableOpacity>
   );
 
- 
+  const handleGenrePress = (genre) => {
+    setSelectedGenre(genre)
+  }
+
+  if (isLoading) {
+    return <SafeAreaView style={{flex: 1, backgroundColor: "#0a0a31"}}>
+      <ActivityIndicator animating={true} color="#f20089" size="large"/>
+    </SafeAreaView>
+  }
 
   return (
     <SafeAreaView style={styles.safeScroll}>
       <ScrollView>
+        <View style={styles.view}>
         <Header navigation={navigation} />
           <Searchbar
             placeholder="Search for a game"
@@ -50,13 +82,27 @@ const ListScreen = ({ navigation }) => {
         data={searchResults}
         renderItem={renderItem}
         keyExtractor={(item) => item.id} // Use a unique key extractor
-      /> : null}
+        /> : null}
+        <Text style={styles.subheading}>Browse Genres</Text>
+        <ScrollView style={styles.genreChipContainer} horizontal>
+          {genres.map((genre) => {
+            return <Chip 
+            style={genre.slug === selectedGenre ? styles.selectedChip : styles.genreChip}
+            selectedColor="#000"
+            elevated={true}
+            onPress={() => {handleGenrePress(genre.slug)}}
+            key={genre.id}
+            >{genre.slug}</Chip>
+          })}
+        </ScrollView>
+        <Carousel games={selectedGenreGames}/>
         <Text style={styles.subheading}>Your Recommendations</Text>
         <Carousel />
         <Text style={styles.subheading}>RPGs</Text>
         <Carousel />
         <Text style={styles.subheading}>Top Rated Games</Text>
         <Carousel />
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -64,14 +110,21 @@ const ListScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   safeScroll: {
-    paddingTop: 10,
+    // paddingTop: 10,
+    paddingBottom: 0,
+    margin: 0,
     backgroundColor: "#0a0a31",
+  },
+  view: {
+    paddingBottom: 0,
+    margin: 0,
   },
   subheading: {
     color: "#fff",
     fontSize: 20,
     textAlign: "center",
     marginBottom: 10,
+    fontWeight: "bold",
   },
   searchbar: {
     margin: 20,
@@ -90,6 +143,22 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
    },
+   genreChip: {
+    backgroundColor: "#fff",
+    padding: 0,
+    margin: 10,
+   },
+   genreChipContainer: {
+    flexDirection: "row",
+    margin: 10,
+    marginHorizontal: 20,
+   },
+   selectedChip: {
+    backgroundColor: "#f20089",
+    padding: 0,
+    margin: 10,
+    color: "#fff",
+   }
 });
 
 export default ListScreen;

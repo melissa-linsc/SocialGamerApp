@@ -11,6 +11,7 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 import { useNavigation } from "@react-navigation/native";
+import { formatGameTitle } from "../utils/utils";
 
 type Props = {
   item: {
@@ -51,7 +52,7 @@ const CarouselItem = ({ item, index, scrollX }: Props) => {
   });
 
   const handlePress = () => {
-    navigation.navigate("Back To Home", { game: item });
+    navigation.navigate("Back To Home", { game: item, gameid: item.id });
   };
 
   return (
@@ -67,7 +68,7 @@ const CarouselItem = ({ item, index, scrollX }: Props) => {
         style={{ width: "90%", height: "100%" }}
       >
         <ImageBackground
-          source={item.img}
+          source={{uri: item.background_image}}
           style={{
             width: "100%",
             height: "100%",
@@ -81,7 +82,7 @@ const CarouselItem = ({ item, index, scrollX }: Props) => {
           imageStyle={{ opacity: 0.6, borderRadius: 15 }}
           resizeMode="cover"
         >
-          <Text style={styles.title}>{item.title}</Text>
+          <Text style={styles.title}>{formatGameTitle(item.slug)}</Text>
         </ImageBackground>
       </TouchableOpacity>
     </Animated.View>
