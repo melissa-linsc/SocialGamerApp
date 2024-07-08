@@ -41,7 +41,7 @@ const ListScreen = ({ navigation }) => {
       <ScrollView>
         <Header navigation={navigation} />
           <Searchbar
-            placeholder="Search"
+            placeholder="Search for a game"
             onChangeText={setSearchQuery}
             value={searchQuery}
             style={styles.searchbar}
