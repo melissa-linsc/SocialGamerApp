@@ -70,6 +70,7 @@ const ListScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.safeScroll}>
       <ScrollView>
+        <View style={styles.view}>
         <Header navigation={navigation} />
           <Searchbar
             placeholder="Search for a game"
@@ -101,6 +102,7 @@ const ListScreen = ({ navigation }) => {
         <Carousel />
         <Text style={styles.subheading}>Top Rated Games</Text>
         <Carousel />
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -108,8 +110,14 @@ const ListScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   safeScroll: {
-    paddingTop: 10,
+    // paddingTop: 10,
+    paddingBottom: 0,
+    margin: 0,
     backgroundColor: "#0a0a31",
+  },
+  view: {
+    paddingBottom: 0,
+    margin: 0,
   },
   subheading: {
     color: "#fff",
