@@ -53,6 +53,10 @@ const OneGame = ({ route, visible, animateFrom }) => {
             showRating={false}
             onFinishRating={onRatingCompleted}
             tintColor="#0a0a31"
+            ratingBackgroundColor="#00ff15"
+            ratingColor="#ff0000"
+      
+            // style={{ borderWidth: 0, padding: 2, borderColor: "#00ff15" }}
           />
         </View>
         <Text style={styles.description}>{game.description}</Text>
@@ -104,11 +108,11 @@ const OneGame = ({ route, visible, animateFrom }) => {
       </Portal>
       <AnimatedFAB
         icon="plus"
-        label="Add to Collection"
+        label="            Add"
         extended={true}
         onPress={openOptions}
         visible={visible}
-        animateFrom={"right"}
+        animateFrom={"left"}
         iconMode="static"
         style={styles.fabStyle}
       />
@@ -120,6 +124,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#0a0a31",
+    paddingHorizontal: 10,
   },
   image: {
     width: "75%",
@@ -144,7 +149,6 @@ const styles = StyleSheet.create({
     color: "#fff",
     textAlign: "center",
     marginTop: 20,
-    width: 400,
     fontSize: 17,
     alignContent: "center",
     marginLeft: "auto",
@@ -156,6 +160,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 20,
     flexWrap: "wrap",
+    marginBottom: 150,
   },
   availableOn: {
     color: "#fff",
@@ -175,18 +180,19 @@ const styles = StyleSheet.create({
   },
   ratingContainer: {
     marginTop: 15,
+    // outline: 'none'
   },
   fabStyle: {
-    position: "absolute",
-    bottom: 90,
+    bottom: 50,
     justifyContent: "center",
     alignSelf: "center",
     marginHorizontal: 10,
     padding: 8,
+    paddingLeft: 0,
     backgroundColor: "#f20089",
   },
   modalContent: {
-    backgroundColor: "#3f4386",
+    backgroundColor: "#0a0a31",
     padding: 20,
     marginHorizontal: 20,
     borderRadius: 15,

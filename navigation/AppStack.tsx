@@ -13,7 +13,7 @@ const Stack = createNativeStackNavigator();
 
 const AppStack = () => {
   useEffect(() => {
-    StatusBar.setBarStyle("dark-content"); 
+    StatusBar.setBarStyle("dark-content");
   }, []);
 
   return (
@@ -64,6 +64,8 @@ const AppStack = () => {
         name="Back To Home"
         component={OneGame}
         options={{
+          headerBackTitleVisible: true,
+          headerTitle: "",
           headerShown: true,
           headerStyle: {
             backgroundColor: "#0a0a31",
