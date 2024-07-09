@@ -11,7 +11,7 @@ import {
 import { useAuth } from "../contexts/AuthContext";
 import { authentication, db } from "../firebase/config";
 import { signOut } from "firebase/auth";
-
+import { ActivityIndicator } from "react-native-paper";
 import {
   collection,
   getDocs,
@@ -22,11 +22,13 @@ import {
 import Carousel from "../components/Carousel";
 
 import Header from "../components/Header";
+import { fetchUserById } from "../utils/api";
 
 function ProfileScreen({ navigation }) {
   const { loggedInUser, setLoggedInUser } = useAuth();
   const [loggedInUserDoc, setLoggedInUserDoc] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [profileData, setProfileData] = useState({})
 
   const signOutUser = () => {
     signOut(authentication)
@@ -53,15 +55,21 @@ function ProfileScreen({ navigation }) {
         });
 
         setLoggedInUserDoc(userData[0]);
-        setIsLoading(false);
       })
       .catch((err) => {
         console.log(err.message);
       });
+
+      fetchUserById(loggedInUser.uid).then((result) => {
+        setProfileData(result)
+        setIsLoading(false);
+      })
   }, []);
 
   if (isLoading) {
-    return <Text style={styles.title}>Loading...</Text>;
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#0a0a31" }}>
+      <ActivityIndicator animating={true} color="#f20089" size="large" />
+    </SafeAreaView>
   }
 
   return (
@@ -69,10 +77,10 @@ function ProfileScreen({ navigation }) {
       <ScrollView>
         <Header navigation={navigation} />
         <View style={styles.container}>
-          <Image style={styles.image} source={{ uri: loggedInUser.photoURL }} />
-          <Text style={styles.title}>{loggedInUser.displayName} </Text>
+          <Image style={styles.image} source={{ uri: profileData.avatar }} />
+          <Text style={styles.title}>{profileData.name} </Text>
           <View>
-            <Text style={styles.text}>Email: {loggedInUser.email} </Text>
+            <Text style={styles.text}>Email: {profileData.email} </Text>
           </View>
         </View>
         <Text style={styles.text}> My Library </Text>
