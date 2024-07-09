@@ -73,12 +73,6 @@ export const fetchUsers = () => {
     });
 };
 
-// app.post("/api/users/:userId/wishlist/add", postToWishlist);
-// app.delete("/api/users/:userId/wishlist/delete/:toDel", deleteFromWishlist);
-
-// app.post("/api/users/:userId/preferences/add", postPreference);
-// app.delete("/api/users/:userId/preferences/delete/:toDel", deletePreference);
-
 //get user by id
 export const fetchUserById = (userId) => {
   return gamerly
@@ -90,3 +84,43 @@ export const fetchUserById = (userId) => {
       console.error("Error fetching user:", error);
     });
 };
+
+// post to wishlist
+export const postToWishlist = (userId, gameId) => {
+  return gamerly
+    .post(`/users/${userId}/wishlist/add`, {
+      gameId: gameId,
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      console.error("Error adding game to wishlist:", error);
+    });
+};
+
+// delete from wishlist
+export const deleteFromWishlist = (userId, toDel) => {
+  return gamerly.delete(`/users/${userId}/wishlist/delete/${toDel}`);
+};
+
+// post to preferences
+export const postToPreferences = (userId, gameId) => {
+  return gamerly
+    .post(`/users/${userId}/preferences/add`, {
+      gameId: gameId,
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      console.error("Error adding game to wishlist:", error);
+    });
+};
+
+
+// delete from preferences
+export const deleteFromPreferences = (userId, toDel) => {
+  return gamerly.delete(`/users/${userId}/preferences/delete/${toDel}`);
+};
+
