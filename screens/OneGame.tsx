@@ -32,10 +32,10 @@ const OneGame = ({ route, visible, animateFrom }) => {
 
   useEffect(() => {
     getGameById(gameid).then((result) => {
-      setGameData(result);
-      setIsLoading(false);
-    });
-  }, []);
+      setGameData(result)
+      setIsLoading(false)
+    })
+  }, [])
 
   const handlePlatform = (url) => {
     Linking.openURL(url).catch((err) =>
@@ -218,7 +218,6 @@ const styles = StyleSheet.create({
   },
   gameStat: {
     backgroundColor: "#4cc9f0",
-    padding: 0,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,

@@ -30,9 +30,11 @@ export function getGameById(gameid) {
 }
 
 export function getGamesByGenre(genre) {
-  return gamerly.get(`/games/genres/${genre}`).then((gameData) => {
-    return gameData.data.games
-  });
+  return gamerly
+    .get(`/games/genres/${genre}?sortField=rating&sortOrder=desc`)
+    .then((gameData) => {
+      return gameData.data.games;
+    });
 }
 
 //Get all games sorted by rating
