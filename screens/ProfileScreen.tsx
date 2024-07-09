@@ -11,19 +11,13 @@ import {
 import { useAuth } from "../contexts/AuthContext";
 import { authentication, db } from "../firebase/config";
 import { signOut } from "firebase/auth";
-
-import {
-  collection,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
-
+import { fetchUsers, getGameById } from "../utils/api";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import Carousel from "../components/Carousel";
-
 import Header from "../components/Header";
 
 function ProfileScreen({ navigation }) {
+  const [gameList, setGameList] = useState([]);
   const { loggedInUser, setLoggedInUser } = useAuth();
   const [loggedInUserDoc, setLoggedInUserDoc] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -40,25 +34,51 @@ function ProfileScreen({ navigation }) {
   };
 
   useEffect(() => {
-    const userRef = query(
-      collection(db, "users"),
-      where("uid", "==", loggedInUser.uid)
-    );
+    fetchUsers().then((result) => {
+      const foundUser = result.allUsers.find(
+        (user) => user.name === loggedInUser.displayName
+      );
+      if (foundUser) {
+        const currentWishlist = foundUser.wishlist;
+        let gameDetails = [];
 
-    getDocs(userRef)
-      .then((snapshot) => {
-        let userData = [];
-        snapshot.docs.forEach((doc) => {
-          userData.push({ ...doc.data(), id: doc.id });
-        });
+        // Fetch game details for each game in the wishlist
+        Promise.all(currentWishlist.map((game) => getGameById(game.gameId)))
+          .then((gameResults) => {
+            gameDetails = gameResults.filter((game) => game !== undefined); // Filter out undefined game results if any
 
-        setLoggedInUserDoc(userData[0]);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
+            // Update state with gameDetails
+            setGameList(gameDetails);
+          })
+          .catch((error) => {
+            console.error("Error fetching game details:", error);
+          });
+      }
+    });
   }, []);
+
+  // console.log(gameList, " <<GAME LIST");
+
+  //get logged in user and then find their wishlist
+
+  const currentUser = loggedInUser.displayName;
+
+  useEffect(() => {
+    fetchUsers().then((result) => {
+      const foundUser = result.allUsers.find(
+        (user) => user.name === currentUser
+      );
+      if (foundUser) {
+        const currentWishlist = foundUser.wishlist;
+        for (let game of currentWishlist) {
+          getGameById(game.gameId).then((result) => {});
+        }
+      }
+    });
+  }, []);
+
+  //find game details for each game by id
+  //add these to an array state and render that
 
   if (isLoading) {
     return <Text style={styles.title}>Loading...</Text>;
@@ -76,9 +96,9 @@ function ProfileScreen({ navigation }) {
           </View>
         </View>
         <Text style={styles.text}> My Library </Text>
-        <Carousel />
+        {/* <Carousel /> */}
         <Text style={styles.text}> My WishList </Text>
-        <Carousel />
+        <Carousel games={gameList} />
         <View style={styles.container}>
           <TouchableOpacity onPress={signOutUser} style={styles.button}>
             <Text style={styles.signOutText}>Sign Out</Text>

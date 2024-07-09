@@ -13,7 +13,7 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [uniqueGenres, setUniqueGenres] = useState<string[]>([]);
 
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetchGames()
@@ -36,7 +36,7 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
         );
         const genreNames = filteredGenres.map((genre) => genre.name);
         setUniqueGenres(genreNames);
-        setIsLoading(false)
+        setIsLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching genres:", error);
@@ -161,9 +161,11 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   };
 
   if (isLoading) {
-    return <SafeAreaView style={{flex: 1, backgroundColor: "#0a0a31"}}>
-      <ActivityIndicator animating={true} color="#f20089" size="large"/>
-    </SafeAreaView>
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: "#0a0a31" }}>
+        <ActivityIndicator animating={true} color="#f20089" size="large" />
+      </SafeAreaView>
+    );
   }
 
   return (

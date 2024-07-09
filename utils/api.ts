@@ -24,7 +24,7 @@ export function getSearchedGames(searchQuery: string): Promise<any[]> {
 
 export function getGameById(gameid) {
   return gamerly.get(`/games/${gameid}`).then((gameData) => {
-    console.log(gameData.data);
+    // console.log(gameData.data);
     return gameData.data.gameById;
   });
 }
@@ -66,7 +66,7 @@ export const fetchUsers = () => {
   return gamerly
     .get("/users")
     .then((response) => {
-      return response.data.users;
+      return response.data;
     })
     .catch((error) => {
       console.error("Error fetching users:", error);
@@ -118,9 +118,7 @@ export const postToPreferences = (userId, gameId) => {
     });
 };
 
-
 // delete from preferences
 export const deleteFromPreferences = (userId, toDel) => {
   return gamerly.delete(`/users/${userId}/preferences/delete/${toDel}`);
 };
-

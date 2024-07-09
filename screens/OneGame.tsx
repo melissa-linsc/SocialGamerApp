@@ -17,11 +17,12 @@ import {
   Button,
   ActivityIndicator,
 } from "react-native-paper";
-
-import { getGameById } from "../utils/api";
+import { useAuth } from "../contexts/AuthContext";
+import { getGameById, fetchUsers, postToWishlist } from "../utils/api";
 import { formatGameTitle, formatDescription } from "../utils/utils";
 
-const OneGame = ({ route, visible, animateFrom }) => {
+const OneGame = ({ route, visible }) => {
+  const { loggedInUser } = useAuth();
   const [gameData, setGameData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
@@ -32,10 +33,10 @@ const OneGame = ({ route, visible, animateFrom }) => {
 
   useEffect(() => {
     getGameById(gameid).then((result) => {
-      setGameData(result)
-      setIsLoading(false)
-    })
-  }, [])
+      setGameData(result);
+      setIsLoading(false);
+    });
+  }, []);
 
   const handlePlatform = (url) => {
     Linking.openURL(url).catch((err) =>
@@ -64,6 +65,27 @@ const OneGame = ({ route, visible, animateFrom }) => {
       </View>
     );
   }
+
+  const handleWishlist = () => {
+    console.log("added to wishlist");
+    //get all users
+    const currentUser = loggedInUser.displayName;
+
+    //get logged in user and check they're in users
+    fetchUsers().then((result) => {
+      const foundUser = result.allUsers.find(
+        (user) => user.name === currentUser
+      );
+      //find the id of that user
+      if (foundUser) {
+        const userId = foundUser.uid;
+        //pass it through user id in post request
+        postToWishlist(userId, gameid).then((result) => {
+          return result.postedWish.wishlist;
+        });
+      }
+    });
+  };
 
   return (
     <Provider>
@@ -171,10 +193,13 @@ const OneGame = ({ route, visible, animateFrom }) => {
             <Button
               icon="plus"
               mode="contained"
-              onPress={() => {
-                console.log("Add to Wishlist");
-                closeOptions();
-              }}
+              // onPress={() => {
+              //   {
+              //     handleWishlist;
+              //   }
+              //   closeOptions();
+              // }}
+              onPress={() => handleWishlist()}
               style={styles.modalButton}
             >
               Add to Wishlist
