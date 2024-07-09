@@ -121,7 +121,7 @@ const OneGame = ({ route, visible, animateFrom }) => {
           </View>
           <View style={styles.platformContainer}>
             <Text style={styles.availableOn}>Genres: </Text>
-            {gameData.genres.map((genre) => (
+            {gameData.genreSlugs.map((genre) => (
               <TouchableOpacity
                 key={genre}
                 // onPress={() => handlePlatform(platform.url)}
