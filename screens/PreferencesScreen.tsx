@@ -241,6 +241,7 @@ const styles = StyleSheet.create({
   },
   pressedButtonTitle: {
     color: "#fff",
+    fontSize: 13,
   },
   continueButtonEnabled: {
     backgroundColor: "#f20089",
