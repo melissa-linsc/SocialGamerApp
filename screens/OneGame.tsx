@@ -72,7 +72,7 @@ const OneGame = ({ route, visible, animateFrom }) => {
         </View>
         <View style={styles.container}>
             <Text style={styles.title}>
-              {formatGameTitle(gameData.slug)}
+              {gameData.name}
             </Text>
         <View style={styles.allRatings}>
             {gameData.ratings.map((rating) => {
@@ -108,13 +108,13 @@ const OneGame = ({ route, visible, animateFrom }) => {
         </View>
         <View style={styles.platformContainer}>
           <Text style={styles.availableOn}>Genres: </Text>
-          {gameData.genres.map((genre) => (
+          {gameData.genreSlugs.map((genre) => (
               <TouchableOpacity
-                key={genre.id}
+                key={genre}
                 // onPress={() => handlePlatform(platform.url)}
                 style={styles.genreButton}
               >
-                <Text style={styles.genreButtonText}>{genre.slug}</Text>
+                <Text style={styles.genreButtonText}>{genre}</Text>
               </TouchableOpacity>
             ))}
         </View>
