@@ -11,16 +11,18 @@ import {
 import { useAuth } from "../contexts/AuthContext";
 import { authentication, db } from "../firebase/config";
 import { signOut } from "firebase/auth";
-import { fetchUsers, getGameById } from "../utils/api";
+import { fetchUsers, getGameById } from "../utils/api";import { ActivityIndicator } from "react-native-paper";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import Carousel from "../components/Carousel";
 import Header from "../components/Header";
+import { fetchUserById } from "../utils/api";
 
 function ProfileScreen({ navigation }) {
   const [gameList, setGameList] = useState([]);
   const { loggedInUser, setLoggedInUser } = useAuth();
   const [loggedInUserDoc, setLoggedInUserDoc] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [profileData, setProfileData] = useState({})
 
   const signOutUser = () => {
     signOut(authentication)
@@ -34,6 +36,28 @@ function ProfileScreen({ navigation }) {
   };
 
   useEffect(() => {
+    const userRef = query(
+      collection(db, "users"),
+      where("uid", "==", loggedInUser.uid)
+    );
+
+    getDocs(userRef)
+      .then((snapshot) => {
+        let userData = [];
+        snapshot.docs.forEach((doc) => {
+          userData.push({ ...doc.data(), id: doc.id });
+        });
+
+        setLoggedInUserDoc(userData[0]);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+
+      fetchUserById(loggedInUser.uid).then((result) => {
+        setProfileData(result)
+        setIsLoading(false);
+      })
     fetchUsers().then((result) => {
       const foundUser = result.allUsers.find(
         (user) => user.name === loggedInUser.displayName
@@ -81,7 +105,9 @@ function ProfileScreen({ navigation }) {
   //add these to an array state and render that
 
   if (isLoading) {
-    return <Text style={styles.title}>Loading...</Text>;
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#0a0a31" }}>
+      <ActivityIndicator animating={true} color="#f20089" size="large" />
+    </SafeAreaView>
   }
 
   return (
@@ -89,10 +115,10 @@ function ProfileScreen({ navigation }) {
       <ScrollView>
         <Header navigation={navigation} />
         <View style={styles.container}>
-          <Image style={styles.image} source={{ uri: loggedInUser.photoURL }} />
-          <Text style={styles.title}>{loggedInUser.displayName} </Text>
+          <Image style={styles.image} source={{ uri: profileData.avatar }} />
+          <Text style={styles.title}>{profileData.name} </Text>
           <View>
-            <Text style={styles.text}>Email: {loggedInUser.email} </Text>
+            <Text style={styles.text}>Email: {profileData.email} </Text>
           </View>
         </View>
         <Text style={styles.text}> My Library </Text>

@@ -78,7 +78,7 @@ export const fetchUserById = (userId) => {
   return gamerly
     .get(`/users/${userId}`)
     .then((response) => {
-      return response.data;
+      return response.data.userById;
     })
     .catch((error) => {
       console.error("Error fetching user:", error);

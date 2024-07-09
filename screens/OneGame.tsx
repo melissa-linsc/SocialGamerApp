@@ -85,6 +85,7 @@ const OneGame = ({ route, visible }) => {
         });
       }
     });
+    closeOptions();
   };
 
   return (
@@ -97,7 +98,7 @@ const OneGame = ({ route, visible }) => {
           />
         </View>
         <View style={styles.container}>
-          <Text style={styles.title}>{formatGameTitle(gameData.slug)}</Text>
+          <Text style={styles.title}>{gameData.name}</Text>
           <View style={styles.allRatings}>
             {gameData.ratings.map((rating) => {
               if (rating.title === "recommended") {
@@ -141,13 +142,13 @@ const OneGame = ({ route, visible }) => {
           </View>
           <View style={styles.platformContainer}>
             <Text style={styles.availableOn}>Genres: </Text>
-            {gameData.genres.map((genre) => (
+            {gameData.genreSlugs.map((genre) => (
               <TouchableOpacity
-                key={genre.id}
+                key={genre}
                 // onPress={() => handlePlatform(platform.url)}
                 style={styles.genreButton}
               >
-                <Text style={styles.genreButtonText}>{genre.slug} </Text>
+                <Text style={styles.genreButtonText}>{genre}</Text>
               </TouchableOpacity>
             ))}
           </View>
