@@ -72,7 +72,7 @@ const ListScreen = ({ navigation }) => {
       style={styles.searchResults}
       onPress={() => handlePress(item)}
     >
-      <Text style={{ color: "#fff" }}>{item.slug}</Text>
+      <Text style={{ color: "#fff", marginRight: 10, }}>{item.name}</Text>
       <Feather name="arrow-right-circle" size={24} color="#f20089" />
     </TouchableOpacity>
   );
