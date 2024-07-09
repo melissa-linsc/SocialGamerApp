@@ -15,16 +15,15 @@ import {
   Portal,
   Modal,
   Button,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native-paper";
-import GradientText from "react-native-gradient-texts";
+
 import { getGameById } from "../utils/api";
 import { formatGameTitle, formatDescription } from "../utils/utils";
 
 const OneGame = ({ route, visible, animateFrom }) => {
-
-  const [gameData, setGameData] = useState({})
-  const [isLoading, setIsLoading] = useState(true)
+  const [gameData, setGameData] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
   const [isExtended, setIsExtended] = useState(false);
   const [rating, setRating] = useState(0);
@@ -33,12 +32,10 @@ const OneGame = ({ route, visible, animateFrom }) => {
 
   useEffect(() => {
     getGameById(gameid).then((result) => {
-      setGameData(result)
-      console.log(Object.keys(result))
-      console.log(result.genres)
-      setIsLoading(false)
-    })
-  }, [])
+      setGameData(result);
+      setIsLoading(false);
+    });
+  }, []);
 
   const handlePlatform = (url) => {
     Linking.openURL(url).catch((err) =>
@@ -61,99 +58,97 @@ const OneGame = ({ route, visible, animateFrom }) => {
   };
 
   if (isLoading) {
-    return <View style={{flex: 1, backgroundColor: "#0a0a31"}}>
-      <ActivityIndicator animating={true} color="#f20089" size="large"/>
-    </View>
+    return (
+      <View style={{ flex: 1, backgroundColor: "#0a0a31" }}>
+        <ActivityIndicator animating={true} color="#f20089" size="large" />
+      </View>
+    );
   }
 
   return (
     <Provider>
       <ScrollView style={styles.scrollView}>
         <View style={styles.imageContainer}>
-          <Image source={{uri: gameData.background_image}} style={styles.image} />
+          <Image
+            source={{ uri: gameData.background_image }}
+            style={styles.image}
+          />
         </View>
         <View style={styles.container}>
-            <Text style={styles.title}>
-              {formatGameTitle(gameData.slug)}
-            </Text>
-        <View style={styles.allRatings}>
+          <Text style={styles.title}>{formatGameTitle(gameData.slug)}</Text>
+          <View style={styles.allRatings}>
             {gameData.ratings.map((rating) => {
-              if (rating.title === 'recommended') {
-                return <View style={styles.gameStat}>
-                <Text style={styles.buttonText}>{rating.title}</Text>
-                <Text style={styles.buttonText}>{rating.percent}%</Text>
-                </View> 
+              if (rating.title === "recommended") {
+                return (
+                  <View style={styles.gameStat}>
+                    <Text style={styles.buttonText}>{rating.title} </Text>
+                    <Text style={styles.buttonText}>{rating.percent}% </Text>
+                  </View>
+                );
               }
             })}
             <View style={styles.gameStat}>
-                <Text style={styles.buttonText}>Released</Text>
-                <Text style={styles.buttonText}>{gameData.released}</Text>
+              <Text style={styles.buttonText}>Released</Text>
+              <Text style={styles.buttonText}>{gameData.released} </Text>
             </View>
-            {gameData.esrb_rating ? <View style={styles.gameStat}>
+            {gameData.esrb_rating ? (
+              <View style={styles.gameStat}>
                 <Text style={styles.buttonText}>ESRB</Text>
-                <Text style={styles.buttonText}>{gameData.esrb_rating.name}</Text>
-            </View> : null}
-        </View>
-        <Text style={styles.description}>{formatDescription(gameData.description)}</Text>
-        {/* <Text style={styles.genres}>Genres: {gameData.genres.join(", ")}</Text> */}
-        <View style={styles.platformContainer}>
-          <Text style={styles.availableOn}>Available On: </Text>
-          {gameData.platforms.map((platforms) => (
-            <TouchableOpacity
-              key={platforms.platform.id}
-              // onPress={() => handlePlatform(platform.url)}
-              style={styles.button}
-            >
-              <Text style={styles.buttonText}>{platforms.platform.name} </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-        <View style={styles.platformContainer}>
-          <Text style={styles.availableOn}>Genres: </Text>
-          {gameData.genres.map((genre) => (
+                <Text style={styles.buttonText}>
+                  {gameData.esrb_rating.name}{" "}
+                </Text>
+              </View>
+            ) : null}
+          </View>
+          <Text style={styles.description}>
+            {formatDescription(gameData.description)}
+          </Text>
+          <View style={styles.platformContainer}>
+            <Text style={styles.availableOn}>Available On: </Text>
+            {gameData.platforms.map((platforms) => (
               <TouchableOpacity
-                key={genre.id}
+                key={platforms.platform.id}
                 // onPress={() => handlePlatform(platform.url)}
-                style={styles.genreButton}
+                style={styles.button}
               >
-                <Text style={styles.genreButtonText}>{genre.slug}</Text>
+                <Text style={styles.buttonText}>
+                  {platforms.platform.name}{" "}
+                </Text>
               </TouchableOpacity>
             ))}
-        </View>
-        <View style={styles.platformContainer}>
-          <Text style={styles.availableOn}>Tags: </Text>
-          {/* {gameData.genres.map((genre) => (
+          </View>
+          <View style={styles.platformContainer}>
+            <Text style={styles.availableOn}>Genres: </Text>
+            {gameData.genres.map((genre) => (
               <TouchableOpacity
                 key={genre.id}
                 // onPress={() => handlePlatform(platform.url)}
                 style={styles.genreButton}
               >
-                <Text style={styles.buttonText}>{genre.slug}</Text>
+                <Text style={styles.genreButtonText}>{genre.slug} </Text>
               </TouchableOpacity>
-            ))} */}
-          {gameData.tags.map((tag) => (
+            ))}
+          </View>
+          <View style={styles.platformContainer}>
+            <Text style={styles.availableOn}>Tags: </Text>
+            {gameData.tags.map((tag) => (
               <TouchableOpacity
                 key={tag.id}
                 // onPress={() => handlePlatform(platform.url)}
                 style={styles.button}
               >
-                <Text style={styles.buttonText}>{tag.slug}</Text>
+                <Text style={styles.buttonText}>{tag.slug} </Text>
               </TouchableOpacity>
             ))}
-        </View>
+          </View>
           <View style={styles.ratingContainer}>
             <AirbnbRating
               showRating={false}
               onFinishRating={onRatingCompleted}
               defaultRating={3}
-              // tintColor="#0a0a31"
-              // ratingBackgroundColor="#00ff15"
-              // ratingColor="#ff0000"
-              // type='heart'
-              // style={{ borderWidth: 0, padding: 2, borderColor: "#00ff15" }}
             />
           </View>
-          </View>
+        </View>
       </ScrollView>
       <Portal>
         <Modal
@@ -228,7 +223,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 10,
     padding: 10,
-    margin: 5
+    margin: 5,
   },
   image: {
     width: "100%",
@@ -238,10 +233,9 @@ const styles = StyleSheet.create({
     marginRight: "auto",
     borderBottomEndRadius: 15,
     borderBottomStartRadius: 15,
-   
   },
   imageContainer: {
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.7,
     shadowRadius: 2,
@@ -254,7 +248,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     marginVertical: 20,
-    textShadowColor: '#f20089', // Set the shadow color
+    textShadowColor: "#f20089", // Set the shadow color
     textShadowOffset: { width: 0, height: 0 }, // Set the shadow offset
     textShadowRadius: 20, // Set the shadow radius
   },
