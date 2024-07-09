@@ -30,9 +30,11 @@ export function getGameById(gameid) {
 }
 
 export function getGamesByGenre(genre) {
-  return gamerly.get(`/games/genres/${genre}`).then((gameData) => {
-    return gameData.data.games
-  });
+  return gamerly
+    .get(`/games/genres/${genre}?sortField=rating&sortOrder=desc`)
+    .then((gameData) => {
+      return gameData.data.games;
+    });
 }
 
 //Get all games sorted by rating
@@ -58,3 +60,67 @@ export const fetchGenres = () => {
       console.error("Error fetching genres:", error);
     });
 };
+
+//get all users
+export const fetchUsers = () => {
+  return gamerly
+    .get("/users")
+    .then((response) => {
+      return response.data.users;
+    })
+    .catch((error) => {
+      console.error("Error fetching users:", error);
+    });
+};
+
+//get user by id
+export const fetchUserById = (userId) => {
+  return gamerly
+    .get(`/users/${userId}`)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      console.error("Error fetching user:", error);
+    });
+};
+
+// post to wishlist
+export const postToWishlist = (userId, gameId) => {
+  return gamerly
+    .post(`/users/${userId}/wishlist/add`, {
+      gameId: gameId,
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      console.error("Error adding game to wishlist:", error);
+    });
+};
+
+// delete from wishlist
+export const deleteFromWishlist = (userId, toDel) => {
+  return gamerly.delete(`/users/${userId}/wishlist/delete/${toDel}`);
+};
+
+// post to preferences
+export const postToPreferences = (userId, gameId) => {
+  return gamerly
+    .post(`/users/${userId}/preferences/add`, {
+      gameId: gameId,
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      console.error("Error adding game to wishlist:", error);
+    });
+};
+
+
+// delete from preferences
+export const deleteFromPreferences = (userId, toDel) => {
+  return gamerly.delete(`/users/${userId}/preferences/delete/${toDel}`);
+};
+
