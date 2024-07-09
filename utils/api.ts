@@ -60,3 +60,33 @@ export const fetchGenres = () => {
       console.error("Error fetching genres:", error);
     });
 };
+
+//get all users
+export const fetchUsers = () => {
+  return gamerly
+    .get("/users")
+    .then((response) => {
+      return response.data.users;
+    })
+    .catch((error) => {
+      console.error("Error fetching users:", error);
+    });
+};
+
+// app.post("/api/users/:userId/wishlist/add", postToWishlist);
+// app.delete("/api/users/:userId/wishlist/delete/:toDel", deleteFromWishlist);
+
+// app.post("/api/users/:userId/preferences/add", postPreference);
+// app.delete("/api/users/:userId/preferences/delete/:toDel", deletePreference);
+
+//get user by id
+export const fetchUserById = (userId) => {
+  return gamerly
+    .get(`/users/${userId}`)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      console.error("Error fetching user:", error);
+    });
+};
