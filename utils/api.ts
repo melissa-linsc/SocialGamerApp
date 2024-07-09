@@ -122,3 +122,26 @@ export const postToPreferences = (userId, gameId) => {
 export const deleteFromPreferences = (userId, toDel) => {
   return gamerly.delete(`/users/${userId}/preferences/delete/${toDel}`);
 };
+
+// post to library
+export const postToLibrary = (userId, gameId) => {
+  return gamerly
+    .post(`/users/${userId}/library/add`, {
+      gameId: gameId,
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      console.error("Error adding game to wishlist:", error);
+    });
+};
+
+// delete from libraryr
+export const deleteFromLibrary = (userId, toDel) => {
+  return gamerly.delete(`/users/${userId}/library/delete/${toDel}`);
+};
+
+// deleteFromLibrary("FIAj5aqlpdZLS95k6TZE5RcmR482", 421698);
+
+// deleteFromLibrary("FIAj5aqlpdZLS95k6TZE5RcmR482", 13627);

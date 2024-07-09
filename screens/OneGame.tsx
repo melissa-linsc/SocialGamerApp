@@ -18,10 +18,17 @@ import {
   ActivityIndicator,
 } from "react-native-paper";
 import { useAuth } from "../contexts/AuthContext";
-import { getGameById, fetchUsers, postToWishlist } from "../utils/api";
+import {
+  getGameById,
+  fetchUsers,
+  postToWishlist,
+  postToLibrary,
+  deleteFromLibrary,
+  deleteFromWishlist,
+} from "../utils/api";
 import { formatGameTitle, formatDescription } from "../utils/utils";
 
-const OneGame = ({ route, visible }) => {
+const OneGame = ({ route, visible, onRemove }) => {
   const { loggedInUser } = useAuth();
   const [gameData, setGameData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -29,6 +36,7 @@ const OneGame = ({ route, visible }) => {
   const [isExtended, setIsExtended] = useState(false);
   const [rating, setRating] = useState(0);
   const [optionsVisible, setOptionsVisible] = useState(false);
+  const [modalType, setModalType] = useState(null); // Add state to track modal type
   const { gameid } = route.params;
 
   useEffect(() => {
@@ -48,14 +56,14 @@ const OneGame = ({ route, visible }) => {
     setRating(rating);
   };
 
-  const openOptions = () => {
-    setIsExtended(!isExtended);
-    setOptionsVisible(!optionsVisible);
+  const openOptions = (type) => {
+    setModalType(type); // Set the modal type when opening options
+    setOptionsVisible(true);
   };
 
   const closeOptions = () => {
-    setIsExtended(false);
     setOptionsVisible(false);
+    setModalType(null); // Reset the modal type when closing options
   };
 
   if (isLoading) {
@@ -67,22 +75,42 @@ const OneGame = ({ route, visible }) => {
   }
 
   const handleWishlist = () => {
-    console.log("added to wishlist");
-    //get all users
     const currentUser = loggedInUser.displayName;
 
-    //get logged in user and check they're in users
     fetchUsers().then((result) => {
       const foundUser = result.allUsers.find(
         (user) => user.name === currentUser
       );
-      //find the id of that user
       if (foundUser) {
         const userId = foundUser.uid;
-        //pass it through user id in post request
-        postToWishlist(userId, gameid).then((result) => {
-          return result.postedWish.wishlist;
-        });
+        if (modalType === "add") {
+          postToWishlist(userId, gameid).then((result) => {
+            return result.postedWish.wishlist;
+          });
+        } else if (modalType === "remove") {
+         //remove from wishlist logic
+        }
+      }
+    });
+    closeOptions();
+  };
+
+  const handleLibrary = () => {
+    const currentUser = loggedInUser.displayName;
+
+    fetchUsers().then((result) => {
+      const foundUser = result.allUsers.find(
+        (user) => user.name === currentUser
+      );
+      if (foundUser) {
+        const userId = foundUser.uid;
+        if (modalType === "add") {
+          postToLibrary(userId, gameid).then((result) => {
+            return result.postedWish.library;
+          });
+        } else if (modalType === "remove") {
+          //remove from library logic
+        }
       }
     });
     closeOptions();
@@ -103,7 +131,7 @@ const OneGame = ({ route, visible }) => {
             {gameData.ratings.map((rating) => {
               if (rating.title === "recommended") {
                 return (
-                  <View style={styles.gameStat}>
+                  <View style={styles.gameStat} key={rating.id}>
                     <Text style={styles.buttonText}>{rating.title} </Text>
                     <Text style={styles.buttonText}>{rating.percent}% </Text>
                   </View>
@@ -131,7 +159,6 @@ const OneGame = ({ route, visible }) => {
             {gameData.platforms.map((platforms) => (
               <TouchableOpacity
                 key={platforms.platform.id}
-                // onPress={() => handlePlatform(platform.url)}
                 style={styles.button}
               >
                 <Text style={styles.buttonText}>
@@ -143,11 +170,7 @@ const OneGame = ({ route, visible }) => {
           <View style={styles.platformContainer}>
             <Text style={styles.availableOn}>Genres: </Text>
             {gameData.genreSlugs.map((genre) => (
-              <TouchableOpacity
-                key={genre}
-                // onPress={() => handlePlatform(platform.url)}
-                style={styles.genreButton}
-              >
+              <TouchableOpacity key={genre} style={styles.genreButton}>
                 <Text style={styles.genreButtonText}>{genre}</Text>
               </TouchableOpacity>
             ))}
@@ -155,11 +178,7 @@ const OneGame = ({ route, visible }) => {
           <View style={styles.platformContainer}>
             <Text style={styles.availableOn}>Tags: </Text>
             {gameData.tags.map((tag) => (
-              <TouchableOpacity
-                key={tag.id}
-                // onPress={() => handlePlatform(platform.url)}
-                style={styles.button}
-              >
+              <TouchableOpacity key={tag.id} style={styles.button}>
                 <Text style={styles.buttonText}>{tag.slug} </Text>
               </TouchableOpacity>
             ))}
@@ -180,31 +199,45 @@ const OneGame = ({ route, visible }) => {
           contentContainerStyle={styles.modalContent}
         >
           <View>
-            <Button
-              icon="plus"
-              mode="contained"
-              onPress={() => {
-                console.log("Add to My Games");
-                closeOptions();
-              }}
-              style={styles.modalButton}
-            >
-              Add to My Games
-            </Button>
-            <Button
-              icon="plus"
-              mode="contained"
-              // onPress={() => {
-              //   {
-              //     handleWishlist;
-              //   }
-              //   closeOptions();
-              // }}
-              onPress={() => handleWishlist()}
-              style={styles.modalButton}
-            >
-              Add to Wishlist
-            </Button>
+            {modalType === "add" ? (
+              <>
+                <Button
+                  icon="plus"
+                  mode="contained"
+                  onPress={handleLibrary}
+                  style={styles.modalButton}
+                >
+                  Add to My Games
+                </Button>
+                <Button
+                  icon="plus"
+                  mode="contained"
+                  onPress={handleWishlist}
+                  style={styles.modalButton}
+                >
+                  Add to Wishlist
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  icon="minus"
+                  mode="contained"
+                  onPress={handleLibrary}
+                  style={styles.modalButton}
+                >
+                  Remove From My Games
+                </Button>
+                <Button
+                  icon="minus"
+                  mode="contained"
+                  onPress={handleWishlist}
+                  style={styles.modalButton}
+                >
+                  Remove From Wishlist
+                </Button>
+              </>
+            )}
           </View>
         </Modal>
       </Portal>
@@ -212,11 +245,21 @@ const OneGame = ({ route, visible }) => {
         icon="plus"
         label="            Add"
         extended={true}
-        onPress={openOptions}
+        onPress={() => openOptions("add")} // Pass 'add' as the modal type
         visible={visible}
         animateFrom={"left"}
         iconMode="static"
-        style={styles.fabStyle}
+        style={styles.fabStyleAdd}
+      />
+      <AnimatedFAB
+        icon="minus"
+        label="          Remove"
+        extended={true}
+        onPress={() => openOptions("remove")} // Pass 'remove' as the modal type
+        visible={visible}
+        animateFrom={"left"}
+        iconMode="static"
+        style={styles.fabStyleRemove}
       />
     </Provider>
   );
@@ -334,7 +377,7 @@ const styles = StyleSheet.create({
     marginBottom: 150,
     // outline: 'none'
   },
-  fabStyle: {
+  fabStyleAdd: {
     bottom: 50,
     justifyContent: "center",
     alignSelf: "center",
@@ -342,6 +385,17 @@ const styles = StyleSheet.create({
     padding: 8,
     paddingLeft: 0,
     backgroundColor: "#4cc9f0",
+    right: 10,
+  },
+  fabStyleRemove: {
+    bottom: 50,
+    justifyContent: "center",
+    alignSelf: "center",
+    marginHorizontal: 10,
+    padding: 8,
+    paddingLeft: 0,
+    backgroundColor: "#4cc9f0",
+    left: 10,
   },
   modalContent: {
     backgroundColor: "#0a0a31",

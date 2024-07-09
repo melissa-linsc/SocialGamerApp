@@ -11,18 +11,24 @@ import {
 import { useAuth } from "../contexts/AuthContext";
 import { authentication, db } from "../firebase/config";
 import { signOut } from "firebase/auth";
-import { fetchUsers, getGameById } from "../utils/api";import { ActivityIndicator } from "react-native-paper";
+import {
+  fetchUsers,
+  getGameById,
+  fetchUserById,
+  deleteFromLibrary,
+} from "../utils/api";
+import { ActivityIndicator } from "react-native-paper";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import Carousel from "../components/Carousel";
 import Header from "../components/Header";
-import { fetchUserById } from "../utils/api";
 
 function ProfileScreen({ navigation }) {
-  const [gameList, setGameList] = useState([]);
+  const [userWishlist, setUserWishlist] = useState([]);
+  const [userLibrary, setUserLibrary] = useState([]);
   const { loggedInUser, setLoggedInUser } = useAuth();
   const [loggedInUserDoc, setLoggedInUserDoc] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  const [profileData, setProfileData] = useState({})
+  const [profileData, setProfileData] = useState({});
 
   const signOutUser = () => {
     signOut(authentication)
@@ -35,79 +41,119 @@ function ProfileScreen({ navigation }) {
       });
   };
 
+  const filterDuplicates = (games) => {
+    const uniqueGames = [];
+    const gameIds = new Set();
+
+    games.forEach((game) => {
+      if (!gameIds.has(game.id)) {
+        uniqueGames.push(game);
+        gameIds.add(game.id);
+      }
+    });
+
+    return uniqueGames;
+  };
+
+  const fetchUserData = async () => {
+    try {
+      const userRef = query(
+        collection(db, "users"),
+        where("uid", "==", loggedInUser.uid)
+      );
+
+      const snapshot = await getDocs(userRef);
+      const userData = snapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+
+      setLoggedInUserDoc(userData[0]);
+
+      const profileResult = await fetchUserById(loggedInUser.uid);
+      setProfileData(profileResult);
+      setIsLoading(false);
+
+      const usersResult = await fetchUsers();
+      const foundUser = usersResult.allUsers.find(
+        (user) => user.name === loggedInUser.displayName
+      );
+
+      if (foundUser) {
+        const wishlistDetails = await Promise.all(
+          foundUser.wishlist.map((game) => getGameById(game.gameId))
+        );
+        const filteredWishlistDetails = wishlistDetails.filter(
+          (game) => game !== undefined
+        );
+
+        const libraryDetails = await Promise.all(
+          foundUser.library.map((game) => getGameById(game.gameId))
+        );
+        const filteredLibraryDetails = libraryDetails.filter(
+          (game) => game !== undefined
+        );
+
+        setUserWishlist(filterDuplicates(filteredWishlistDetails));
+        setUserLibrary(filterDuplicates(filteredLibraryDetails));
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  // const removeFromList = (gameId, listType) => {
+  //   if (listType === "wishlist") {
+  //     const updatedWishlist = userWishlist.filter((game) => game.id !== gameId);
+  //     setUserWishlist(updatedWishlist);
+  //   } else if (listType === "library") {
+  //     const updatedLibrary = userLibrary.filter((game) => game.id !== gameId);
+  //     setUserLibrary(updatedLibrary);
+  //     deleteFromLibrary(loggedInUser.uid, gameId).catch((error) =>
+  //       console.error("Error removing from library:", error)
+  //     );
+  //   }
+  // };
+
   useEffect(() => {
-    const userRef = query(
-      collection(db, "users"),
-      where("uid", "==", loggedInUser.uid)
-    );
+    fetchUserData();
+  }, [loggedInUser.displayName, loggedInUser.uid]);
 
-    getDocs(userRef)
-      .then((snapshot) => {
-        let userData = [];
-        snapshot.docs.forEach((doc) => {
-          userData.push({ ...doc.data(), id: doc.id });
-        });
-
-        setLoggedInUserDoc(userData[0]);
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
-
-      fetchUserById(loggedInUser.uid).then((result) => {
-        setProfileData(result)
-        setIsLoading(false);
-      })
+  useEffect(() => {
     fetchUsers().then((result) => {
       const foundUser = result.allUsers.find(
         (user) => user.name === loggedInUser.displayName
       );
       if (foundUser) {
-        const currentWishlist = foundUser.wishlist;
-        let gameDetails = [];
+        const currentWishlist = foundUser.wishlist.map((game) => game.gameId);
+        Promise.all(currentWishlist.map((gameId) => getGameById(gameId))).then(
+          (gameResults) => {
+            const uniqueWishlist = filterDuplicates(
+              gameResults.filter((game) => game !== undefined)
+            );
+            setUserWishlist(uniqueWishlist);
+          }
+        );
 
-        // Fetch game details for each game in the wishlist
-        Promise.all(currentWishlist.map((game) => getGameById(game.gameId)))
-          .then((gameResults) => {
-            gameDetails = gameResults.filter((game) => game !== undefined); // Filter out undefined game results if any
-
-            // Update state with gameDetails
-            setGameList(gameDetails);
-          })
-          .catch((error) => {
-            console.error("Error fetching game details:", error);
-          });
+        const currentLibrary = foundUser.library.map((game) => game.gameId);
+        Promise.all(currentLibrary.map((gameId) => getGameById(gameId))).then(
+          (gameResults) => {
+            const uniqueLibrary = filterDuplicates(
+              gameResults.filter((game) => game !== undefined)
+            );
+            setUserLibrary(uniqueLibrary);
+          }
+        );
       }
     });
   }, []);
-
-  // console.log(gameList, " <<GAME LIST");
-
-  //get logged in user and then find their wishlist
-
-  const currentUser = loggedInUser.displayName;
-
-  useEffect(() => {
-    fetchUsers().then((result) => {
-      const foundUser = result.allUsers.find(
-        (user) => user.name === currentUser
-      );
-      if (foundUser) {
-        const currentWishlist = foundUser.wishlist;
-        for (let game of currentWishlist) {
-          getGameById(game.gameId).then((result) => {});
-        }
-      }
-    });
-  }, []);
-
-  //find game details for each game by id
-  //add these to an array state and render that
 
   if (isLoading) {
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#0a0a31" }}>
-      <ActivityIndicator animating={true} color="#f20089" size="large" />
-    </SafeAreaView>
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: "#0a0a31" }}>
+        <ActivityIndicator animating={true} color="#f20089" size="large" />
+      </SafeAreaView>
+    );
   }
 
   return (
@@ -122,9 +168,15 @@ function ProfileScreen({ navigation }) {
           </View>
         </View>
         <Text style={styles.text}> My Library </Text>
-        {/* <Carousel /> */}
+        <Carousel
+          games={userLibrary}
+          onRemove={(gameId) => removeFromList(gameId, "library")}
+        />
         <Text style={styles.text}> My WishList </Text>
-        <Carousel games={gameList} />
+        <Carousel
+          games={userWishlist}
+          onRemove={(gameId) => removeFromList(gameId, "wishlist")}
+        />
         <View style={styles.container}>
           <TouchableOpacity onPress={signOutUser} style={styles.button}>
             <Text style={styles.signOutText}>Sign Out</Text>
