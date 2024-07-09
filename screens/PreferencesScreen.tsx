@@ -3,7 +3,7 @@ import { SafeAreaView, View, Text, ScrollView, StyleSheet } from "react-native";
 import { Button, ThemeProvider } from "@rneui/themed";
 import { useAuth } from "../contexts/AuthContext";
 import GradientText from "react-native-gradient-texts";
-import { fetchGames, fetchGenres } from "../utils/api";
+import { fetchGames, fetchGenres, postToPreferences } from "../utils/api";
 import { ActivityIndicator } from "react-native-paper";
 
 const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
@@ -12,6 +12,8 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [preferences, setPreferences] = useState<string[]>([]);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [uniqueGenres, setUniqueGenres] = useState<string[]>([]);
+
+  const { loggedInUser, setLoggedInUser } = useAuth();
 
   const [isLoading, setIsLoading] = useState(true);
 

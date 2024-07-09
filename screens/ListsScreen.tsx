@@ -132,8 +132,6 @@ const ListScreen = ({ navigation }) => {
           <Carousel games={selectedGenreGames} />
           <Text style={styles.subheading}>Your Recommendations</Text>
           <Carousel />
-          <Text style={styles.subheading}>RPGs</Text>
-          <Carousel />
           <Text style={styles.subheading}>Top Rated Games</Text>
           <Carousel games={topRatedGames} />
         </View>

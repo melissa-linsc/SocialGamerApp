@@ -105,16 +105,14 @@ export const deleteFromWishlist = (userId, toDel) => {
 };
 
 // post to preferences
-export const postToPreferences = (userId, gameId) => {
+export const postToPreferences = (userId, gameSlugs) => {
   return gamerly
-    .post(`/users/${userId}/preferences/add`, {
-      gameId: gameId,
-    })
+    .post(`/users/${userId}/preferences/add`, gameSlugs)
     .then((response) => {
       return response.data;
     })
     .catch((error) => {
-      console.error("Error adding game to wishlist:", error);
+      console.error("Error adding to preferences:", error);
     });
 };
 
