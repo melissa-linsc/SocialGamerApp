@@ -34,8 +34,6 @@ const OneGame = ({ route, visible, animateFrom }) => {
   useEffect(() => {
     getGameById(gameid).then((result) => {
       setGameData(result)
-      console.log(Object.keys(result))
-      console.log(result.genres)
       setIsLoading(false)
     })
   }, [])
@@ -223,7 +221,6 @@ const styles = StyleSheet.create({
   },
   gameStat: {
     backgroundColor: "#4cc9f0",
-    padding: 0,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,

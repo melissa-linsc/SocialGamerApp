@@ -8,7 +8,7 @@ import Carousel from "../components/Carousel";
 import { Searchbar, Chip, ActivityIndicator } from 'react-native-paper';
 import { Feather } from '@expo/vector-icons';
 import { formatGameTitle } from "../utils/utils";
-import { getSearchedGames, fetchGenres, getGamesByGenre } from "../utils/api";
+import { getSearchedGames, fetchGenres, getGamesByGenre, fetchGames } from "../utils/api";
 
 const ListScreen = ({ navigation }) => {
 
@@ -18,6 +18,7 @@ const ListScreen = ({ navigation }) => {
   const [selectedGenre, setSelectedGenre] = useState("racing")
   const [selectedGenreGames, setSelectedGenreGames] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+  const [topRatedGames, setTopRatedGames] = useState([])
 
   useEffect(() => {
     StatusBar.setBarStyle("light-content");
@@ -41,6 +42,10 @@ const ListScreen = ({ navigation }) => {
 
     getGamesByGenre(selectedGenre).then((result) => {
       setSelectedGenreGames(result)
+    })
+
+    fetchGames().then((result) => {
+      setTopRatedGames(result)
       setIsLoading(false)
     })
 
@@ -101,7 +106,7 @@ const ListScreen = ({ navigation }) => {
         <Text style={styles.subheading}>RPGs</Text>
         <Carousel />
         <Text style={styles.subheading}>Top Rated Games</Text>
-        <Carousel />
+        <Carousel games={topRatedGames}/>
         </View>
       </ScrollView>
     </SafeAreaView>
