@@ -40,12 +40,13 @@ const ListScreen = ({ navigation }) => {
   const [profileData, setProfileData] = useState({})
 
   const [recommendations, setRecommendations] = useState([])
+  const [recommendationsGenerating, setRecommendationsGenerating] = useState(true)
 
   useEffect(() => {
     StatusBar.setBarStyle("light-content");
 
-    fetchUserById(loggedInUser.uid).then((result) => {
-      setProfileData(result)
+    fetchUserById(loggedInUser.uid).then((profile) => {
+      setProfileData(profile)
     })
 
     getSearchedGames(searchQuery).then((results) => {
@@ -75,9 +76,13 @@ const ListScreen = ({ navigation }) => {
       setIsLoading(false);
     });
 
-    fetchRecommendedGames(['the-witcher-3-wild-hunt']).then((result) => {
-      setRecommendations(result)
-    })
+    if (profileData.recommendations) {
+      fetchRecommendedGames(profileData.preferences).then((result) => {
+        console.log(result)
+        setRecommendations(result)
+        setRecommendationsGenerating(false)
+      })
+    }
 
   }, [searchQuery, selectedGenre]);
 
@@ -148,8 +153,12 @@ const ListScreen = ({ navigation }) => {
             })}
           </ScrollView>
           <Carousel games={selectedGenreGames} />
-          <Text style={styles.subheading}>Your Recommendations</Text>
-          <Carousel games={recommendations}/>
+          {recommendationsGenerating ? 
+          <Text style={styles.subheading}>Recommendations Generating...</Text>
+          : <View>
+            <Text style={styles.subheading}>Your Recommendations</Text>
+            <Carousel games={recommendations}/>
+            </View>}
           <Text style={styles.subheading}>Top Rated Games</Text>
           <Carousel games={topRatedGames} />
         </View>

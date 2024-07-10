@@ -198,11 +198,11 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
           containerStyle={{ marginVertical: 15, borderRadius: 15 }}
           onPress={() => {
             console.log(preferences)
-            // postToPreferences(loggedInUser.uid, preferences).then((result) => {
-            //   console.log("Successfully added preferences:", result)
-            // }).catch((err) => {
-            //   console.log("Error adding preferences:", err)
-            // })
+            postToPreferences(loggedInUser.uid, preferences).then((result) => {
+              console.log("Successfully added preferences:", result)
+            }).catch((err) => {
+              console.log("Error adding preferences:", err)
+            })
             if (preferences.length >= 3 && selectedGenres.length >= 3) {
               navigation.navigate("Home");
             }
