@@ -11,11 +11,11 @@ import {
 import { useAuth } from "../contexts/AuthContext";
 import { authentication, db } from "../firebase/config";
 import { signOut } from "firebase/auth";
-import { fetchUsers, getGameById } from "../utils/api";import { ActivityIndicator } from "react-native-paper";
+import { fetchUsers, getGameById } from "../utils/api.js";import { ActivityIndicator } from "react-native-paper";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import Carousel from "../components/Carousel";
 import Header from "../components/Header";
-import { fetchUserById } from "../utils/api";
+import { fetchUserById } from "../utils/api.js";
 
 function ProfileScreen({ navigation }) {
   const [gameList, setGameList] = useState([]);

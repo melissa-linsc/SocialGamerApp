@@ -10,6 +10,7 @@ import {
   View,
   TouchableOpacity,
 } from "react-native";
+import { useAuth } from "../contexts/AuthContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../components/Header";
 import Carousel from "../components/Carousel";
@@ -21,7 +22,9 @@ import {
   fetchGenres,
   getGamesByGenre,
   fetchGames,
-} from "../utils/api";
+  fetchUserById,
+  fetchRecommendedGames
+} from "../utils/api.js";
 
 const ListScreen = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -32,8 +35,18 @@ const ListScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [topRatedGames, setTopRatedGames] = useState([]);
 
+  const { loggedInUser, setLoggedInUser } = useAuth();
+
+  const [profileData, setProfileData] = useState({})
+
+  const [recommendations, setRecommendations] = useState([])
+
   useEffect(() => {
     StatusBar.setBarStyle("light-content");
+
+    fetchUserById(loggedInUser.uid).then((result) => {
+      setProfileData(result)
+    })
 
     getSearchedGames(searchQuery).then((results) => {
       setSearchResults(results);
@@ -61,6 +74,11 @@ const ListScreen = ({ navigation }) => {
       setTopRatedGames(result);
       setIsLoading(false);
     });
+
+    fetchRecommendedGames(['the-witcher-3-wild-hunt']).then((result) => {
+      setRecommendations(result)
+    })
+
   }, [searchQuery, selectedGenre]);
 
   const handlePress = (item) => {
@@ -131,7 +149,7 @@ const ListScreen = ({ navigation }) => {
           </ScrollView>
           <Carousel games={selectedGenreGames} />
           <Text style={styles.subheading}>Your Recommendations</Text>
-          <Carousel />
+          <Carousel games={recommendations}/>
           <Text style={styles.subheading}>Top Rated Games</Text>
           <Carousel games={topRatedGames} />
         </View>
