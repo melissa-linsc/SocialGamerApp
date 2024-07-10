@@ -40,7 +40,11 @@ export function getGamesByGenre(genre) {
 //Get all games sorted by rating
 export const fetchGames = () => {
   return gamerly
-    .get("/games?sortField=rating&sortOrder=desc")
+    .get("/games?sortField=rating&sortOrder=desc", {
+      params: {
+        limit: 50,
+      },
+    })
     .then((response) => {
       return response.data.games;
     })

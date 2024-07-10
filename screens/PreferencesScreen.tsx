@@ -20,8 +20,23 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   useEffect(() => {
     fetchGames()
       .then((result) => {
-        const top20Games = result.slice(0, 20);
-        setGames(top20Games);
+        const top30Games = result.slice(0, 50
+        );
+        const filteredGames = top30Games.filter((game) => {
+          return game.name !== 'Resident Evil 2' 
+          && game.name !== 'The Last Of Us Remastered' 
+          && game.name !== 'Grand Theft Auto: San Andreas' 
+          && game.name !== 'Grand Theft Auto: Vice City'
+          && game.name !== 'Mass Effect 2' 
+          && game.name !== 'Marvel\'s Spider-Man Remastered' 
+          && game.name !== 'The Legend of Zelda: Tears of the Kingdom'
+          && game.name !== 'Half-Life 2: Episode Two'
+          && game.name !== 'Red Dead Redemption'
+          && game.name !== 'Uncharted: Legacy of Thieves Collection'
+          && !game.name.includes('Max Payne 2')
+          && !game.name.includes('Ultimate')
+        })
+        setGames(filteredGames);
       })
       .catch((error) => {
         console.error("Error fetching games:", error);
@@ -55,15 +70,15 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
     });
   };
 
-  const handleGenrePress = (genre: string) => {
-    setSelectedGenres((prevGenres) => {
-      if (prevGenres.includes(genre)) {
-        return prevGenres.filter((g) => g !== genre);
-      } else {
-        return [...prevGenres, genre];
-      }
-    });
-  };
+  // const handleGenrePress = (genre: string) => {
+  //   setSelectedGenres((prevGenres) => {
+  //     if (prevGenres.includes(genre)) {
+  //       return prevGenres.filter((g) => g !== genre);
+  //     } else {
+  //       return [...prevGenres, genre];
+  //     }
+  //   });
+  // };
 
   const renderButtons = () => {
     let rows: JSX.Element[] = [];
@@ -112,55 +127,55 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
     return rows;
   };
 
-  const renderGenreButtons = () => {
-    let rows: JSX.Element[] = [];
-    let row: JSX.Element[] = [];
+  // const renderGenreButtons = () => {
+  //   let rows: JSX.Element[] = [];
+  //   let row: JSX.Element[] = [];
 
-    uniqueGenres.forEach((genre, index) => {
-      row.push(
-        <Button
-          key={index}
-          title={genre}
-          type={selectedGenres.includes(genre) ? "solid" : "outline"}
-          containerStyle={{ flex: 1, margin: 5 }}
-          onPress={() => handleGenrePress(genre)}
-          buttonStyle={
-            selectedGenres.includes(genre)
-              ? styles.pressedButton
-              : styles.button
-          }
-          titleStyle={
-            selectedGenres.includes(genre)
-              ? styles.pressedButtonTitle
-              : styles.buttonTitle
-          }
-        />
-      );
+  //   uniqueGenres.forEach((genre, index) => {
+  //     row.push(
+  //       <Button
+  //         key={index}
+  //         title={genre}
+  //         type={selectedGenres.includes(genre) ? "solid" : "outline"}
+  //         containerStyle={{ flex: 1, margin: 5 }}
+  //         onPress={() => handleGenrePress(genre)}
+  //         buttonStyle={
+  //           selectedGenres.includes(genre)
+  //             ? styles.pressedButton
+  //             : styles.button
+  //         }
+  //         titleStyle={
+  //           selectedGenres.includes(genre)
+  //             ? styles.pressedButtonTitle
+  //             : styles.buttonTitle
+  //         }
+  //       />
+  //     );
 
-      if ((index + 1) % 3 === 0) {
-        rows.push(
-          <View key={index} style={{ flexDirection: "row", marginBottom: 10 }}>
-            {row}
-          </View>
-        );
-        row = [];
-      }
-    });
+  //     if ((index + 1) % 3 === 0) {
+  //       rows.push(
+  //         <View key={index} style={{ flexDirection: "row", marginBottom: 10 }}>
+  //           {row}
+  //         </View>
+  //       );
+  //       row = [];
+  //     }
+  //   });
 
-    // Push the last row if there are remaining buttons
-    if (row.length > 0) {
-      rows.push(
-        <View
-          key="lastGenreRow"
-          style={{ flexDirection: "row", marginBottom: 10 }}
-        >
-          {row}
-        </View>
-      );
-    }
+  //   // Push the last row if there are remaining buttons
+  //   if (row.length > 0) {
+  //     rows.push(
+  //       <View
+  //         key="lastGenreRow"
+  //         style={{ flexDirection: "row", marginBottom: 10 }}
+  //       >
+  //         {row}
+  //       </View>
+  //     );
+  //   }
 
-    return rows;
-  };
+  //   return rows;
+  // };
 
   if (isLoading) {
     return (
@@ -182,18 +197,18 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
           gradientColors={["#f20089", "#2d00f7"]}
         />
         <Text style={{ color: "white", fontSize: 18, marginVertical: 20 }}>
-          Select At Least 3 Games:{" "}
+          Select Up To 3 Games:{" "}
         </Text>
         {renderButtons()}
 
-        <Text style={{ color: "white", fontSize: 18, marginVertical: 20 }}>
+        {/* <Text style={{ color: "white", fontSize: 18, marginVertical: 20 }}>
           Select At Least 3 Genres:{" "}
         </Text>
-        {renderGenreButtons()}
+        {renderGenreButtons()} */}
 
         <Button
           title="Continue"
-          disabled={preferences.length < 3 || selectedGenres.length < 3}
+          disabled={preferences.length > 3 || preferences.length === 0}
           type="outline"
           containerStyle={{ marginVertical: 15, borderRadius: 15 }}
           onPress={() => {
@@ -203,21 +218,17 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
             }).catch((err) => {
               console.log("Error adding preferences:", err)
             })
-            if (preferences.length >= 3 && selectedGenres.length >= 3) {
+            if (preferences.length <= 3 && preferences.length > 0) {
               navigation.navigate("Home");
             }
           }}
           disabledStyle={styles.continueButtonDisabled}
           disabledTitleStyle={styles.continueButtonTitleDisabled}
           buttonStyle={
-            preferences.length >= 3 && selectedGenres.length >= 3
-              ? styles.continueButtonEnabled
-              : null
+            preferences.length <= 3 && preferences.length > 0 ? styles.continueButtonEnabled : null
           }
           titleStyle={
-            preferences.length >= 3 && selectedGenres.length >= 3
-              ? styles.continueButtonTitleEnabled
-              : null
+            preferences.length <= 3 && preferences.length > 0 ? styles.continueButtonTitleEnabled : null
           }
         />
       </ScrollView>
