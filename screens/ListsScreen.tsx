@@ -9,8 +9,9 @@ import {
   FlatList,
   View,
   TouchableOpacity,
+  SafeAreaView
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useAuth } from "../contexts/AuthContext";
 import Header from "../components/Header";
 import Carousel from "../components/Carousel";
 import { Searchbar, Chip, ActivityIndicator } from "react-native-paper";
@@ -21,7 +22,9 @@ import {
   fetchGenres,
   getGamesByGenre,
   fetchGames,
-} from "../utils/api";
+  fetchUserById,
+  fetchRecommendedGames
+} from "../utils/api.js";
 
 const ListScreen = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -32,8 +35,26 @@ const ListScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [topRatedGames, setTopRatedGames] = useState([]);
 
+  const { loggedInUser, setLoggedInUser } = useAuth();
+
+  const [profileData, setProfileData] = useState({})
+
+  const [recommendations, setRecommendations] = useState([])
+  const [recommendationsGenerating, setRecommendationsGenerating] = useState(true)
+
   useEffect(() => {
     StatusBar.setBarStyle("light-content");
+
+    fetchUserById(loggedInUser.uid).then((profile) => {
+      setProfileData(profile)
+      return profile
+    }).then((profile) => {
+      console.log(profile.preferences)
+      return fetchRecommendedGames(profile.preferences)
+    }).then((result) => {
+        setRecommendations(result)
+        setRecommendationsGenerating(false)
+    })
 
     getSearchedGames(searchQuery).then((results) => {
       setSearchResults(results);
@@ -61,6 +82,8 @@ const ListScreen = ({ navigation }) => {
       setTopRatedGames(result);
       setIsLoading(false);
     });
+
+
   }, [searchQuery, selectedGenre]);
 
   const handlePress = (item) => {
@@ -130,10 +153,12 @@ const ListScreen = ({ navigation }) => {
             })}
           </ScrollView>
           <Carousel games={selectedGenreGames} />
-          <Text style={styles.subheading}>Your Recommendations</Text>
-          <Carousel />
-          <Text style={styles.subheading}>RPGs</Text>
-          <Carousel />
+          {recommendationsGenerating ? 
+          <Text style={styles.subheading}>Recommendations Generating...</Text>
+          : <View>
+            <Text style={styles.subheading}>Your Recommendations</Text>
+            <Carousel games={recommendations}/>
+            </View>}
           <Text style={styles.subheading}>Top Rated Games</Text>
           <Carousel games={topRatedGames} />
         </View>

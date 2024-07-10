@@ -8,6 +8,7 @@ import {
   View,
   ScrollView,
 } from "react-native";
+import { TextInput, Button } from 'react-native-paper';
 import { useAuth } from "../contexts/AuthContext";
 import { authentication, db } from "../firebase/config";
 import { signOut } from "firebase/auth";
@@ -16,11 +17,14 @@ import {
   getGameById,
   fetchUserById,
   deleteFromLibrary,
-} from "../utils/api";
+} from "../utils/api.js";
+
 import { ActivityIndicator } from "react-native-paper";
+import { Feather } from '@expo/vector-icons';
 import { collection, getDocs, query, where } from "firebase/firestore";
 import Carousel from "../components/Carousel";
 import Header from "../components/Header";
+
 
 function ProfileScreen({ navigation }) {
   const [userWishlist, setUserWishlist] = useState([]);
@@ -28,7 +32,9 @@ function ProfileScreen({ navigation }) {
   const { loggedInUser, setLoggedInUser } = useAuth();
   const [loggedInUserDoc, setLoggedInUserDoc] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  const [profileData, setProfileData] = useState({});
+  const [profileData, setProfileData] = useState({})
+
+  const [avatarURL, setAvatarURL] = React.useState("");
 
   const signOutUser = () => {
     signOut(authentication)
@@ -102,18 +108,6 @@ function ProfileScreen({ navigation }) {
     }
   };
 
-  // const removeFromList = (gameId, listType) => {
-  //   if (listType === "wishlist") {
-  //     const updatedWishlist = userWishlist.filter((game) => game.id !== gameId);
-  //     setUserWishlist(updatedWishlist);
-  //   } else if (listType === "library") {
-  //     const updatedLibrary = userLibrary.filter((game) => game.id !== gameId);
-  //     setUserLibrary(updatedLibrary);
-  //     deleteFromLibrary(loggedInUser.uid, gameId).catch((error) =>
-  //       console.error("Error removing from library:", error)
-  //     );
-  //   }
-  // };
 
   useEffect(() => {
     fetchUserData();
@@ -146,14 +140,22 @@ function ProfileScreen({ navigation }) {
         );
       }
     });
-  }, []);
+  }, [avatarURL]);
+
+  function handleAvatarChange(avatarURL) {
+    patchAvatar(loggedInUser.uid, avatarURL).then((response) => {
+      console.log(response)
+      setAvatarURL('')
+    })
+  }
+
+  //find game details for each game by id
+  //add these to an array state and render that
 
   if (isLoading) {
-    return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: "#0a0a31" }}>
-        <ActivityIndicator animating={true} color="#f20089" size="large" />
-      </SafeAreaView>
-    );
+    return <SafeAreaView style={{ flex: 1, backgroundColor: "#0a0a31" }}>
+              <ActivityIndicator animating={true} color="#f20089" size="large" />
+           </SafeAreaView>
   }
 
   return (
@@ -166,16 +168,31 @@ function ProfileScreen({ navigation }) {
           <View>
             <Text style={styles.text}>Email: {profileData.email} </Text>
           </View>
+          <TextInput
+            label={profileData.avatar}
+            value={avatarURL}
+            onChangeText={avatarURL => setAvatarURL(avatarURL)}
+            style={{width:300, backgroundColor: "#0a0a31", color: "#fff"}}
+            textColor="#fff"
+            underlineColor="#fff"
+            left={<TextInput.Icon icon={() => <Feather name="edit" size={24} color="white" />} />}
+          />
+          <Button 
+          mode="contained" 
+          onPress={() => {handleAvatarChange(avatarURL)}} 
+          style={styles.submitButton}
+          >
+          Edit
+        </Button>
         </View>
         <Text style={styles.text}> My Library </Text>
         <Carousel
           games={userLibrary}
-          onRemove={(gameId) => removeFromList(gameId, "library")}
+         
         />
         <Text style={styles.text}> My WishList </Text>
         <Carousel
           games={userWishlist}
-          onRemove={(gameId) => removeFromList(gameId, "wishlist")}
         />
         <View style={styles.container}>
           <TouchableOpacity onPress={signOutUser} style={styles.button}>
@@ -204,6 +221,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     paddingVertical: 20,
     textAlign: "center",
+  },
+  submitButton: {
+    backgroundColor: "#f20089",
+    marginVertical: 10,
   },
   button: {
     backgroundColor: "#f20089",

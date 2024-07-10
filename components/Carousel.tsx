@@ -8,7 +8,7 @@ import Animated, {
 import CarouselItem from "./CarouselItem";
 import { items } from "./items";
 
-export default function Carousel({ games, onRemove }) {
+export default function Carousel({ games }) {
   const scrollX = useSharedValue(0);
   const onScrollHandler = useAnimatedScrollHandler((event) => {
     scrollX.value = event.contentOffset.x;

@@ -40,7 +40,11 @@ export function getGamesByGenre(genre) {
 //Get all games sorted by rating
 export const fetchGames = () => {
   return gamerly
-    .get("/games?sortField=rating&sortOrder=desc")
+    .get("/games?sortField=rating&sortOrder=desc", {
+      params: {
+        limit: 50,
+      },
+    })
     .then((response) => {
       return response.data.games;
     })
@@ -99,31 +103,6 @@ export const postToWishlist = (userId, gameId) => {
     });
 };
 
-// delete from wishlist
-export const deleteFromWishlist = (userId, toDel) => {
-  return gamerly.delete(`/users/${userId}/wishlist/delete/${toDel}`);
-};
-
-// post to preferences
-export const postToPreferences = (userId, gameId) => {
-  return gamerly
-    .post(`/users/${userId}/preferences/add`, {
-      gameId: gameId,
-    })
-    .then((response) => {
-      return response.data;
-    })
-    .catch((error) => {
-      console.error("Error adding game to wishlist:", error);
-    });
-};
-
-// delete from preferences
-export const deleteFromPreferences = (userId, toDel) => {
-  return gamerly.delete(`/users/${userId}/preferences/delete/${toDel}`);
-};
-
-// post to library
 export const postToLibrary = (userId, gameId) => {
   return gamerly
     .post(`/users/${userId}/library/add`, {
@@ -133,15 +112,61 @@ export const postToLibrary = (userId, gameId) => {
       return response.data;
     })
     .catch((error) => {
-      console.error("Error adding game to wishlist:", error);
+      console.error("Error adding game to library:", error);
     });
 };
 
-// delete from libraryr
+// delete from wishlist
+export const deleteFromWishlist = (userId, toDel) => {
+  return gamerly.delete(`/users/${userId}/wishlist/delete/${toDel}`);
+};
+
 export const deleteFromLibrary = (userId, toDel) => {
   return gamerly.delete(`/users/${userId}/library/delete/${toDel}`);
 };
 
-// deleteFromLibrary("FIAj5aqlpdZLS95k6TZE5RcmR482", 421698);
+// post to preferences
+export const postToPreferences = (userId, gameSlugs) => {
+  return gamerly
+    .post(`/users/${userId}/preferences/add`, gameSlugs)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      console.error("Error adding to preferences:", error);
+    });
+};
 
-// deleteFromLibrary("FIAj5aqlpdZLS95k6TZE5RcmR482", 13627);
+// delete from preferences
+export const deleteFromPreferences = (userId, toDel) => {
+  return gamerly.delete(`/users/${userId}/preferences/delete/${toDel}`);
+};
+
+export const fetchRecommendedGames = (favoriteGames) => {
+  // Replace with actual favorite games
+
+  return axios
+    .post("https://flaskapp-3d91.onrender.com/recommend", {
+      favorite_games: favoriteGames,
+    })
+    .then((response) => {
+      console.log("response", response.data);
+      return response.data;
+    })
+    .catch((error) => {
+      console.error("Error fetching recommendations:", error);
+    });
+};
+
+export function patchAvatar(userid, avatarURL) {
+  return gamerly
+    .patch(`/users/${userid}/patch_avatar`, {
+      avatarURL: avatarURL,
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      console.error("Error updating avatar:", error);
+    });
+}
