@@ -82,7 +82,7 @@ const CarouselItem = ({ item, index, scrollX }: Props) => {
           imageStyle={{ opacity: 0.6, borderRadius: 15 }}
           resizeMode="cover"
         >
-          <Text style={styles.title}>{formatGameTitle(item.slug)}</Text>
+          <Text style={styles.title}>{item.name}</Text>
         </ImageBackground>
       </TouchableOpacity>
     </Animated.View>

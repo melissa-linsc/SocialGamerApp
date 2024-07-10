@@ -3,7 +3,7 @@ import { SafeAreaView, View, Text, ScrollView, StyleSheet } from "react-native";
 import { Button, ThemeProvider } from "@rneui/themed";
 import { useAuth } from "../contexts/AuthContext";
 import GradientText from "react-native-gradient-texts";
-import { fetchGames, fetchGenres, postToPreferences } from "../utils/api.js";
+import { fetchGames, fetchGenres, postToPreferences, deletePreferences } from "../utils/api.js";
 import { ActivityIndicator } from "react-native-paper";
 
 const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
@@ -18,6 +18,9 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+
+    deletePreferences(loggedInUser.uid)
+    
     fetchGames()
       .then((result) => {
         const top30Games = result.slice(0, 50

@@ -118,11 +118,19 @@ export const postToLibrary = (userId, gameId) => {
 
 // delete from wishlist
 export const deleteFromWishlist = (userId, toDel) => {
-  return gamerly.delete(`/users/${userId}/wishlist/delete/${toDel}`);
+  return gamerly.delete(`/users/${userId}/wishlist/delete/${toDel}`).then(() => {
+    console.log('success deleting wishlist')
+  }).catch((err) => {
+    console.log(err)
+  });
 };
 
 export const deleteFromLibrary = (userId, toDel) => {
-  return gamerly.delete(`/users/${userId}/library/delete/${toDel}`);
+  return gamerly.delete(`/users/${userId}/library/delete/${toDel}`).then(() => {
+    console.log('success deleting library')
+  }).catch((err) => {
+    console.log(err)
+  });
 };
 
 // post to preferences
@@ -135,11 +143,6 @@ export const postToPreferences = (userId, gameSlugs) => {
     .catch((error) => {
       console.error("Error adding to preferences:", error);
     });
-};
-
-// delete from preferences
-export const deleteFromPreferences = (userId, toDel) => {
-  return gamerly.delete(`/users/${userId}/preferences/delete/${toDel}`);
 };
 
 export const fetchRecommendedGames = (favoriteGames) => {
@@ -172,5 +175,9 @@ export function patchAvatar(userid, avatarURL) {
 }
 
 export function deletePreferences(userid) {
-  return gamerly.delete(`/api/users/${userid}/preferences/deleteAll`)
+  return gamerly.delete(`/api/users/${userid}/preferences/deleteAll`).then(() => {
+    console.log('success deleting preferences')
+  }).catch((err) => {
+    console.log(err)
+  })
 }

@@ -32,9 +32,8 @@ const LoginScreen = ({ navigation }) => {
     signInWithEmailAndPassword(authentication, email, password)
       .then((res) => {
         console.log("successful");
-        console.log(res.user)
         setLoggedInUser(res.user);
-        deletePreferences(res.user.uid)
+        return res.user.uid
       })
 
       .catch((err) => {

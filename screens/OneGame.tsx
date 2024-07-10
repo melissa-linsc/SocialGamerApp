@@ -109,10 +109,11 @@ const OneGame = ({ route, visible, onRemove }) => {
             return result.postedWish.library;
           });
         } else if (modalType === "remove") {
+          console.log(userId)
           //remove from library logic
           deleteFromLibrary(userId, gameid).then(() => {
             console.log('deleted:', foundUser.library)
-            console.log(gameid)
+            console.log(typeof gameid)
           })
         }
       }
