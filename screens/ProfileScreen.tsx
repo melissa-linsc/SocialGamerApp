@@ -18,7 +18,7 @@ import { Feather } from '@expo/vector-icons';
 import { collection, getDocs, query, where } from "firebase/firestore";
 import Carousel from "../components/Carousel";
 import Header from "../components/Header";
-import { fetchUserById } from "../utils/api.js";
+import { fetchUserById, patchAvatar } from "../utils/api.js";
 
 function ProfileScreen({ navigation }) {
   const [gameList, setGameList] = useState([]);
@@ -84,7 +84,7 @@ function ProfileScreen({ navigation }) {
           });
       }
     });
-  }, []);
+  }, [avatarURL]);
 
   // console.log(gameList, " <<GAME LIST");
 
@@ -104,10 +104,13 @@ function ProfileScreen({ navigation }) {
         }
       }
     });
-  }, []);
+  }, [avatarURL]);
 
-  function handleAvatarChange() {
-
+  function handleAvatarChange(avatarURL) {
+    patchAvatar(loggedInUser.uid, avatarURL).then((response) => {
+      console.log(response)
+      setAvatarURL('')
+    })
   }
 
   //find game details for each game by id
@@ -140,7 +143,7 @@ function ProfileScreen({ navigation }) {
           />
           <Button 
           mode="contained" 
-          onPress={handleAvatarChange} 
+          onPress={() => {handleAvatarChange(avatarURL)}} 
           style={styles.submitButton}
           >
           Edit
