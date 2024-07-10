@@ -120,3 +120,18 @@ export const postToPreferences = (userId, gameSlugs) => {
 export const deleteFromPreferences = (userId, toDel) => {
   return gamerly.delete(`/users/${userId}/preferences/delete/${toDel}`);
 };
+
+export const fetchRecommendedGames = (favoriteGames) => {;
+   // Replace with actual favorite games
+
+  return axios.post('https://flaskapp-3d91.onrender.com/recommend', {
+          favorite_games: favoriteGames,
+      }).then((response) => {
+        console.log("response", response.data)
+        return response.data
+      }).catch((error) => {
+        console.error("Error fetching recommendations:", error);
+      });
+
+};
+

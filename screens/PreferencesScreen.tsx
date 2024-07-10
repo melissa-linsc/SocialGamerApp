@@ -3,7 +3,7 @@ import { SafeAreaView, View, Text, ScrollView, StyleSheet } from "react-native";
 import { Button, ThemeProvider } from "@rneui/themed";
 import { useAuth } from "../contexts/AuthContext";
 import GradientText from "react-native-gradient-texts";
-import { fetchGames, fetchGenres, postToPreferences } from "../utils/api";
+import { fetchGames, fetchGenres, postToPreferences } from "../utils/api.js";
 import { ActivityIndicator } from "react-native-paper";
 
 const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
@@ -74,16 +74,16 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
         <Button
           key={index}
           title={game.name}
-          type={preferences.includes(game.name) ? "solid" : "outline"}
+          type={preferences.includes(game.slug) ? "solid" : "outline"}
           containerStyle={{ flex: 1, margin: 5 }}
-          onPress={() => handlePress(game.name)}
+          onPress={() => handlePress(game.slug)}
           buttonStyle={
-            preferences.includes(game.name)
+            preferences.includes(game.slug)
               ? styles.pressedButton
               : styles.button
           }
           titleStyle={
-            preferences.includes(game.name)
+            preferences.includes(game.slug)
               ? styles.pressedButtonTitle
               : styles.buttonTitle
           }
@@ -197,6 +197,12 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
           type="outline"
           containerStyle={{ marginVertical: 15, borderRadius: 15 }}
           onPress={() => {
+            console.log(preferences)
+            postToPreferences(loggedInUser.uid, preferences).then((result) => {
+              console.log("Successfully added preferences:", result)
+            }).catch((err) => {
+              console.log("Error adding preferences:", err)
+            })
             if (preferences.length >= 3 && selectedGenres.length >= 3) {
               navigation.navigate("Home");
             }

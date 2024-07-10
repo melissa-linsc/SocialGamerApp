@@ -18,7 +18,7 @@ import {
   ActivityIndicator,
 } from "react-native-paper";
 import { useAuth } from "../contexts/AuthContext";
-import { getGameById, fetchUsers, postToWishlist } from "../utils/api";
+import { getGameById, fetchUsers, postToWishlist } from "../utils/api.js";
 import { formatGameTitle, formatDescription } from "../utils/utils";
 
 const OneGame = ({ route, visible }) => {
