@@ -17,6 +17,7 @@ import {
   getGameById,
   fetchUserById,
   deleteFromLibrary,
+  patchAvatar
 } from "../utils/api.js";
 
 import { ActivityIndicator } from "react-native-paper";
@@ -168,6 +169,7 @@ function ProfileScreen({ navigation }) {
           <View>
             <Text style={styles.text}>Email: {profileData.email} </Text>
           </View>
+          <Text style={styles.text}>Edit Avatar URL:</Text>
           <TextInput
             label={profileData.avatar}
             value={avatarURL}
@@ -182,7 +184,7 @@ function ProfileScreen({ navigation }) {
           onPress={() => {handleAvatarChange(avatarURL)}} 
           style={styles.submitButton}
           >
-          Edit
+          Edit Avatar
         </Button>
         </View>
         <Text style={styles.text}> My Library </Text>

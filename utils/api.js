@@ -170,3 +170,7 @@ export function patchAvatar(userid, avatarURL) {
       console.error("Error updating avatar:", error);
     });
 }
+
+export function deletePreferences(userid) {
+  return gamerly.delete(`/api/users/${userid}/preferences/deleteAll`)
+}

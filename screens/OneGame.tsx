@@ -110,6 +110,10 @@ const OneGame = ({ route, visible, onRemove }) => {
           });
         } else if (modalType === "remove") {
           //remove from library logic
+          deleteFromLibrary(userId, gameid).then(() => {
+            console.log('deleted:', foundUser.library)
+            console.log(gameid)
+          })
         }
       }
     });

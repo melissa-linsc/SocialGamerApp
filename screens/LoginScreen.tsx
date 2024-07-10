@@ -12,6 +12,7 @@ import GradientText from "react-native-gradient-texts";
 import { authentication } from "../firebase/config";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useAuth } from "../contexts/AuthContext";
+import { deletePreferences } from "../utils/api";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = React.useState("");
@@ -31,7 +32,9 @@ const LoginScreen = ({ navigation }) => {
     signInWithEmailAndPassword(authentication, email, password)
       .then((res) => {
         console.log("successful");
+        console.log(res.user)
         setLoggedInUser(res.user);
+        deletePreferences(res.user.uid)
       })
 
       .catch((err) => {
