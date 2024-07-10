@@ -9,9 +9,9 @@ import {
   FlatList,
   View,
   TouchableOpacity,
+  SafeAreaView
 } from "react-native";
 import { useAuth } from "../contexts/AuthContext";
-import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../components/Header";
 import Carousel from "../components/Carousel";
 import { Searchbar, Chip, ActivityIndicator } from "react-native-paper";
@@ -47,6 +47,13 @@ const ListScreen = ({ navigation }) => {
 
     fetchUserById(loggedInUser.uid).then((profile) => {
       setProfileData(profile)
+      return profile
+    }).then((profile) => {
+      console.log(profile.preferences)
+      return fetchRecommendedGames(profile.preferences)
+    }).then((result) => {
+        setRecommendations(result)
+        setRecommendationsGenerating(false)
     })
 
     getSearchedGames(searchQuery).then((results) => {
@@ -76,13 +83,6 @@ const ListScreen = ({ navigation }) => {
       setIsLoading(false);
     });
 
-    if (profileData.recommendations) {
-      fetchRecommendedGames(profileData.preferences).then((result) => {
-        console.log(result)
-        setRecommendations(result)
-        setRecommendationsGenerating(false)
-      })
-    }
 
   }, [searchQuery, selectedGenre]);
 
