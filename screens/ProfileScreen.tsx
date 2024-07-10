@@ -8,14 +8,17 @@ import {
   View,
   ScrollView,
 } from "react-native";
+import { TextInput, Button } from 'react-native-paper';
 import { useAuth } from "../contexts/AuthContext";
 import { authentication, db } from "../firebase/config";
 import { signOut } from "firebase/auth";
-import { fetchUsers, getGameById } from "../utils/api.js";import { ActivityIndicator } from "react-native-paper";
+import { fetchUsers, getGameById } from "../utils/api.js";
+import { ActivityIndicator } from "react-native-paper";
+import { Feather } from '@expo/vector-icons';
 import { collection, getDocs, query, where } from "firebase/firestore";
 import Carousel from "../components/Carousel";
 import Header from "../components/Header";
-import { fetchUserById } from "../utils/api.js";
+import { fetchUserById, patchAvatar } from "../utils/api.js";
 
 function ProfileScreen({ navigation }) {
   const [gameList, setGameList] = useState([]);
@@ -23,6 +26,8 @@ function ProfileScreen({ navigation }) {
   const [loggedInUserDoc, setLoggedInUserDoc] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [profileData, setProfileData] = useState({})
+
+  const [avatarURL, setAvatarURL] = React.useState("");
 
   const signOutUser = () => {
     signOut(authentication)
@@ -79,7 +84,7 @@ function ProfileScreen({ navigation }) {
           });
       }
     });
-  }, []);
+  }, [avatarURL]);
 
   // console.log(gameList, " <<GAME LIST");
 
@@ -99,15 +104,22 @@ function ProfileScreen({ navigation }) {
         }
       }
     });
-  }, []);
+  }, [avatarURL]);
+
+  function handleAvatarChange(avatarURL) {
+    patchAvatar(loggedInUser.uid, avatarURL).then((response) => {
+      console.log(response)
+      setAvatarURL('')
+    })
+  }
 
   //find game details for each game by id
   //add these to an array state and render that
 
   if (isLoading) {
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#0a0a31" }}>
-      <ActivityIndicator animating={true} color="#f20089" size="large" />
-    </SafeAreaView>
+    return <SafeAreaView style={{ flex: 1, backgroundColor: "#0a0a31" }}>
+              <ActivityIndicator animating={true} color="#f20089" size="large" />
+           </SafeAreaView>
   }
 
   return (
@@ -120,6 +132,22 @@ function ProfileScreen({ navigation }) {
           <View>
             <Text style={styles.text}>Email: {profileData.email} </Text>
           </View>
+          <TextInput
+            label={profileData.avatar}
+            value={avatarURL}
+            onChangeText={avatarURL => setAvatarURL(avatarURL)}
+            style={{width:300, backgroundColor: "#0a0a31", color: "#fff"}}
+            textColor="#fff"
+            underlineColor="#fff"
+            left={<TextInput.Icon icon={() => <Feather name="edit" size={24} color="white" />} />}
+          />
+          <Button 
+          mode="contained" 
+          onPress={() => {handleAvatarChange(avatarURL)}} 
+          style={styles.submitButton}
+          >
+          Edit
+        </Button>
         </View>
         <Text style={styles.text}> My Library </Text>
         {/* <Carousel /> */}
@@ -152,6 +180,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     paddingVertical: 20,
     textAlign: "center",
+  },
+  submitButton: {
+    backgroundColor: "#f20089",
+    marginVertical: 10,
   },
   button: {
     backgroundColor: "#f20089",

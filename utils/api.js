@@ -139,3 +139,12 @@ export const fetchRecommendedGames = (favoriteGames) => {;
 
 };
 
+export function patchAvatar(userid, avatarURL) {
+  return gamerly.patch(`/users/${userid}/patch_avatar`, {
+    avatarURL: avatarURL
+  }).then((response) => {
+    return response.data
+  }).catch((error) => {
+    console.error("Error updating avatar:", error);
+  });
+}
