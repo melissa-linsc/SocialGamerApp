@@ -89,8 +89,9 @@ export const fetchUserById = (userId) => {
 
 // post to wishlist
 export const postToWishlist = (userId, gameId) => {
+  const strId = gameId.toString();
   return gamerly
-    .post(`/users/${userId}/wishlist/add`, [gameId])
+    .post(`/users/${userId}/wishlist/add`, [strId])
     .then((response) => {
       return response.data;
     })
