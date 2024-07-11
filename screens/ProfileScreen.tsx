@@ -110,7 +110,7 @@ function ProfileScreen({ navigation }) {
 
   useEffect(() => {
     fetchUserData();
-  }, [loggedInUser.displayName, loggedInUser.uid]);
+  }, [loggedInUser.displayName, loggedInUser.uid, avatarURL]);
 
   useEffect(() => {
     fetchUsers().then((result) => {

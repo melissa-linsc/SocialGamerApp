@@ -49,13 +49,11 @@ const FriendsScreen = ({ navigation }) => {
           userData.push({ ...doc.data(), id: doc.id });
         });
 
-        if (userData[0]) {
-          setLoggedInUserDoc(userData[0]);
-          setFriendRequests(userData[0].req);
-        }
-      },
-      (error) => {
-        console.log("Error fetching logged-in user:", error.message);
+      if (userData[0]) {
+        setLoggedInUserDoc(userData[0]);
+        setUserFriends(userData[0].realFriend);
+        setFriendRequests(userData[0].req);
+
       }
     );
 
@@ -88,7 +86,11 @@ const FriendsScreen = ({ navigation }) => {
       unsubscribeUserRef();
       unsubscribeUsers();
     };
-  }, [loggedInUser.uid]);
+
+
+  }, [loggedInUser.uid ]);
+
+
 
   function handleSendFriendRequest(item) {
     const userQuery = query(
