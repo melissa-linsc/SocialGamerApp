@@ -92,9 +92,7 @@ export const fetchUserById = (userId) => {
 // post to wishlist
 export const postToWishlist = (userId, gameId) => {
   return gamerly
-    .post(`/users/${userId}/wishlist/add`, {
-      gameId: gameId,
-    })
+    .post(`/users/${userId}/wishlist/add`, [gameId])
     .then((response) => {
       return response.data;
     })
@@ -104,10 +102,9 @@ export const postToWishlist = (userId, gameId) => {
 };
 
 export const postToLibrary = (userId, gameId) => {
+  const strId = gameId.toString();
   return gamerly
-    .post(`/users/${userId}/library/add`, {
-      gameId: gameId,
-    })
+    .post(`/users/${userId}/library/add`, [strId])
     .then((response) => {
       return response.data;
     })
@@ -118,19 +115,26 @@ export const postToLibrary = (userId, gameId) => {
 
 // delete from wishlist
 export const deleteFromWishlist = (userId, toDel) => {
-  return gamerly.delete(`/users/${userId}/wishlist/delete/${toDel}`).then(() => {
-    console.log('success deleting wishlist')
-  }).catch((err) => {
-    console.log(err)
-  });
+  return gamerly
+    .delete(`/users/${userId}/wishlist/delete/${toDel}`)
+    .then(() => {
+      console.log("success deleting wishlist");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 export const deleteFromLibrary = (userId, toDel) => {
-  return gamerly.delete(`/users/${userId}/library/delete/${toDel}`).then(() => {
-    console.log('success deleting library')
-  }).catch((err) => {
-    console.log(err)
-  });
+  return gamerly
+    .delete(`/users/${userId}/library/delete/${toDel}`)
+    .then(() => {
+      console.log(`${toDel}`, " << TO DEL");
+      console.log("success deleting library");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 // post to preferences
@@ -175,9 +179,12 @@ export function patchAvatar(userid, avatarURL) {
 }
 
 export function deletePreferences(userid) {
-  return gamerly.delete(`/api/users/${userid}/preferences/deleteAll`).then(() => {
-    console.log('success deleting preferences')
-  }).catch((err) => {
-    console.log(err)
-  })
+  return gamerly
+    .delete(`/api/users/${userid}/preferences/deleteAll`)
+    .then(() => {
+      console.log("success deleting preferences");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 }
