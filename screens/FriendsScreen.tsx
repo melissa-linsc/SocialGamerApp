@@ -54,7 +54,7 @@ const FriendsScreen = ({ navigation }) => {
 
       if (userData[0]) {
         setLoggedInUserDoc(userData[0]);
-        // setUserFriends(userData[0].realFriend);
+        setUserFriends(userData[0].realFriend);
         setFriendRequests(userData[0].req);
 
       }
@@ -74,16 +74,16 @@ const FriendsScreen = ({ navigation }) => {
       console.log('Error fetching users:', error.message);
     });
 
-    fetchUserById(loggedInUser.uid).then((profile) => {
-      profile.realFriend.forEach((friend) => {
-        fetchUserById(friend.uid).then((friendProfile) => {
-          setUserFriends((currFriends) => {
-            return [friendProfile, ...currFriends]
-          })
-          console.log(userFriends)
-        })
-      })
-    })
+    // fetchUserById(loggedInUser.uid).then((profile) => {
+    //   profile.realFriend.forEach((friend) => {
+    //     fetchUserById(friend.uid).then((friendProfile) => {
+    //       setUserFriends((currFriends) => {
+    //         return [friendProfile, ...currFriends]
+    //       })
+    //       console.log(userFriends)
+    //     })
+    //   })
+    // })
 
 
 
@@ -94,7 +94,7 @@ const FriendsScreen = ({ navigation }) => {
     };
 
 
-  }, [loggedInUser.uid]);
+  }, [loggedInUser.uid ]);
 
 
 

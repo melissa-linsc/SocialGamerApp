@@ -20,7 +20,7 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   useEffect(() => {
 
     deletePreferences(loggedInUser.uid)
-    
+
     fetchGames()
       .then((result) => {
         const top30Games = result.slice(0, 50
@@ -182,7 +182,7 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
 
   if (isLoading) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: "#0a0a31" }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: "#0a0a31", height: 400 }}>
         <ActivityIndicator animating={true} color="#f20089" size="large" />
       </SafeAreaView>
     );

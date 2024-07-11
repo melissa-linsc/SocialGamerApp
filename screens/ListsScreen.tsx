@@ -43,13 +43,14 @@ const ListScreen = ({ navigation }) => {
   const [recommendationsGenerating, setRecommendationsGenerating] = useState(true)
 
   useEffect(() => {
-    StatusBar.setBarStyle("light-content");
+    StatusBar.setBarStyle("dark-content");
 
     fetchUserById(loggedInUser.uid).then((profile) => {
+      console.log("hello")
       setProfileData(profile)
       return profile
     }).then((profile) => {
-      console.log(profile.preferences)
+      console.log("preferences:", profile.preferences)
       return fetchRecommendedGames(profile.preferences)
     }).then((result) => {
         setRecommendations(result)
