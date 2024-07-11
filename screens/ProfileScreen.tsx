@@ -8,7 +8,7 @@ import {
   View,
   ScrollView,
 } from "react-native";
-import { TextInput, Button } from 'react-native-paper';
+import { TextInput, Button } from "react-native-paper";
 import { useAuth } from "../contexts/AuthContext";
 import { authentication, db } from "../firebase/config";
 import { signOut } from "firebase/auth";
@@ -17,15 +17,14 @@ import {
   getGameById,
   fetchUserById,
   deleteFromLibrary,
-  patchAvatar
+  patchAvatar,
 } from "../utils/api.js";
 
 import { ActivityIndicator } from "react-native-paper";
-import { Feather } from '@expo/vector-icons';
+import { Feather } from "@expo/vector-icons";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import Carousel from "../components/Carousel";
 import Header from "../components/Header";
-
 
 function ProfileScreen({ navigation }) {
   const [userWishlist, setUserWishlist] = useState([]);
@@ -33,7 +32,7 @@ function ProfileScreen({ navigation }) {
   const { loggedInUser, setLoggedInUser } = useAuth();
   const [loggedInUserDoc, setLoggedInUserDoc] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  const [profileData, setProfileData] = useState({})
+  const [profileData, setProfileData] = useState({});
 
   const [avatarURL, setAvatarURL] = React.useState("");
 
@@ -109,7 +108,6 @@ function ProfileScreen({ navigation }) {
     }
   };
 
-
   useEffect(() => {
     fetchUserData();
   }, [loggedInUser.displayName, loggedInUser.uid, avatarURL]);
@@ -141,22 +139,24 @@ function ProfileScreen({ navigation }) {
         );
       }
     });
-  }, []);
+  }, [userLibrary, userWishlist, avatarURL]);
 
   function handleAvatarChange(avatarURL) {
     patchAvatar(loggedInUser.uid, avatarURL).then((response) => {
-      console.log(response)
-      setAvatarURL('')
-    })
+      console.log(response);
+      setAvatarURL("");
+    });
   }
 
   //find game details for each game by id
   //add these to an array state and render that
 
   if (isLoading) {
-    return <SafeAreaView style={{ flex: 1, backgroundColor: "#0a0a31" }}>
-              <ActivityIndicator animating={true} color="#f20089" size="large" />
-           </SafeAreaView>
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: "#0a0a31" }}>
+        <ActivityIndicator animating={true} color="#f20089" size="large" />
+      </SafeAreaView>
+    );
   }
 
   return (
@@ -173,29 +173,30 @@ function ProfileScreen({ navigation }) {
           <TextInput
             label={profileData.avatar}
             value={avatarURL}
-            onChangeText={avatarURL => setAvatarURL(avatarURL)}
-            style={{width:300, backgroundColor: "#0a0a31", color: "#fff"}}
+            onChangeText={(avatarURL) => setAvatarURL(avatarURL)}
+            style={{ width: 300, backgroundColor: "#0a0a31", color: "#fff" }}
             textColor="#fff"
             underlineColor="#fff"
-            left={<TextInput.Icon icon={() => <Feather name="edit" size={24} color="white" />} />}
+            left={
+              <TextInput.Icon
+                icon={() => <Feather name="edit" size={24} color="white" />}
+              />
+            }
           />
-          <Button 
-          mode="contained" 
-          onPress={() => {handleAvatarChange(avatarURL)}} 
-          style={styles.submitButton}
+          <Button
+            mode="contained"
+            onPress={() => {
+              handleAvatarChange(avatarURL);
+            }}
+            style={styles.submitButton}
           >
-          Edit Avatar
-        </Button>
+            Edit Avatar
+          </Button>
         </View>
         <Text style={styles.text}> My Library </Text>
-        <Carousel
-          games={userLibrary}
-         
-        />
+        <Carousel games={userLibrary} />
         <Text style={styles.text}> My WishList </Text>
-        <Carousel
-          games={userWishlist}
-        />
+        <Carousel games={userWishlist} />
         <View style={styles.container}>
           <TouchableOpacity onPress={signOutUser} style={styles.button}>
             <Text style={styles.signOutText}>Sign Out</Text>

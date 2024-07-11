@@ -28,7 +28,7 @@ import {
 } from "../utils/api";
 import { formatGameTitle, formatDescription } from "../utils/utils";
 
-const OneGame = ({ route, visible, onRemove }) => {
+const OneGame = ({ route, visible }) => {
   const { loggedInUser } = useAuth();
   const [gameData, setGameData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -38,6 +38,7 @@ const OneGame = ({ route, visible, onRemove }) => {
   const [optionsVisible, setOptionsVisible] = useState(false);
   const [modalType, setModalType] = useState(null); // Add state to track modal type
   const { gameid } = route.params;
+  console.log(gameid, " << id");
 
   useEffect(() => {
     getGameById(gameid).then((result) => {
@@ -84,11 +85,17 @@ const OneGame = ({ route, visible, onRemove }) => {
       if (foundUser) {
         const userId = foundUser.uid;
         if (modalType === "add") {
+          console.log(gameid, " <<id in post modal");
           postToWishlist(userId, gameid).then((result) => {
             return result.postedWish.wishlist;
           });
         } else if (modalType === "remove") {
-         //remove from wishlist logic
+          //remove from wishlist logic
+          console.log(gameid, " <<id in remove modal");
+
+          deleteFromWishlist(userId, gameid).then(() => {
+            console.log("deleted:", gameid);
+          });
         }
       }
     });
@@ -105,16 +112,20 @@ const OneGame = ({ route, visible, onRemove }) => {
       if (foundUser) {
         const userId = foundUser.uid;
         if (modalType === "add") {
+          console.log(gameid, " <<id in post modal");
           postToLibrary(userId, gameid).then((result) => {
+            console.log("successfuly posted:", gameid);
+
             return result.postedWish.library;
           });
         } else if (modalType === "remove") {
-          console.log(userId)
+          // console.log(userId);
           //remove from library logic
+          console.log(gameid, " <<id in remove modal");
           deleteFromLibrary(userId, gameid).then(() => {
-            console.log('deleted:', foundUser.library)
-            console.log(typeof gameid)
-          })
+            console.log("deleted:", gameid);
+            // console.log(foundUser.library, " <<library");
+          });
         }
       }
     });
