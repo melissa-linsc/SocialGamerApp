@@ -20,23 +20,20 @@ function Header({navigation}) {
             where('read', '==', false)
           );
     
-          // Subscribe to real-time updates
           const unsubscribe = onSnapshot(messagesQuery, (querySnapshot) => {
             let totalUnread = 0;
             querySnapshot.forEach((doc) => {
               totalUnread += 1;
             });
     
-            // Update state with unread count
             setUnreadMessagesCount(totalUnread);
           });
     
-          return unsubscribe; // Cleanup function to unsubscribe from listener
+          return unsubscribe; 
         };
     
         const unsubscribe = fetchUnreadMessagesCount();
     
-        // Cleanup function to unsubscribe when component unmounts
         return () => unsubscribe();
       }, [loggedInUser.uid]);
    

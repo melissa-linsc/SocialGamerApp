@@ -12,7 +12,6 @@ import GradientText from "react-native-gradient-texts";
 import { authentication } from "../firebase/config";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useAuth } from "../contexts/AuthContext";
-import { deletePreferences } from "../utils/api";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = React.useState("");

@@ -1,37 +1,19 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { Firestore } from "firebase/firestore";
 
 import {
-  SafeAreaView,
-  StatusBar,
-  ScrollView,
-  View,
-  FlatList,
-  TouchableOpacity,
-  Image,
-  Text,
   StyleSheet,
   KeyboardAvoidingView,
-  Platform,
-  Button,
 } from "react-native";
 import {
   collection,
   getDocs,
-  updateDoc,
-  doc,
   query,
   where,
   addDoc,
-  FieldValue,
-  arrayUnion,
-  arrayRemove,
-  getFirestore,
   orderBy,
   onSnapshot,
   writeBatch,
 } from "firebase/firestore";
-import { serverTimestamp } from "firebase/firestore";
 
 import { db } from "../firebase/config";
 import { useAuth } from "../contexts/AuthContext";
@@ -39,7 +21,6 @@ import {
   GiftedChat,
   Bubble,
   InputToolbar,
-  Send,
   Avatar,
 } from "react-native-gifted-chat";
 
@@ -54,7 +35,6 @@ function MessagesScreen({ user, route }) {
       : `${uid}-${loggedInUser.uid}`;
 
   useEffect(() => {
-    // Create a reference to the collection
     const messagesRef = collection(db, "Chats", chatid, "messages");
     const q = query(messagesRef, orderBy("createdAt", "desc"));
 
@@ -119,8 +99,8 @@ function MessagesScreen({ user, route }) {
       <Avatar
         {...props}
         imageStyle={{
-          left: { backgroundColor: "#f20089" }, // left (received) avatar background color
-          right: { backgroundColor: "#4cc9f0" }, // right (sent) avatar background color
+          left: { backgroundColor: "#f20089" }, 
+          right: { backgroundColor: "#4cc9f0" }, 
         }}
       />
     );

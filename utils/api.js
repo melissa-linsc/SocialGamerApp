@@ -1,5 +1,4 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
 
 const gamerly = axios.create({
   baseURL: "https://us-central1-debugd1vas.cloudfunctions.net/app/api",
@@ -24,7 +23,6 @@ export function getSearchedGames(searchQuery: string): Promise<any[]> {
 
 export function getGameById(gameid) {
   return gamerly.get(`/games/${gameid}`).then((gameData) => {
-    // console.log(gameData.data);
     return gameData.data.gameById;
   });
 }
@@ -150,14 +148,11 @@ export const postToPreferences = (userId, gameSlugs) => {
 };
 
 export const fetchRecommendedGames = (favoriteGames) => {
-  // Replace with actual favorite games
-
   return axios
     .post("https://flaskapp-3d91.onrender.com/recommend", {
       favorite_games: favoriteGames,
     })
     .then((response) => {
-      console.log("response", response.data);
       return response.data;
     })
     .catch((error) => {

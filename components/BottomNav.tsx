@@ -1,24 +1,22 @@
-import React, {useEffect} from 'react';
-import { View, StyleSheet, StatusBar } from 'react-native';
+import React, { useEffect } from "react";
+import { View, StyleSheet, StatusBar } from "react-native";
 
-import { CommonActions } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import {  BottomNavigation } from 'react-native-paper';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { FontAwesome5 } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons';
+import { CommonActions } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { BottomNavigation } from "react-native-paper";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
-import FriendsScreen from '../screens/FriendsScreen';
-import ProfileScreen from '../screens/ProfileScreen';
-import ListScreen from '../screens/ListsScreen';
+import FriendsScreen from "../screens/FriendsScreen";
+import ProfileScreen from "../screens/ProfileScreen";
+import ListScreen from "../screens/ListsScreen";
 
 const Tab = createBottomTabNavigator();
 
 export default function BottomNav() {
-
   useEffect(() => {
-    // Set status bar style when component mounts
-    StatusBar.setBarStyle('light-content'); // or 'dark-content'
+    StatusBar.setBarStyle("light-content");
   }, []);
 
   return (
@@ -29,14 +27,14 @@ export default function BottomNav() {
       tabBar={({ navigation, state, descriptors, insets }) => (
         <BottomNavigation.Bar
           style={styles.bottomNav}
-          inactiveColor='#fff'
-          activeColor='#fff'
+          inactiveColor="#fff"
+          activeColor="#fff"
           activeIndicatorStyle={styles.activeTab}
           navigationState={state}
-         safeAreaInsets={insets}
+          safeAreaInsets={insets}
           onTabPress={({ route, preventDefault }) => {
             const event = navigation.emit({
-              type: 'tabPress',
+              type: "tabPress",
               target: route.key,
               canPreventDefault: true,
             });
@@ -44,7 +42,7 @@ export default function BottomNav() {
             if (event.defaultPrevented) {
               preventDefault();
             } else {
-             navigation.dispatch({
+              navigation.dispatch({
                 ...CommonActions.navigate(route.name, route.params),
                 target: state.key,
               });
@@ -76,9 +74,9 @@ export default function BottomNav() {
         name="Home"
         component={ListScreen}
         options={{
-          tabBarLabel: 'Home',
+          tabBarLabel: "Home",
           tabBarIcon: ({ color, size }) => {
-            return <Icon name="home" size={size} color="#fff"/>;
+            return <Icon name="home" size={size} color="#fff" />;
           },
         }}
       />
@@ -86,7 +84,7 @@ export default function BottomNav() {
         name="Profile"
         component={ProfileScreen}
         options={{
-          tabBarLabel: 'Profile',
+          tabBarLabel: "Profile",
           tabBarIcon: ({ color, size }) => {
             return <Ionicons name="person" size={24} color="#fff" />;
           },
@@ -96,7 +94,7 @@ export default function BottomNav() {
         name="Friends"
         component={FriendsScreen}
         options={{
-          tabBarLabel: 'Friends',
+          tabBarLabel: "Friends",
           tabBarIcon: ({ color, size }) => {
             return <FontAwesome5 name="user-friends" size={24} color="#fff" />;
           },
@@ -106,17 +104,17 @@ export default function BottomNav() {
   );
 }
 
-const styles = StyleSheet.create({ 
+const styles = StyleSheet.create({
   bottomNav: {
-     backgroundColor: "#0a0a31",
-     opacity: 0.9,
-     color: "#fff",
-     padding: 0,
-     margin: 0,
-     borderWidth: 0,
-     borderColor: "fff"
+    backgroundColor: "#0a0a31",
+    opacity: 0.9,
+    color: "#fff",
+    padding: 0,
+    margin: 0,
+    borderWidth: 0,
+    borderColor: "fff",
   },
   activeTab: {
     backgroundColor: "#f20089",
-  }
-})
+  },
+});

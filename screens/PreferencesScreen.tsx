@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { SafeAreaView, View, Text, ScrollView, StyleSheet } from "react-native";
-import { Button, ThemeProvider } from "@rneui/themed";
+import { Button } from "@rneui/themed";
 import { useAuth } from "../contexts/AuthContext";
 import GradientText from "react-native-gradient-texts";
 import { fetchGames, fetchGenres, postToPreferences, deletePreferences } from "../utils/api.js";
 import { ActivityIndicator } from "react-native-paper";
 
 const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
-  const [genres, setGenres] = useState([]);
   const [games, setGames] = useState([]);
   const [preferences, setPreferences] = useState<string[]>([]);
-  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [uniqueGenres, setUniqueGenres] = useState<string[]>([]);
 
   const { loggedInUser, setLoggedInUser } = useAuth();
@@ -72,16 +70,6 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
       }
     });
   };
-
-  // const handleGenrePress = (genre: string) => {
-  //   setSelectedGenres((prevGenres) => {
-  //     if (prevGenres.includes(genre)) {
-  //       return prevGenres.filter((g) => g !== genre);
-  //     } else {
-  //       return [...prevGenres, genre];
-  //     }
-  //   });
-  // };
 
   const renderButtons = () => {
     let rows: JSX.Element[] = [];
@@ -204,18 +192,12 @@ const PreferencesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
         </Text>
         {renderButtons()}
 
-        {/* <Text style={{ color: "white", fontSize: 18, marginVertical: 20 }}>
-          Select At Least 3 Genres:{" "}
-        </Text>
-        {renderGenreButtons()} */}
-
         <Button
           title="Continue"
           disabled={preferences.length > 3 || preferences.length === 0}
           type="outline"
           containerStyle={{ marginVertical: 15, borderRadius: 15 }}
           onPress={() => {
-            console.log(preferences)
             postToPreferences(loggedInUser.uid, preferences).then((result) => {
               console.log("Successfully added preferences:", result)
             }).catch((err) => {

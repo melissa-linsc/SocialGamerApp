@@ -5,14 +5,11 @@ import {
   SafeAreaView,
   FlatList,
   Image,
-  Button,
   TouchableOpacity,
 } from "react-native";
 import { useAuth } from "../contexts/AuthContext";
 import { useState, useEffect } from "react";
 import { db } from "../firebase/config";
-
-import { Ionicons } from '@expo/vector-icons';
 
 import {
   collection,
@@ -24,7 +21,6 @@ import {
   arrayUnion,
   arrayRemove,
   onSnapshot,
-  writeBatch
 } from "firebase/firestore";
 
 import Header from "../components/Header";
@@ -40,63 +36,59 @@ const FriendsScreen = ({ navigation }) => {
   const [users, setUsers] = useState([]);
   const [friendRequests, setFriendRequests] = useState([]);
 
-
   useEffect(() => {
-    const usersRef = collection(db, 'users');
-    const q = query(usersRef, where('uid', '!=', loggedInUser.uid));
-    const userRef = query(usersRef, where('uid', '==', loggedInUser.uid));
+    const usersRef = collection(db, "users");
+    const q = query(usersRef, where("uid", "!=", loggedInUser.uid));
+    const userRef = query(usersRef, where("uid", "==", loggedInUser.uid));
 
-    const unsubscribeUserRef = onSnapshot(userRef, (snapshot) => {
-      let userData = [];
-      snapshot.docs.forEach((doc) => {
-        userData.push({ ...doc.data(), id: doc.id });
-      });
+    const unsubscribeUserRef = onSnapshot(
+      userRef,
+      (snapshot) => {
+        let userData = [];
+        snapshot.docs.forEach((doc) => {
+          userData.push({ ...doc.data(), id: doc.id });
+        });
 
-      if (userData[0]) {
-        setLoggedInUserDoc(userData[0]);
-        // setUserFriends(userData[0].realFriend);
-        setFriendRequests(userData[0].req);
-
+        if (userData[0]) {
+          setLoggedInUserDoc(userData[0]);
+          setFriendRequests(userData[0].req);
+        }
+      },
+      (error) => {
+        console.log("Error fetching logged-in user:", error.message);
       }
-    }, (error) => {
-      console.log('Error fetching logged-in user:', error.message);
-    });
+    );
 
-    const unsubscribeUsers = onSnapshot(q, (snapshot) => {
-      let userData = [];
-      snapshot.docs.forEach((doc) => {
-        userData.push({ ...doc.data(), id: doc.id });
-      });
+    const unsubscribeUsers = onSnapshot(
+      q,
+      (snapshot) => {
+        let userData = [];
+        snapshot.docs.forEach((doc) => {
+          userData.push({ ...doc.data(), id: doc.id });
+        });
 
-      setUsers(userData);
-
-    }, (error) => {
-      console.log('Error fetching users:', error.message);
-    });
+        setUsers(userData);
+      },
+      (error) => {
+        console.log("Error fetching users:", error.message);
+      }
+    );
 
     fetchUserById(loggedInUser.uid).then((profile) => {
       profile.realFriend.forEach((friend) => {
         fetchUserById(friend.uid).then((friendProfile) => {
           setUserFriends((currFriends) => {
-            return [friendProfile, ...currFriends]
-          })
-          console.log(userFriends)
-        })
-      })
-    })
+            return [friendProfile, ...currFriends];
+          });
+        });
+      });
+    });
 
-
-
-    // Cleanup listeners on unmount
     return () => {
       unsubscribeUserRef();
       unsubscribeUsers();
     };
-
-
   }, [loggedInUser.uid]);
-
-
 
   function handleSendFriendRequest(item) {
     const userQuery = query(
@@ -107,11 +99,9 @@ const FriendsScreen = ({ navigation }) => {
     getDocs(userQuery)
       .then((querySnapshot) => {
         if (!querySnapshot.empty) {
-          // Assuming there is only one document matching the query
           const userDoc = querySnapshot.docs[0];
           const userDocRef = doc(db, "users", userDoc.id);
 
-          // Update the realFriend array field using arrayUnion
           updateDoc(userDocRef, {
             req: arrayUnion(loggedInUserDoc),
           });
@@ -133,21 +123,19 @@ const FriendsScreen = ({ navigation }) => {
       where("uid", "==", item.uid)
     );
 
-    if (userFriends.some(friend => friend.uid === item.uid)) {
+    if (userFriends.some((friend) => friend.uid === item.uid)) {
       console.log("Friend already added");
-      return;  
+      return;
     }
-    // Execute the query
+
     getDocs(userQuery)
       .then((querySnapshot) => {
         if (!querySnapshot.empty) {
-          // Assuming there is only one document matching the query
+        
           const userToAddDoc = querySnapshot.docs[0];
           const userToAddDocRef = doc(db, "users", userToAddDoc.id);
-
           const currentUserRef = doc(db, "users", loggedInUserDoc.id);
 
-          // Update the realFriend array field using arrayUnion
           updateDoc(userToAddDocRef, {
             realFriend: arrayUnion(loggedInUserDoc),
           });
@@ -165,22 +153,22 @@ const FriendsScreen = ({ navigation }) => {
           });
 
           setUsers((currUsers) => {
-            console.log(currUsers)
-            return currUsers.filter((user) => { return user.uid !== item.uid});
-          });  
+            return currUsers.filter((user) => {
+              return user.uid !== item.uid;
+            });
+          });
 
           setFriendRequests((currFriendRequests) => {
             return currFriendRequests.filter((friend) => {
               return friend.uid !== item.uid;
             });
           });
-          
         } else {
           throw new Error("No matching user document found.");
         }
       })
       .then(() => {
-        console.log("Real friends updated successfully!"); 
+        console.log("Real friends updated successfully!");
       })
       .catch((error) => {
         console.error("Error updating real friends:", error);
@@ -188,36 +176,36 @@ const FriendsScreen = ({ navigation }) => {
   }
 
   function handleRemoveFriend(item) {
-    const itemDocRef = doc(db, 'users', item.id);
-    const loggedInUserDocRef = doc(db, 'users', loggedInUserDoc.id);
+    const itemDocRef = doc(db, "users", item.id);
+    const loggedInUserDocRef = doc(db, "users", loggedInUserDoc.id);
 
-    // Update item's document to remove loggedInUser from realFriend array
     updateDoc(itemDocRef, {
-        realFriend: item.realFriend.filter(friend => friend.uid !== loggedInUserDoc.uid)
+      realFriend: item.realFriend.filter(
+        (friend) => friend.uid !== loggedInUserDoc.uid
+      ),
     })
-    .then(() => {
-        // Update loggedInUser's document to remove item from realFriend array
+      .then(() => {
         return updateDoc(loggedInUserDocRef, {
-            realFriend: loggedInUserDoc.realFriend.filter(friend => friend.uid !== item.uid)
+          realFriend: loggedInUserDoc.realFriend.filter(
+            (friend) => friend.uid !== item.uid
+          ),
         });
-
-    })
-    .then(() => {
-        console.log('Friends removed successfully.');
+      })
+      .then(() => {
+        console.log("Friends removed successfully.");
         setUsers((currUsers) => {
-          // Check if the removed friend is already in the users list
-          const isFriendInList = currUsers.some(user => user.uid === item.uid);
+          const isFriendInList = currUsers.some(
+            (user) => user.uid === item.uid
+          );
           if (!isFriendInList) {
-            // If not already in the list, add them back
             return [...currUsers, item];
           }
-          // Otherwise, return the current list as is
           return currUsers;
         });
-    })
-    .catch(error => {
-        console.error('Error removing friends:', error.message);
-    });
+      })
+      .catch((error) => {
+        console.error("Error removing friends:", error.message);
+      });
   }
 
   function handleDeclineFriend(item) {
@@ -245,24 +233,26 @@ const FriendsScreen = ({ navigation }) => {
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <View style={styles.user}>
-                <Image style={styles.image} source={{ uri: item.avatar }} />
-                <View style={styles.friendRequest}>
-                  <Text style={styles.text}>{item.name} sent you a friend request!</Text>
-                  <View style={styles.acceptDecline}>
-                      <TouchableOpacity
-                      onPress={() => handleAddFriend(item)}
-                      style={styles.button}
-                    >
-                      <Text style={styles.text}>Accept</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => handleDeclineFriend(item)}
-                      style={styles.button}
-                    >
-                      <Text style={styles.text}>Decline</Text>
-                    </TouchableOpacity>
-                  </View>
+              <Image style={styles.image} source={{ uri: item.avatar }} />
+              <View style={styles.friendRequest}>
+                <Text style={styles.text}>
+                  {item.name} sent you a friend request!
+                </Text>
+                <View style={styles.acceptDecline}>
+                  <TouchableOpacity
+                    onPress={() => handleAddFriend(item)}
+                    style={styles.button}
+                  >
+                    <Text style={styles.text}>Accept</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => handleDeclineFriend(item)}
+                    style={styles.button}
+                  >
+                    <Text style={styles.text}>Decline</Text>
+                  </TouchableOpacity>
                 </View>
+              </View>
             </View>
           )}
         />
@@ -273,36 +263,40 @@ const FriendsScreen = ({ navigation }) => {
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <View style={styles.user}>
-                <View style={styles.userInfo}>
-                  <Image style={styles.image} source={{ uri: item.avatar }} />
-                  <Text style={styles.text}>{item.name}</Text>
-                </View>
+              <View style={styles.userInfo}>
+                <Image style={styles.image} source={{ uri: item.avatar }} />
+                <Text style={styles.text}>{item.name}</Text>
+              </View>
               <TouchableOpacity
-                  onPress={() => handleRemoveFriend(item)}
-                  style={styles.button}
-                >
-                  <Text style={styles.text}>Remove</Text>
-                </TouchableOpacity>
+                onPress={() => handleRemoveFriend(item)}
+                style={styles.button}
+              >
+                <Text style={styles.text}>Remove</Text>
+              </TouchableOpacity>
             </View>
           )}
         />
         <Text style={styles.subheading}>Find Friends</Text>
-   
+
         <FlatList
           data={users}
           style={styles.list}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => {
-            const isFriend = userFriends.some((friend) => friend.uid === item.uid);
-            const requestSent = item.req.some((friend) => friend.uid === loggedInUser.uid);
-  
+            const isFriend = userFriends.some(
+              (friend) => friend.uid === item.uid
+            );
+            const requestSent = item.req.some(
+              (friend) => friend.uid === loggedInUser.uid
+            );
+
             return (
               <View style={styles.user}>
                 <View style={styles.userInfo}>
                   <Image style={styles.image} source={{ uri: item.avatar }} />
                   <Text style={styles.text}>{item.name}</Text>
                 </View>
-  
+
                 {isFriend ? (
                   <TouchableOpacity style={styles.disabledButton}>
                     <Text style={styles.text}>Friends</Text>
@@ -337,9 +331,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#0a0a31",
     flex: 1,
   },
-  view: {
-    // padding: 20,
-  },
   list: {
     paddingBottom: 20,
   },
@@ -351,7 +342,6 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   user: {
-    // padding: 20,
     justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
@@ -399,6 +389,6 @@ const styles = StyleSheet.create({
   },
   acceptDecline: {
     flexDirection: "row",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
 });

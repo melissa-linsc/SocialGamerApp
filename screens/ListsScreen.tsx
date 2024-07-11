@@ -1,5 +1,3 @@
-// src/screens/ListScreen.tsx
-
 import React, { useEffect, useState } from "react";
 import {
   ScrollView,
@@ -16,7 +14,6 @@ import Header from "../components/Header";
 import Carousel from "../components/Carousel";
 import { Searchbar, Chip, ActivityIndicator } from "react-native-paper";
 import { Feather } from "@expo/vector-icons";
-import { formatGameTitle } from "../utils/utils";
 import {
   getSearchedGames,
   fetchGenres,
@@ -49,7 +46,6 @@ const ListScreen = ({ navigation }) => {
       setProfileData(profile)
       return profile
     }).then((profile) => {
-      console.log(profile.preferences)
       return fetchRecommendedGames(profile.preferences)
     }).then((result) => {
         setRecommendations(result)
@@ -127,7 +123,7 @@ const ListScreen = ({ navigation }) => {
             <FlatList
               data={searchResults}
               renderItem={renderItem}
-              keyExtractor={(item) => item.id} // Use a unique key extractor
+              keyExtractor={(item) => item.id} 
             />
           ) : null}
           <Text style={styles.subheading}>Browse Genres</Text>
@@ -169,7 +165,6 @@ const ListScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   safeScroll: {
-    // paddingTop: 10,
     paddingBottom: 0,
     margin: 0,
     backgroundColor: "#0a0a31",
@@ -195,8 +190,6 @@ const styles = StyleSheet.create({
     margin: 10,
     padding: 10,
     marginHorizontal: 30,
-    // borderBottomWidth: 2,
-    // borderBottomColor: "#fff",
     backgroundColor: "rgba(256,256,256,0.15)",
     borderRadius: 15,
     flexDirection: "row",

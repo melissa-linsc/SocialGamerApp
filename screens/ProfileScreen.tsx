@@ -148,9 +148,6 @@ function ProfileScreen({ navigation }) {
     });
   }
 
-  //find game details for each game by id
-  //add these to an array state and render that
-
   if (isLoading) {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: "#0a0a31" }}>

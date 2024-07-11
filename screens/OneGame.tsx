@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Linking } from "react-native";
-import { Rating, AirbnbRating } from "react-native-elements";
+import { AirbnbRating } from "react-native-elements";
 import {
   Text,
   Image,
@@ -26,19 +25,17 @@ import {
   deleteFromLibrary,
   deleteFromWishlist,
 } from "../utils/api";
-import { formatGameTitle, formatDescription } from "../utils/utils";
+import { formatDescription } from "../utils/utils";
 
 const OneGame = ({ route, visible }) => {
   const { loggedInUser } = useAuth();
   const [gameData, setGameData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
-  const [isExtended, setIsExtended] = useState(false);
   const [rating, setRating] = useState(0);
   const [optionsVisible, setOptionsVisible] = useState(false);
-  const [modalType, setModalType] = useState(null); // Add state to track modal type
+  const [modalType, setModalType] = useState(null);
   const { gameid } = route.params;
-  console.log(gameid, " << id");
 
   useEffect(() => {
     getGameById(gameid).then((result) => {
@@ -47,24 +44,18 @@ const OneGame = ({ route, visible }) => {
     });
   }, []);
 
-  const handlePlatform = (url) => {
-    Linking.openURL(url).catch((err) =>
-      console.error("Couldn't load page", err)
-    );
-  };
-
   const onRatingCompleted = (rating) => {
     setRating(rating);
   };
 
   const openOptions = (type) => {
-    setModalType(type); // Set the modal type when opening options
+    setModalType(type);
     setOptionsVisible(true);
   };
 
   const closeOptions = () => {
     setOptionsVisible(false);
-    setModalType(null); // Reset the modal type when closing options
+    setModalType(null);
   };
 
   if (isLoading) {
@@ -85,14 +76,12 @@ const OneGame = ({ route, visible }) => {
       if (foundUser) {
         const userId = foundUser.uid;
         if (modalType === "add") {
-          console.log(gameid, " <<id in post modal");
           postToWishlist(userId, gameid).then((result) => {
+            console.log("succesfully posted to wishlist");
+
             return result.postedWish.wishlist;
           });
         } else if (modalType === "remove") {
-          //remove from wishlist logic
-          console.log(gameid, " <<id in remove modal");
-
           deleteFromWishlist(userId, gameid).then(() => {
             console.log("deleted:", gameid);
           });
@@ -112,19 +101,14 @@ const OneGame = ({ route, visible }) => {
       if (foundUser) {
         const userId = foundUser.uid;
         if (modalType === "add") {
-          console.log(gameid, " <<id in post modal");
           postToLibrary(userId, gameid).then((result) => {
             console.log("successfuly posted:", gameid);
 
             return result.postedWish.library;
           });
         } else if (modalType === "remove") {
-          // console.log(userId);
-          //remove from library logic
-          console.log(gameid, " <<id in remove modal");
           deleteFromLibrary(userId, gameid).then(() => {
             console.log("deleted:", gameid);
-            // console.log(foundUser.library, " <<library");
           });
         }
       }
@@ -261,7 +245,7 @@ const OneGame = ({ route, visible }) => {
         icon="plus"
         label="            Add"
         extended={true}
-        onPress={() => openOptions("add")} // Pass 'add' as the modal type
+        onPress={() => openOptions("add")}
         visible={visible}
         animateFrom={"left"}
         iconMode="static"
@@ -271,7 +255,7 @@ const OneGame = ({ route, visible }) => {
         icon="minus"
         label="          Remove"
         extended={true}
-        onPress={() => openOptions("remove")} // Pass 'remove' as the modal type
+        onPress={() => openOptions("remove")}
         visible={visible}
         animateFrom={"left"}
         iconMode="static"
@@ -323,7 +307,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.7,
     shadowRadius: 2,
-    elevation: 5, // For Android
+    elevation: 5,
     paddingBottom: 10,
   },
   title: {
@@ -332,9 +316,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     marginVertical: 20,
-    textShadowColor: "#f20089", // Set the shadow color
-    textShadowOffset: { width: 0, height: 0 }, // Set the shadow offset
-    textShadowRadius: 20, // Set the shadow radius
+    textShadowColor: "#f20089",
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 20,
   },
   genres: {
     color: "#fff",
@@ -391,7 +375,6 @@ const styles = StyleSheet.create({
   ratingContainer: {
     marginTop: 25,
     marginBottom: 150,
-    // outline: 'none'
   },
   fabStyleAdd: {
     bottom: 50,
