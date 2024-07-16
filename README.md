@@ -1,4 +1,5 @@
 Backend Data: https://us-central1-debugd1vas.cloudfunctions.net/app/api
+Recommendations Algorithm: https://flaskapp-3d91.onrender.com/
 
 
 This application uses data from a backend API to create a social media app for gamers. It includes features such as login authentication, real-time chat with other users, adding video games to personal libraries and viewing recommended games based on an initial selection of liked games made by a user.
