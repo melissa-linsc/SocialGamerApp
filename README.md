@@ -1,3 +1,5 @@
+Backend Repo: https://github.com/ChannersSoh/game-project-be
+
 Backend Data: https://us-central1-debugd1vas.cloudfunctions.net/app/api
 
 Recommendations Algorithm: https://flaskapp-3d91.onrender.com/
@@ -17,6 +19,5 @@ To run the app:
      
 
 
-
-
 This project was created as part of a Digital Skills Bootcamp in Software Engineering provided by [Northcoders](https://northcoders.com/)
+This project was completed by Mikael Vadi, Melissa Lin, Charnjeet Sohal and Jack Cowling,
