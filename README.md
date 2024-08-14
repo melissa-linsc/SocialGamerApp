@@ -1,3 +1,5 @@
+Demonstration of Gamerly: https://northcoders.com/project-phase/gamerly
+
 Backend Repo: https://github.com/ChannersSoh/game-project-be
 
 Backend Data: https://us-central1-debugd1vas.cloudfunctions.net/app/api
